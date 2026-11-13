@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `fhir-extensions` skill, in the `fhir` plugin: a locally built knowledge base of the FHIR
+  Extensions Pack for R4 (`hl7.fhir.uv.extensions.r4` 5.4.0), with guidance on checking an
+  extension's status, context and value type, and on writing extensions in JSON. New evals in
+  `evals/fhir-extensions/`.
+- The shared profile converter (in `crmi`, `cpg` and `fhir-extensions`) now shows each
+  StructureDefinition's standards status, maturity (FMM) and work group, and why a deprecated
+  artifact was deprecated (the replacement is named for 103 of the 106 deprecated extensions). For
+  extensions it also shows the contexts they may be used in.
 - `crmi` and `cpg` skills, in the `clinical-reasoning` plugin. They were split from the
   `fhir-profiles-cpg-crmi` skill in raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson. Changes on import:

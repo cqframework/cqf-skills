@@ -354,6 +354,47 @@ def has_complexity(el):
     return any(el.get(f) for f in COMPLEXITY_FIELDS)
 
 
+EXT_STANDARDS_STATUS = "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status"
+EXT_FMM = "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm"
+EXT_WG = "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg"
+
+
+def _lifecycle_and_context_lines(profile):
+    """Header lines for standards status, maturity and work group, and, for an extension
+    definition, the contexts it may be used in and any context invariants."""
+    lines = []
+    meta = {}
+    reasons = []
+    for ext in profile.get("extension") or []:
+        url = ext.get("url")
+        if url == EXT_STANDARDS_STATUS:
+            meta["Standards Status"] = ext.get("valueCode")
+            # Why an artifact is deprecated (and what replaces it) is an extension on the code.
+            for sub in (ext.get("_valueCode") or {}).get("extension") or []:
+                if sub.get("url") == EXT_STANDARDS_STATUS + "-reason":
+                    reasons.append(clean(sub.get("valueMarkdown") or sub.get("valueString") or ""))
+        elif url == EXT_FMM:
+            meta["FMM"] = ext.get("valueInteger")
+        elif url == EXT_WG:
+            meta["WG"] = ext.get("valueCode")
+    parts = [f"**{k}:** {meta[k]}" for k in ("Standards Status", "FMM", "WG")
+             if meta.get(k) not in (None, "")]
+    if parts:
+        lines.append(" | ".join(parts))
+    reasons = [r for r in reasons if r]
+    if reasons:
+        lines.append(f"**Status Reason:** {' '.join(reasons)}")
+    if profile.get("type") == "Extension" and profile.get("derivation") == "constraint":
+        contexts = [f"{c.get('type', '')} `{c.get('expression', '')}`"
+                    for c in profile.get("context") or []]
+        if contexts:
+            lines.append(f"**Context:** {'; '.join(contexts)}")
+        invariants = [f"`{clean(i)}`" for i in profile.get("contextInvariant") or []]
+        if invariants:
+            lines.append(f"**Context invariant:** {'; '.join(invariants)}")
+    return lines
+
+
 def convert_structure_definition(profile, output_dir, json_filepath):
     snapshot = profile.get("snapshot", {})
     snapshot_elements = snapshot.get("element", [])
@@ -377,6 +418,7 @@ def convert_structure_definition(profile, output_dir, json_filepath):
     md.append(f"**Base:** {os.path.basename(base_def) if base_def else 'none'} | **Derivation:** {derivation} | **Kind:** {kind} | **Abstract:** {str(abstract).lower()}")
     if publisher or date or version:
         md.append(f"**Publisher:** {publisher} | **Date:** {date} | **Version:** {version}")
+    md.extend(_lifecycle_and_context_lines(profile))
     md.append("")
 
     description = profile.get("description", "")

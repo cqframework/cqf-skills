@@ -12,7 +12,8 @@ __pycache__/
 skills/cql/resources/spec/*
 !skills/cql/resources/spec/README.md
 
-# crmi, cpg: the profile KB is built locally by each skill's scripts/build-kb.sh from pinned
-# FHIR packages.
+# crmi, cpg, fhir-extensions: the profile KB is built locally by each skill's
+# scripts/build-kb.sh from pinned FHIR packages.
 skills/crmi/resources/profiles/
 skills/cpg/resources/profiles/
+skills/fhir-extensions/resources/profiles/
