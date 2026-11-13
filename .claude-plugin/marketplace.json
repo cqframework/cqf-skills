@@ -1,0 +1,41 @@
+{
+  "name": "cqf-skills",
+  "owner": {
+    "name": "Clinical Quality Framework",
+    "url": "https://github.com/cqframework"
+  },
+  "metadata": {
+    "description": "Agent Skills for CQL, FHIR, FHIR Clinical Reasoning, and FHIR content Implementation Guides",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "cql",
+      "description": "Author, test, and translate Clinical Quality Language (CQL) libraries",
+      "source": "./",
+      "strict": false,
+      "skills": []
+    },
+    {
+      "name": "fhir",
+      "description": "FHIRPath, terminology, and profiling skills for FHIR R4/R5",
+      "source": "./",
+      "strict": false,
+      "skills": []
+    },
+    {
+      "name": "clinical-reasoning",
+      "description": "Author and evaluate FHIR Clinical Reasoning artifacts: Measures, PlanDefinitions, and SDC Questionnaires",
+      "source": "./",
+      "strict": false,
+      "skills": []
+    },
+    {
+      "name": "fhir-ig",
+      "description": "Author, publish, and package FHIR content Implementation Guides (FSH, IG Publisher, CRMI)",
+      "source": "./",
+      "strict": false,
+      "skills": []
+    }
+  ]
+}
