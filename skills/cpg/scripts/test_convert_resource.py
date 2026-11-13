@@ -72,6 +72,35 @@ def test_operation_parameters_render_documentation(mod, tmp_path, monkeypatch):
     assert "| url | in | 0..1 | uri | A canonical \\| reference to package. |" in text
 
 
+def test_extension_header_shows_context_and_status(mod, tmp_path, monkeypatch):
+    src = tmp_path / "in"
+    src.mkdir()
+    base = "http://hl7.org/fhir/StructureDefinition/"
+    (src / "StructureDefinition-ext.json").write_text(json.dumps({
+        "resourceType": "StructureDefinition", "id": "ext", "url": "http://example.org/ext",
+        "name": "Ext", "status": "active", "kind": "complex-type", "abstract": False,
+        "type": "Extension", "derivation": "constraint", "baseDefinition": base + "Extension",
+        "extension": [
+            {"url": base + "structuredefinition-standards-status", "valueCode": "deprecated",
+             "_valueCode": {"extension": [{
+                 "url": base + "structuredefinition-standards-status-reason",
+                 "valueMarkdown": "Replaced by\nnew-ext."}]}},
+            {"url": base + "structuredefinition-fmm", "valueInteger": 2},
+            {"url": base + "structuredefinition-wg", "valueCode": "pa"},
+        ],
+        "context": [{"type": "element", "expression": "Patient"},
+                    {"type": "element", "expression": "RelatedPerson"}],
+        "snapshot": {"element": [{"id": "Extension", "path": "Extension", "min": 0, "max": "1"}]},
+    }), encoding="utf-8")
+    out = tmp_path / "out"
+    monkeypatch.setattr("sys.argv", ["x", "--input", str(src), "--output", str(out)])
+    mod.main()
+    text = next(out.glob("*.md")).read_text(encoding="utf-8")
+    assert "**Standards Status:** deprecated | **FMM:** 2 | **WG:** pa" in text
+    assert "**Status Reason:** Replaced by new-ext." in text
+    assert "**Context:** element `Patient`; element `RelatedPerson`" in text
+
+
 def test_default_paths_anchor_to_module_file(mod, tmp_path, monkeypatch):
     # Sanity: argparse defaults resolve relative to the script's location, even when CWD is elsewhere.
     monkeypatch.chdir(tmp_path)

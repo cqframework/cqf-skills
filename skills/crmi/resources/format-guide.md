@@ -14,7 +14,15 @@ skill, as produced by `scripts/convert-resource-to-markdown.py`.
 **ID:** `{id}` | **URL:** `{canonical}` | **Status:** {status}
 **Base:** {base} | **Derivation:** constraint|specialization | **Kind:** resource|extension|...
 **Publisher:** ... | **Date:** ... | **Version:** ...
+**Standards Status:** draft|trial-use|normative|deprecated|... | **FMM:** {0-5} | **WG:** {work group}
+**Status Reason:** {why the status was set, e.g. what replaces a deprecated extension}
+**Context:** {type} `{expression}`; ...          ← extensions only
+**Context invariant:** `{FHIRPath}`; ...           ← extensions only
 ```
+
+The standards status, maturity (FMM) and work group lines appear only when the source declares
+them. **Context** lists where an extension may be used: `element` contexts name a resource or
+element path (`Patient`, `Observation.value[x]`), and `Element` means anywhere.
 
 ### Elements table
 

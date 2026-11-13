@@ -48,7 +48,7 @@
       "description": "FHIR R4 resources, bundles, and base resource element tables",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/fhir"]
+      "skills": ["./skills/fhir", "./skills/fhir-extensions"]
     },
     {
       "name": "clinical-reasoning",
