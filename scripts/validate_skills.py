@@ -8,6 +8,8 @@ Checks:
   - relative links in SKILL.md resolve inside the skill folder
   - .claude-plugin/marketplace.json references only existing skills, and every skill
     belongs to exactly one plugin
+  - files that several skills each carry a copy of (SHARED_FILES) are identical in every skill
+    that has them, so a fix made in one copy isn't lost in the others
 
 Requires: Python 3.9+, PyYAML.  Usage: python scripts/validate_skills.py
 """
@@ -29,6 +31,15 @@ LINK_RE = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
 MAX_NAME = 64
 MAX_DESCRIPTION = 1024
 MAX_BODY_LINES = 500
+
+# Skills must be self-contained, so tooling used by several skills is copied into each one.
+# Paths are relative to the skill folder. Edit one copy, then copy it to the others.
+SHARED_FILES = [
+    "scripts/convert-resource-to-markdown.py",
+    "scripts/test_convert_resource.py",
+    "scripts/fixtures/crmi-shareablelibrary.json",
+    "resources/format-guide.md",
+]
 
 
 def parse_skill(path: Path) -> tuple[dict, str]:
@@ -101,12 +112,29 @@ def check_marketplace(skill_names: set[str]) -> list[str]:
     return errors
 
 
+def check_shared_files(skill_dirs: list[Path]) -> list[str]:
+    errors: list[str] = []
+    for rel in SHARED_FILES:
+        copies = [d / rel for d in skill_dirs if (d / rel).is_file()]
+        if len(copies) < 2:
+            continue
+        # Compare with line endings normalized, so a Windows checkout doesn't differ spuriously.
+        first = copies[0].read_bytes().replace(b"\r\n", b"\n")
+        for other in copies[1:]:
+            if other.read_bytes().replace(b"\r\n", b"\n") != first:
+                skill, base = (p.relative_to(SKILLS_DIR).parts[0] for p in (other, copies[0]))
+                errors.append(f"shared file {rel}: the copy in skills/{skill} differs from "
+                              f"the copy in skills/{base}")
+    return errors
+
+
 def main() -> int:
     skill_dirs = sorted(p for p in SKILLS_DIR.iterdir() if p.is_dir()) if SKILLS_DIR.is_dir() else []
     errors: list[str] = []
     for d in skill_dirs:
         errors.extend(check_skill(d))
     errors.extend(check_marketplace({d.name for d in skill_dirs}))
+    errors.extend(check_shared_files(skill_dirs))
 
     for err in errors:
         print(f"ERROR: {err}", file=sys.stderr)

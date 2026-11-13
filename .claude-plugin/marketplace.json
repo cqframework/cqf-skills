@@ -52,10 +52,10 @@
     },
     {
       "name": "clinical-reasoning",
-      "description": "Author and evaluate FHIR Clinical Reasoning artifacts: Measures, PlanDefinitions, and SDC Questionnaires",
+      "description": "Author and evaluate FHIR Clinical Reasoning artifacts against the CPG, CRMI and FHIR Extensions IGs",
       "source": "./",
       "strict": false,
-      "skills": []
+      "skills": ["./skills/crmi", "./skills/cpg"]
     },
     {
       "name": "fhir-ig",

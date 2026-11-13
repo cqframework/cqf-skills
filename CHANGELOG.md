@@ -8,6 +8,28 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `crmi` and `cpg` skills, in the `clinical-reasoning` plugin. They were split from the
+  `fhir-profiles-cpg-crmi` skill in raleigh-claude-skills at `8224e28`, originally written by
+  raleigh-g-thompson. Changes on import:
+  - One skill per IG: `crmi` covers CRMI 2.0.0, and `cpg` covers CPG 2.0.0. Each includes FHIR
+    Extensions (R4) 5.4.0 for the `cqf-` and `artifact-` extensions its profiles use. The source
+    covered CPG 1.0.0, CRMI 1.0.0 and extensions.r4 5.2.0. Both skills note that CPG 2.0.0 dropped
+    CPG 1.0.0's shareable and publishable artifact profiles, and that CRMI 2.0.0 defines them.
+  - `crmi`'s SKILL.md explains that CRMI 2.0.0 capability profiles each derive from the base
+    resource and are claimed together.
+  - Each knowledge base is built locally by the skill's `scripts/build-kb.sh` from pinned packages,
+    instead of committing about 24 MB of renderings and a 6 MB source tarball. This also replaces
+    the stale committed renderings, which had broken binding cells, doubled slice names and
+    truncated text.
+  - Each skill has its own copy of the converter, so it can be installed on its own.
+    `validate_skills.py` checks that the copies match.
+  - `format-guide.md` now matches the converter's current output.
+  - The converter now renders OperationDefinition parameter documentation. It used to read a
+    `description` field that R4 doesn't have, so all 270 parameters across the 24
+    OperationDefinitions had empty descriptions.
+  - New evals in `evals/crmi/` and `evals/cpg/`, each with questions, an answer key, a graded task
+    (`grade_library.py` and `grade_plandefinition.py`, tested in CI), and trigger prompts.
+  - References to skills outside this repository are removed.
 - `fhir` skill, imported from raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson. Changes on import:
   - References to skills outside this repository are removed.
