@@ -14,7 +14,7 @@ Skills are grouped into **plugins** by domain (`cql`, `fhir`, `clinical-reasonin
 
 | Plugin | Skill | Purpose |
 |---|---|---|
-| | | *No skills yet* |
+| `cql` | [`cql`](skills/cql/SKILL.md) | Author, review and debug CQL libraries, and answer semantics questions from the CQL 1.4, 1.5.3 and 2.0.0 spec text, with documented translator and engine gotchas. Run `bash skills/cql/scripts/fetch-spec.sh` once to build the local spec copy. |
 
 ## Installation
 
@@ -36,9 +36,9 @@ Each folder under [`skills/`](skills/) is self-contained. Copy or symlink the on
 
 ```bash
 git clone https://github.com/cqframework/cqf-skills.git
-cp -r cqf-skills/skills/cql-authoring ~/.claude/skills/        # Claude Code (personal)
-cp -r cqf-skills/skills/cql-authoring .claude/skills/          # Claude Code (project)
-cp -r cqf-skills/skills/cql-authoring .agents/skills/          # agents that use .agents/skills
+cp -r cqf-skills/skills/cql ~/.claude/skills/        # Claude Code (personal)
+cp -r cqf-skills/skills/cql .claude/skills/          # Claude Code (project)
+cp -r cqf-skills/skills/cql .agents/skills/          # agents that use .agents/skills
 ```
 
 Check your agent's documentation for the exact location it reads skills from.

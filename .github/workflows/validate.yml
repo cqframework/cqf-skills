@@ -13,5 +13,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyyaml
+      - run: pip install pyyaml pytest
       - run: python scripts/validate_skills.py
+      - name: Run skill script tests
+        run: |
+          for d in skills/*/scripts; do
+            if ls "$d"/test_*.py >/dev/null 2>&1; then
+              python -m pytest -q -p no:cacheprovider "$d"
+            fi
+          done
