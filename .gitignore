@@ -1,0 +1,13 @@
+# Python and test caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS and editor files
+.DS_Store
+*.swp
+
+# cql: the CQL spec copy is built locally by skills/cql/scripts/fetch-spec.sh.
+# HL7 spec text is not redistributed in this repository.
+skills/cql/resources/spec/*
+!skills/cql/resources/spec/README.md
