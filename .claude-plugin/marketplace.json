@@ -45,10 +45,10 @@
     },
     {
       "name": "fhir",
-      "description": "FHIRPath, terminology, and profiling skills for FHIR R4/R5",
+      "description": "FHIR R4 resources, bundles, and base resource element tables",
       "source": "./",
       "strict": false,
-      "skills": []
+      "skills": ["./skills/fhir"]
     },
     {
       "name": "clinical-reasoning",

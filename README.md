@@ -15,6 +15,7 @@ Skills are grouped into **plugins** by domain (`cql`, `fhir`, `clinical-reasonin
 | Plugin | Skill | Purpose |
 |---|---|---|
 | `cql` | [`cql`](skills/cql/SKILL.md) | Author, review and debug CQL libraries, and answer semantics questions from the CQL 1.4, 1.5.3 and 2.0.0 spec text, with documented translator and engine gotchas. Run `bash skills/cql/scripts/fetch-spec.sh` once to build the local spec copy. |
+| `fhir` | [`fhir`](skills/fhir/SKILL.md) | Work with FHIR R4 resources and bundles: bundle types, transaction entries, resource IDs, `meta.profile`, references and terminology system URIs, with element, cardinality and binding tables for the base R4 resources and data types. |
 | `cql-mcp` | [`cql-mcp`](https://github.com/cqframework/cql-mcp/blob/v0.1.0-rc.2/skills/cql-mcp/SKILL.md) | The [cql-mcp](https://github.com/cqframework/cql-mcp) server and its usage skill: validate and run CQL, inspect ELM, run and diff test-case suites, and debug step by step. Maintained in cqframework/cql-mcp and pinned to a release. Requires Node.js 22+ and JDK 17+. |
 
 ## Installation
@@ -26,6 +27,7 @@ This repository is a Claude Code plugin marketplace.
 ```text
 /plugin marketplace add cqframework/cqf-skills
 /plugin install cql@cqf-skills
+/plugin install fhir@cqf-skills
 /plugin install cql-mcp@cqf-skills
 ```
 
