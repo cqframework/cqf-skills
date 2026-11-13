@@ -47,6 +47,8 @@ as a server package URL) and `version` together in one change.
 
 A skill must work when its folder is copied on its own. Don't link to files outside the skill folder. If two skills need the same reference, duplicate it, or split it out into its own skill.
 
+When several skills carry a copy of the same file, such as the profile converter that `crmi` and `cpg` both use, list its path in `SHARED_FILES` in `scripts/validate_skills.py`. The validator fails if the copies differ, so a fix made in one copy has to be copied to the others.
+
 ### Data
 
 All examples, fixtures, and test data must be **synthetic**. Never include PHI or real patient data. When a skill references licensed terminologies (SNOMED CT, CPT, and so on), use only codes that are permitted in examples, or illustrative codes that are clearly marked as such.
