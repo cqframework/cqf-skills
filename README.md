@@ -10,11 +10,12 @@ The skills follow the open Agent Skills format, so they work in Claude Code, Cla
 
 ## Skill catalog
 
-Skills are grouped into **plugins** by domain (`cql`, `fhir`, `clinical-reasoning`, `fhir-ig`), so you can install only the ones you need.
+Skills are grouped into **plugins** by domain (`cql`, `fhir`, `clinical-reasoning`, `fhir-ig`), so you can install only the ones you need. Some plugins are maintained in their own repositories and listed here so they can be installed from one marketplace.
 
 | Plugin | Skill | Purpose |
 |---|---|---|
 | `cql` | [`cql`](skills/cql/SKILL.md) | Author, review and debug CQL libraries, and answer semantics questions from the CQL 1.4, 1.5.3 and 2.0.0 spec text, with documented translator and engine gotchas. Run `bash skills/cql/scripts/fetch-spec.sh` once to build the local spec copy. |
+| `cql-mcp` | [`cql-mcp`](https://github.com/cqframework/cql-mcp/blob/v0.1.0-rc.2/skills/cql-mcp/SKILL.md) | The [cql-mcp](https://github.com/cqframework/cql-mcp) server and its usage skill: validate and run CQL, inspect ELM, run and diff test-case suites, and debug step by step. Maintained in cqframework/cql-mcp and pinned to a release. Requires Node.js 22+ and JDK 17+. |
 
 ## Installation
 
@@ -25,10 +26,12 @@ This repository is a Claude Code plugin marketplace.
 ```text
 /plugin marketplace add cqframework/cqf-skills
 /plugin install cql@cqf-skills
-/plugin install clinical-reasoning@cqf-skills
+/plugin install cql-mcp@cqf-skills
 ```
 
 To pick up new releases, run `/plugin marketplace update cqf-skills`.
+
+Installing `cql-mcp` installs its skill and registers the cql-mcp server, with the workspace set to the project directory you start Claude Code from. The server needs Node.js 22+ and a JDK 17+. On first use it downloads the server package and the CQL language server, so the first start can be slow. If you already registered cql-mcp yourself with `claude mcp add`, remove that registration to avoid running two servers.
 
 ### Other agents that support Agent Skills
 
@@ -42,6 +45,8 @@ cp -r cqf-skills/skills/cql .agents/skills/          # agents that use .agents/s
 ```
 
 Check your agent's documentation for the exact location it reads skills from.
+
+Plugins maintained elsewhere aren't under `skills/`. For `cql-mcp`, set up the server for your client by following the [cql-mcp install guide](https://github.com/cqframework/cql-mcp#install-and-configure), and get the skill from the `cql-mcp-skill.zip` attached to each [cql-mcp release](https://github.com/cqframework/cql-mcp/releases).
 
 ### Claude.ai and the Claude API
 

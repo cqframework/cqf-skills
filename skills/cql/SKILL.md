@@ -93,6 +93,8 @@ says. Before stating how an operator, type test, conversion, or null case behave
    what the engine does (run it). Engine source, translator source and past upstream fixes are
    evidence of behavior only, never of what the spec requires.
 6. **Run every repro before relying on it,** with a control that differs in exactly one thing.
+   If the cql-mcp server's `cql_*` tools are available, use them: `cql_validate` to compile,
+   `cql_view_elm` to read the ELM, `cql_execute` to run. The `cql-mcp` skill has the playbooks.
    Paste the actual output. After editing a probe file, save it under a new library and file name
    before reading its ELM: the language server's ELM view has returned the previous version's ELM
    after an edit.

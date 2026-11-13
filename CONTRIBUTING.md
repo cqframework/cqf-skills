@@ -11,6 +11,15 @@ Thanks for helping. This guide covers how to author a skill and what reviewers l
 5. Add the skill path (`./skills/<skill-name>`) to the right plugin in `.claude-plugin/marketplace.json`.
 6. Run `python scripts/validate_skills.py`, then open a PR. Update the catalog table in `README.md` and `CHANGELOG.md`.
 
+## Listing a plugin maintained elsewhere
+
+Some skills belong with the tool they describe and are maintained in that tool's repository (for
+example `cql-mcp`). Don't copy them here. Instead, add a `marketplace.json` entry whose `source` is
+`{"source": "github", "repo": "<owner>/<repo>", "ref": "<release tag>", "sha": "<commit>"}` and that
+declares the repository's `skills` path, plus any `mcpServers`. Pin both `ref` and `sha` to a
+release. When the upstream project releases, update the tag, the commit, any versioned URLs (such
+as a server package URL) and `version` together in one change.
+
 ## Authoring guidelines
 
 ### Frontmatter

@@ -84,6 +84,11 @@ def check_marketplace(skill_names: set[str]) -> list[str]:
     data = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
     seen: dict[str, str] = {}
     for plugin in data.get("plugins", []):
+        if plugin.get("source") != "./":
+            # Hosted in another repository; its skills are validated there.
+            if not isinstance(plugin.get("source"), dict):
+                errors.append(f"marketplace: plugin {plugin['name']!r} has an unsupported source")
+            continue
         for ref in plugin.get("skills", []):
             skill = Path(ref).name
             if not (ROOT / ref).joinpath("SKILL.md").is_file():

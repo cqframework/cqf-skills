@@ -17,6 +17,33 @@
       "skills": ["./skills/cql"]
     },
     {
+      "name": "cql-mcp",
+      "description": "CQL MCP server (validate, run, inspect ELM, run test suites, step-through debugging) with its usage skill, maintained in cqframework/cql-mcp",
+      "version": "0.1.0-rc.2",
+      "homepage": "https://github.com/cqframework/cql-mcp",
+      "license": "Apache-2.0",
+      "source": {
+        "source": "github",
+        "repo": "cqframework/cql-mcp",
+        "ref": "v0.1.0-rc.2",
+        "sha": "a2895f0ca2632845b305e70e274bce7c447cfbcf"
+      },
+      "skills": ["./skills/cql-mcp"],
+      "mcpServers": {
+        "cql-mcp": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "--package=https://github.com/cqframework/cql-mcp/releases/download/v0.1.0-rc.2/cqframework-cql-mcp-0.1.0-rc.2.tgz",
+            "cql-mcp"
+          ],
+          "env": {
+            "CQL_MCP_WORKSPACE": "${CLAUDE_PROJECT_DIR}"
+          }
+        }
+      }
+    },
+    {
       "name": "fhir",
       "description": "FHIRPath, terminology, and profiling skills for FHIR R4/R5",
       "source": "./",
