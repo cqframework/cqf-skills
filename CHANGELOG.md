@@ -8,6 +8,9 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `cql-mcp` plugin. It references cqframework/cql-mcp at `v0.1.0-rc.2`, installing that repository's
+  `cql-mcp` skill and registering its MCP server. The `cql` skill now uses the `cql_*` tools to
+  compile, inspect and run repros when the server is available.
 - Repository structure, marketplace manifest, skill template, and validation tooling.
 - `cql` skill, imported from raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson. Changes on import:
