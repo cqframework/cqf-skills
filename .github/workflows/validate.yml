@@ -15,9 +15,9 @@ jobs:
           python-version: "3.12"
       - run: pip install pyyaml pytest
       - run: python scripts/validate_skills.py
-      - name: Run skill script tests
+      - name: Run skill script and eval grader tests
         run: |
-          for d in skills/*/scripts; do
+          for d in skills/*/scripts evals/*; do
             if ls "$d"/test_*.py >/dev/null 2>&1; then
               python -m pytest -q -p no:cacheprovider "$d"
             fi

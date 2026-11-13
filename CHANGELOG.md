@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `fhir` skill, imported from raleigh-claude-skills at `8224e28`, originally written by
+  raleigh-g-thompson. Changes on import:
+  - References to skills outside this repository are removed.
+  - The description of the element tables now matches the generated files.
+  - The element tables (`hl7.fhir.r4.core@4.0.1`) are committed as generated. Their generator is
+    shared tooling that will come in with the model skills.
+  - New evals in `evals/fhir/`: element-definition and bundle questions with an answer key, a
+    graded transaction-bundle task (`grade_bundle.py`, tested in CI), and trigger prompts.
 - `cql-mcp` plugin. It references cqframework/cql-mcp at `v0.1.0-rc.2`, installing that repository's
   `cql-mcp` skill and registering its MCP server. The `cql` skill now uses the `cql_*` tools to
   compile, inspect and run repros when the server is available.
