@@ -1,0 +1,13 @@
+{
+  "resourceType": "ValueSet",
+  "id": "body-weight-codes",
+  "url": "http://example.org/fhir/ValueSet/body-weight-codes",
+  "version": "0.1.0",
+  "name": "BodyWeightCodes",
+  "status": "draft",
+  "compose": { "include": [ { "system": "http://loinc.org", "concept": [ { "code": "29463-7", "display": "Body weight" } ] } ] },
+  "expansion": {
+    "timestamp": "2026-11-14T00:00:00Z",
+    "contains": [ { "system": "http://loinc.org", "code": "29463-7", "display": "Body weight" } ]
+  }
+}

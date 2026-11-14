@@ -92,14 +92,13 @@ from that, not observed.
 
 ## Tools that assume the default layout
 
-**The VS Code CQL extension** (VSCQL, an unreleased branch; released versions may differ) treats a
+**The VS Code CQL extension** (VSCQL, vscode-cql 1.0.0) treats a
 folder as an IG root if it has `ig.ini` or `input/cql`
 [src: VSCQL src/model/igLayoutDetector.ts:56-61]. It then reads CQL from `<root>/input/cql`, tests
 from `<root>/input/tests` and results from `<root>/input/tests/results`, all hard-coded
 [src: VSCQL src/model/cqlProject.ts:230-232]. No file under `src/` reads `path-binary` or
-`path-resource` (searched with `git grep` at f910ac7). So the extension reads CQL from `input/cql`
-whatever the IG's `path-binary` says. The user reports that the extension supports only the default
-folder structure; the code supports this narrower claim. The CQL language server was not checked.
+`path-resource` (searched at v1.0.0). So the extension reads CQL from `input/cql` whatever the IG's
+`path-binary` says. The `vscode-cql` skill covers the extension and its language server in detail.
 
 ## Example: one cqf measure IG
 

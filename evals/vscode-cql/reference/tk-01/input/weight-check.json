@@ -1,0 +1,11 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "example.fhir.weightcheck",
+  "url": "http://example.org/fhir/weightcheck/ImplementationGuide/example.fhir.weightcheck",
+  "version": "0.1.0",
+  "name": "WeightCheck",
+  "status": "draft",
+  "packageId": "example.fhir.weightcheck",
+  "fhirVersion": ["4.0.1"],
+  "definition": { "parameter": [ { "code": "path-binary", "value": "input/cql" } ] }
+}

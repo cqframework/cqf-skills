@@ -8,6 +8,32 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `vscode-cql` skill, in the `cql` plugin, for the VS Code CQL extension (`cqframework.cql`) 1.0.0 and
+  cql-language-server 5.0.0, from raleigh-claude-skills at `8224e28`, originally written by
+  raleigh-g-thompson. Changes on import:
+  - Re-pinned from the extension wiki as captured on 2026-08-22 to the 1.0.0 releases. Every
+    behaviour is cited to the extension or language server code at those tags, or to the wiki at its
+    1.0.0 update, where the wiki is right.
+  - Corrections against the code, including: the default result format is `flat`, not individual;
+    the extension has no VS Code settings; Bundles in test case folders are ignored; Execute CQL gets
+    no value sets without an `ig.ini`; one bad parameter value drops every configured parameter; the
+    CQL Explorer and Execute CQL find test cases differently; a `launch.json` needs the `.cql` file's
+    URI, `libraryName` and `fhirVersion`; the debugger's scopes; packaging is `tsc`, not esbuild; Java
+    17, not 11.
+  - The wiki says `dev` dependencies are built in memory and no stub is written to
+    `~/.fhir/packages`; at 5.0.0 the server still writes an empty `<pkg>#current` stub. The skill
+    follows the code and flags the stub.
+  - `resources/commands.md` is generated from the extension's `package.json` by
+    `scripts/gen_reference.py`.
+  - `scripts/check_release.py` follows new extension and server releases and wiki changes, and runs
+    in the weekly release check. `scripts/lint_skill_vscql.py` checks citations against clones made by
+    `scripts/fetch-sources.sh`.
+  - New evals in `evals/vscode-cql/`.
+- The weekly release check (`.github/workflows/release-check.yml`, renamed from
+  `ig-publisher-release-check.yml`) now runs every skill's `scripts/check_release.py`, with one issue
+  per skill labelled `<skill>-release`.
+- `ig-publisher` cites vscode-cql 1.0.0 instead of an unreleased branch commit, and the `cql` skill
+  names the translator versions IG Publisher 3.0.4 and the VS Code extension use.
 - `ig-publisher` skill, in the `fhir-ig` plugin, for configuring, running and debugging the HL7 IG
   Publisher, from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson.
   Changes on import:
@@ -28,7 +54,7 @@ All notable changes to this project are documented here. The format is based on
     cache folder can be set with `IGPUB_SKILL_CACHE`.
   - `scripts/check_release.py` compares the pins with the latest IG Publisher, core, template and
     tools IG releases, and reports which citations a re-pin must re-read. A weekly workflow
-    (`.github/workflows/ig-publisher-release-check.yml`) runs it and opens or updates an issue
+    (`.github/workflows/release-check.yml`) runs it and opens or updates an issue
     labelled `ig-publisher-release` when a newer release is out.
   - `scripts/lint_skill.py` is a shared copy of the `cql` skill's linter, checked by
     `validate_skills.py`.
