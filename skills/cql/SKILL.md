@@ -8,7 +8,8 @@ CQL (Clinical Quality Language) is an HL7 specification for expressing clinical 
 
 This skill covers model-agnostic CQL. For patterns that depend on a data model (FHIR, US Core,
 US Quality Core) in quality measures, use the CMS Quality Measure Development IG; see
-[resources/guides/README.md](resources/guides/README.md). For CQL used with FHIR (the FHIR
+[resources/guides/README.md](resources/guides/README.md), or the `cms-qmd` skill, which carries
+that IG's pages and shared libraries. For CQL used with FHIR (the FHIR
 ModelInfo, FHIRHelpers, FHIRCommon, packaging CQL in a FHIR Library, and `$cql` and
 `Library/$evaluate`), see the `cql-ig` skill, which covers the Using CQL With FHIR IG.
 

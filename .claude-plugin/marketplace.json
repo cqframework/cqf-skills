@@ -11,10 +11,10 @@
   "plugins": [
     {
       "name": "cql",
-      "description": "Author, test, and translate Clinical Quality Language (CQL) libraries, and use CQL with FHIR",
+      "description": "Author, test, and translate Clinical Quality Language (CQL) libraries, use CQL with FHIR, and author CMS quality measures",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/cql", "./skills/cql-ig", "./skills/us-cql-ig"]
+      "skills": ["./skills/cql", "./skills/cql-ig", "./skills/us-cql-ig", "./skills/cms-qmd"]
     },
     {
       "name": "cql-mcp",
@@ -45,10 +45,10 @@
     },
     {
       "name": "fhir",
-      "description": "FHIR R4 resources, bundles, standard extensions, and US Core profiles",
+      "description": "FHIR R4 resources, bundles, standard extensions, US Core and US Quality Core profiles",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/fhir", "./skills/fhir-extensions", "./skills/uscore"]
+      "skills": ["./skills/fhir", "./skills/fhir-extensions", "./skills/uscore", "./skills/usqualitycore"]
     },
     {
       "name": "clinical-reasoning",

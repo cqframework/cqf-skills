@@ -43,6 +43,9 @@ context Patient
   resource (`USCore.PatientProfile` extends `FHIR.Patient`). FHIR types, the FHIRHelpers
   conversions and the FHIRCommon functions all apply to USCore data. The `-derived` suffix
   distinguishes this model from a non-derived USCore model.
+- **Keep `using FHIR`.** With only `using USCore`, the FHIRHelpers conversions don't apply:
+  `Patient.gender = 'female'` fails to translate, and terminology retrieves warn "Could not resolve
+  membership operator".
 - **Includes.** The IG's own libraries include FHIRHelpers and FHIRCommon by namespace
   (`hl7.fhir.uv.cql.`) and without a `called` alias. Using CQL With FHIR requires `called` on every
   include (2.3), so add it in your own libraries.

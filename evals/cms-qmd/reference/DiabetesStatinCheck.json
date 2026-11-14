@@ -1,0 +1,805 @@
+{
+ "library": {
+  "annotation": [
+   {
+    "translatorVersion": "3.29.0",
+    "translatorOptions": "",
+    "signatureLevel": "None",
+    "type": "CqlToElmInfo"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToInterval has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToInterval has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRCommon.references has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function CQMConcepts.prevalencePeriod has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToInterval has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToDateTime has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   }
+  ],
+  "identifier": {
+   "id": "DiabetesStatinCheck",
+   "version": "1.0.000"
+  },
+  "schemaIdentifier": {
+   "id": "urn:hl7-org:elm",
+   "version": "r1"
+  },
+  "usings": {
+   "def": [
+    {
+     "localIdentifier": "System",
+     "uri": "urn:hl7-org:elm-types:r1",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "USQualityCore",
+     "uri": "http://hl7.org/fhir",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "USCore",
+     "uri": "http://hl7.org/fhir",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "FHIR",
+     "uri": "http://hl7.org/fhir",
+     "version": "4.0.1",
+     "annotation": []
+    }
+   ]
+  },
+  "includes": {
+   "def": [
+    {
+     "localIdentifier": "FHIRHelpers",
+     "path": "FHIRHelpers",
+     "version": "4.0.1",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "FHIRCommon",
+     "path": "FHIRCommon",
+     "version": "2.0.0",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "CQMConcepts",
+     "path": "CQMConcepts",
+     "version": "0.5.000",
+     "annotation": []
+    }
+   ]
+  },
+  "parameters": {
+   "def": [
+    {
+     "name": "Measurement Period",
+     "accessLevel": "Public",
+     "annotation": [],
+     "parameterTypeSpecifier": {
+      "type": "IntervalTypeSpecifier",
+      "annotation": [],
+      "pointType": {
+       "name": "{urn:hl7-org:elm-types:r1}DateTime",
+       "type": "NamedTypeSpecifier",
+       "annotation": []
+      }
+     }
+    }
+   ]
+  },
+  "valueSets": {
+   "def": [
+    {
+     "name": "Office Visit",
+     "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1001",
+     "accessLevel": "Public",
+     "annotation": [],
+     "codeSystem": []
+    },
+    {
+     "name": "Diabetes",
+     "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1001",
+     "accessLevel": "Public",
+     "annotation": [],
+     "codeSystem": []
+    },
+    {
+     "name": "Statin Therapy",
+     "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.117.1.1.1",
+     "accessLevel": "Public",
+     "annotation": [],
+     "codeSystem": []
+    }
+   ]
+  },
+  "contexts": {
+   "def": [
+    {
+     "name": "Patient",
+     "annotation": []
+    }
+   ]
+  },
+  "statements": {
+   "def": [
+    {
+     "name": "Patient",
+     "context": "Patient",
+     "annotation": [],
+     "expression": {
+      "type": "SingletonFrom",
+      "annotation": [],
+      "signature": [],
+      "operand": {
+       "dataType": "{http://hl7.org/fhir}Patient",
+       "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-patient",
+       "type": "Retrieve",
+       "annotation": [],
+       "include": [],
+       "codeFilter": [],
+       "dateFilter": [],
+       "otherFilter": []
+      }
+     }
+    },
+    {
+     "name": "Qualifying Encounters",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "type": "Query",
+      "annotation": [],
+      "source": [
+       {
+        "alias": "OfficeVisit",
+        "annotation": [],
+        "expression": {
+         "dataType": "{http://hl7.org/fhir}Encounter",
+         "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-encounter",
+         "codeProperty": "type",
+         "codeComparator": "in",
+         "type": "Retrieve",
+         "annotation": [],
+         "codes": {
+          "name": "Office Visit",
+          "preserve": true,
+          "type": "ValueSetRef",
+          "annotation": []
+         },
+         "include": [],
+         "codeFilter": [],
+         "dateFilter": [],
+         "otherFilter": []
+        }
+       }
+      ],
+      "let": [],
+      "relationship": [],
+      "where": {
+       "type": "And",
+       "annotation": [],
+       "signature": [],
+       "operand": [
+        {
+         "type": "Equal",
+         "annotation": [],
+         "signature": [],
+         "operand": [
+          {
+           "name": "ToString",
+           "libraryName": "FHIRHelpers",
+           "type": "FunctionRef",
+           "annotation": [],
+           "signature": [],
+           "operand": [
+            {
+             "path": "status",
+             "scope": "OfficeVisit",
+             "type": "Property",
+             "annotation": []
+            }
+           ]
+          },
+          {
+           "valueType": "{urn:hl7-org:elm-types:r1}String",
+           "value": "finished",
+           "type": "Literal",
+           "annotation": []
+          }
+         ]
+        },
+        {
+         "type": "IncludedIn",
+         "annotation": [],
+         "signature": [],
+         "operand": [
+          {
+           "name": "ToInterval",
+           "libraryName": "FHIRHelpers",
+           "type": "FunctionRef",
+           "annotation": [],
+           "signature": [],
+           "operand": [
+            {
+             "path": "period",
+             "scope": "OfficeVisit",
+             "type": "Property",
+             "annotation": []
+            }
+           ]
+          },
+          {
+           "name": "Measurement Period",
+           "type": "ParameterRef",
+           "annotation": []
+          }
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Encounters With Diabetes",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "type": "Query",
+      "annotation": [],
+      "source": [
+       {
+        "alias": "QualifyingEncounter",
+        "annotation": [],
+        "expression": {
+         "name": "Qualifying Encounters",
+         "type": "ExpressionRef",
+         "annotation": []
+        }
+       }
+      ],
+      "let": [],
+      "relationship": [],
+      "where": {
+       "type": "Or",
+       "annotation": [],
+       "signature": [],
+       "operand": [
+        {
+         "type": "Exists",
+         "annotation": [],
+         "signature": [],
+         "operand": {
+          "type": "Query",
+          "annotation": [],
+          "source": [
+           {
+            "alias": "DiabetesDiagnosis",
+            "annotation": [],
+            "expression": {
+             "dataType": "{http://hl7.org/fhir}Condition",
+             "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-condition-encounter-diagnosis",
+             "codeProperty": "code",
+             "codeComparator": "in",
+             "type": "Retrieve",
+             "annotation": [],
+             "codes": {
+              "name": "Diabetes",
+              "preserve": true,
+              "type": "ValueSetRef",
+              "annotation": []
+             },
+             "include": [],
+             "codeFilter": [],
+             "dateFilter": [],
+             "otherFilter": []
+            }
+           }
+          ],
+          "let": [],
+          "relationship": [],
+          "where": {
+           "name": "references",
+           "libraryName": "FHIRCommon",
+           "type": "FunctionRef",
+           "annotation": [],
+           "signature": [],
+           "operand": [
+            {
+             "path": "encounter",
+             "scope": "DiabetesDiagnosis",
+             "type": "Property",
+             "annotation": []
+            },
+            {
+             "name": "QualifyingEncounter",
+             "type": "AliasRef",
+             "annotation": []
+            }
+           ]
+          }
+         }
+        },
+        {
+         "type": "Exists",
+         "annotation": [],
+         "signature": [],
+         "operand": {
+          "type": "Query",
+          "annotation": [],
+          "source": [
+           {
+            "alias": "DiabetesProblem",
+            "annotation": [],
+            "expression": {
+             "dataType": "{http://hl7.org/fhir}Condition",
+             "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-condition-problems-health-concerns",
+             "codeProperty": "code",
+             "codeComparator": "in",
+             "type": "Retrieve",
+             "annotation": [],
+             "codes": {
+              "name": "Diabetes",
+              "preserve": true,
+              "type": "ValueSetRef",
+              "annotation": []
+             },
+             "include": [],
+             "codeFilter": [],
+             "dateFilter": [],
+             "otherFilter": []
+            }
+           }
+          ],
+          "let": [],
+          "relationship": [],
+          "where": {
+           "type": "Overlaps",
+           "annotation": [],
+           "signature": [],
+           "operand": [
+            {
+             "name": "prevalencePeriod",
+             "libraryName": "CQMConcepts",
+             "type": "FunctionRef",
+             "annotation": [],
+             "signature": [],
+             "operand": [
+              {
+               "name": "DiabetesProblem",
+               "type": "AliasRef",
+               "annotation": []
+              }
+             ]
+            },
+            {
+             "name": "ToInterval",
+             "libraryName": "FHIRHelpers",
+             "type": "FunctionRef",
+             "annotation": [],
+             "signature": [],
+             "operand": [
+              {
+               "path": "period",
+               "scope": "QualifyingEncounter",
+               "type": "Property",
+               "annotation": []
+              }
+             ]
+            }
+           ]
+          }
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Has Statin Order",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "type": "Exists",
+      "annotation": [],
+      "signature": [],
+      "operand": {
+       "type": "Query",
+       "annotation": [],
+       "source": [
+        {
+         "alias": "StatinOrder",
+         "annotation": [],
+         "expression": {
+          "type": "Union",
+          "annotation": [],
+          "signature": [],
+          "operand": [
+           {
+            "dataType": "{http://hl7.org/fhir}MedicationRequest",
+            "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-medicationrequest",
+            "codeProperty": "medication",
+            "codeComparator": "in",
+            "type": "Retrieve",
+            "annotation": [],
+            "codes": {
+             "name": "Statin Therapy",
+             "preserve": true,
+             "type": "ValueSetRef",
+             "annotation": []
+            },
+            "include": [],
+            "codeFilter": [],
+            "dateFilter": [],
+            "otherFilter": []
+           },
+           {
+            "type": "Query",
+            "annotation": [],
+            "source": [
+             {
+              "alias": "MR",
+              "annotation": [],
+              "expression": {
+               "dataType": "{http://hl7.org/fhir}MedicationRequest",
+               "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-medicationrequest",
+               "type": "Retrieve",
+               "annotation": [],
+               "include": [],
+               "codeFilter": [],
+               "dateFilter": [],
+               "otherFilter": []
+              }
+             }
+            ],
+            "let": [],
+            "relationship": [
+             {
+              "alias": "M",
+              "type": "With",
+              "annotation": [],
+              "expression": {
+               "dataType": "{http://hl7.org/fhir}Medication",
+               "templateId": "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-medication",
+               "type": "Retrieve",
+               "annotation": [],
+               "include": [],
+               "codeFilter": [],
+               "dateFilter": [],
+               "otherFilter": []
+              },
+              "suchThat": {
+               "type": "And",
+               "annotation": [],
+               "signature": [],
+               "operand": [
+                {
+                 "type": "Equal",
+                 "annotation": [],
+                 "signature": [],
+                 "operand": [
+                  {
+                   "name": "ToString",
+                   "libraryName": "FHIRHelpers",
+                   "type": "FunctionRef",
+                   "annotation": [],
+                   "signature": [],
+                   "operand": [
+                    {
+                     "path": "id",
+                     "scope": "M",
+                     "type": "Property",
+                     "annotation": []
+                    }
+                   ]
+                  },
+                  {
+                   "type": "Last",
+                   "annotation": [],
+                   "signature": [],
+                   "source": {
+                    "type": "Split",
+                    "annotation": [],
+                    "signature": [],
+                    "stringToSplit": {
+                     "name": "ToString",
+                     "libraryName": "FHIRHelpers",
+                     "type": "FunctionRef",
+                     "annotation": [],
+                     "signature": [],
+                     "operand": [
+                      {
+                       "path": "medication.reference",
+                       "scope": "MR",
+                       "type": "Property",
+                       "annotation": []
+                      }
+                     ]
+                    },
+                    "separator": {
+                     "valueType": "{urn:hl7-org:elm-types:r1}String",
+                     "value": "/",
+                     "type": "Literal",
+                     "annotation": []
+                    }
+                   }
+                  }
+                 ]
+                },
+                {
+                 "type": "InValueSet",
+                 "annotation": [],
+                 "signature": [],
+                 "code": {
+                  "name": "ToConcept",
+                  "libraryName": "FHIRHelpers",
+                  "type": "FunctionRef",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                   {
+                    "path": "code",
+                    "scope": "M",
+                    "type": "Property",
+                    "annotation": []
+                   }
+                  ]
+                 },
+                 "valueset": {
+                  "name": "Statin Therapy",
+                  "preserve": true,
+                  "annotation": []
+                 }
+                }
+               ]
+              }
+             }
+            ]
+           }
+          ]
+         }
+        }
+       ],
+       "let": [],
+       "relationship": [],
+       "where": {
+        "type": "And",
+        "annotation": [],
+        "signature": [],
+        "operand": [
+         {
+          "type": "And",
+          "annotation": [],
+          "signature": [],
+          "operand": [
+           {
+            "type": "In",
+            "annotation": [],
+            "signature": [],
+            "operand": [
+             {
+              "name": "ToString",
+              "libraryName": "FHIRHelpers",
+              "type": "FunctionRef",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+               {
+                "path": "status",
+                "scope": "StatinOrder",
+                "type": "Property",
+                "annotation": []
+               }
+              ]
+             },
+             {
+              "type": "List",
+              "annotation": [],
+              "element": [
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "active",
+                "type": "Literal",
+                "annotation": []
+               },
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "completed",
+                "type": "Literal",
+                "annotation": []
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "type": "In",
+            "annotation": [],
+            "signature": [],
+            "operand": [
+             {
+              "name": "ToString",
+              "libraryName": "FHIRHelpers",
+              "type": "FunctionRef",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+               {
+                "path": "intent",
+                "scope": "StatinOrder",
+                "type": "Property",
+                "annotation": []
+               }
+              ]
+             },
+             {
+              "type": "List",
+              "annotation": [],
+              "element": [
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "order",
+                "type": "Literal",
+                "annotation": []
+               },
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "original-order",
+                "type": "Literal",
+                "annotation": []
+               },
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "reflex-order",
+                "type": "Literal",
+                "annotation": []
+               },
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "filler-order",
+                "type": "Literal",
+                "annotation": []
+               },
+               {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "instance-order",
+                "type": "Literal",
+                "annotation": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "In",
+          "annotation": [],
+          "signature": [],
+          "operand": [
+           {
+            "name": "ToDateTime",
+            "libraryName": "FHIRHelpers",
+            "type": "FunctionRef",
+            "annotation": [],
+            "signature": [],
+            "operand": [
+             {
+              "path": "authoredOn",
+              "scope": "StatinOrder",
+              "type": "Property",
+              "annotation": []
+             }
+            ]
+           },
+           {
+            "name": "Measurement Period",
+            "type": "ParameterRef",
+            "annotation": []
+           }
+          ]
+         }
+        ]
+       }
+      }
+     }
+    },
+    {
+     "name": "Diabetic Patients Without Statin Order",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "type": "And",
+      "annotation": [],
+      "signature": [],
+      "operand": [
+       {
+        "type": "Exists",
+        "annotation": [],
+        "signature": [],
+        "operand": {
+         "name": "Encounters With Diabetes",
+         "type": "ExpressionRef",
+         "annotation": []
+        }
+       },
+       {
+        "type": "Not",
+        "annotation": [],
+        "signature": [],
+        "operand": {
+         "name": "Has Statin Order",
+         "type": "ExpressionRef",
+         "annotation": []
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ }
+}
