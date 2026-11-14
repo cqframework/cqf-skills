@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `cql-ig` skill, in the `cql` plugin, for the Using CQL With FHIR IG (`hl7.fhir.uv.cql` 2.0.0).
+  It covers the IG's conformance requirements for CQL against FHIR and for packaging CQL in FHIR
+  Library resources, the CQL-to-FHIR type mapping, `$cql` and `Library/$evaluate`, and the FHIR
+  authoring patterns. `scripts/build-ig.py` regenerates the committed references from the pinned
+  package and the HL7/cql-ig source at tag 2.0.0 (both CC0-1.0): the IG's narrative pages, the
+  published FHIRHelpers and FHIRCommon CQL, and the FHIR ModelInfo condensed to one Markdown file
+  per resource. The IG's profiles, operations and examples are rendered into a local knowledge
+  base by `scripts/build-kb.sh`, with the shared converter. New evals in `evals/cql-ig/`.
 - `fsh` skill, in the `fhir-ig` plugin, imported from raleigh-claude-skills at `8224e28`, originally
   written by raleigh-g-thompson. Changes on import:
   - The FSH 3.0.0 language reference is regenerated from the HL7 specification source

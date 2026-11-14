@@ -11,10 +11,10 @@
   "plugins": [
     {
       "name": "cql",
-      "description": "Author, test, and translate Clinical Quality Language (CQL) libraries",
+      "description": "Author, test, and translate Clinical Quality Language (CQL) libraries, and use CQL with FHIR",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/cql"]
+      "skills": ["./skills/cql", "./skills/cql-ig"]
     },
     {
       "name": "cql-mcp",
