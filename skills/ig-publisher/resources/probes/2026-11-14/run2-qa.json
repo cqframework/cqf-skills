@@ -1,0 +1,21 @@
+{
+  "url" : "https://madie.cms.gov/ImplementationGuide/madie.cms.gov.dqms",
+  "name" : "DraftDQMContentCMSDerived",
+  "title" : "Draft dQM CMS Content Implementation Guide",
+  "description" : "Draft digital Quality Measure (dQM) Content Implementation Guide in support of testing at the 2026 US Realm Connectathon",
+  "ig-date" : "2026-03-25",
+  "status" : "draft",
+  "package-id" : "madie.cms.gov.dqms",
+  "ig-ver" : "2025.1.0",
+  "date" : "Sat, 14 Nov, 2026 10:40:44 -0700",
+  "dateISO8601" : "2026-11-14T10:40:44-07:00",
+  "errs" : 1505,
+  "warnings" : 1516,
+  "hints" : 248,
+  "broken-links" : 0,
+  "suppressed-hints" : 6472,
+  "suppressed-warnings" : 1288,
+  "version" : "4.0.1",
+  "tool" : "6.0.0-snapshot1 (3)",
+  "maxMemory" : 3849337176
+}

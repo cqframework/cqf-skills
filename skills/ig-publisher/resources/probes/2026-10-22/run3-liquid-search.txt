@@ -1,0 +1,14 @@
+# *.liquid files after run 3 (searched 2026-10-23 with find -name '*.liquid')
+
+## <probe>/ig/template/ (the unpacked template chain: cqf.fhir.template#0.7.1 on fhir.base.template#0.8.1)
+count: 0
+
+## <probe>/pkgcache/ (every package the build loaded)
+count: 0
+
+## <probe>/ig/templates/liquid/ (the IG's path-liquid-ig folder)
+templates/liquid/ActivityDefinition.liquid
+templates/liquid/Group.liquid
+templates/liquid/Library.liquid
+templates/liquid/Measure.liquid
+templates/liquid/PlanDefinition.liquid

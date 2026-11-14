@@ -1,0 +1,11 @@
+# run 3 qa.html summary sentence (tags removed)
+Summary: errors = 1502, warn = 1437, info = 248, broken links = 0, pinned = 4854 (all) (in manifest Parameters/manifest).
+
+# input/resources/parameters/Parameters-manifest.json: parameter counts
+{'system-version': 1}
+
+# run 3 output/Parameters-manifest.json: parameter counts
+764 {'system-version': 15, 'default-canonical-version': 123, 'default-valueset-version': 626}
+
+# input/ignoreWarnings.txt line 13
+%Pinned the version of%

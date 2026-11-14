@@ -1,0 +1,227 @@
+#!/usr/bin/env python3
+"""Generate resources/ig-parameters.md from the pinned sources. Do not hand-edit the output.
+
+Usage:
+    gen_ig_parameters.py [--skill-dir DIR] [--igpub-repo GITDIR] [--check]
+
+Inputs (all pinned; see resources/SOURCES.md):
+  TOOLS-1.3.0     resources/sources/tools-1.3.0/CodeSystem-ig-parameters.json   (what each code is meant to do)
+  IGPUB-3.0.4     PublisherIGLoader.java at tag 3.0.4, read with `git show`     (which codes the publisher reads)
+  TPL-BASE-1.0.0  resources/sources/tpl-base-1.0.0/config.json, scripts/onLoad.xslt (template parameters, defaults)
+
+--check exits 1 if the file on disk differs from what would be generated.
+"""
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+IGPUB_REF = "3.0.4"
+LOADER = "org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/PublisherIGLoader.java"
+LOADER_CITE = "org.hl7.fhir.publisher.core/…/PublisherIGLoader.java"
+# Where scripts/fetch-sources.sh caches the source repos (it honours the same variable).
+CACHE_DIR = Path(os.environ.get("IGPUB_SKILL_CACHE", Path.home() / ".cache" / "ig-publisher-skill"))
+CS_FILE = "CodeSystem-ig-parameters.json"
+
+SWITCH_RE = re.compile(r"\}\s*else\s+switch\s*\(pc\)\s*\{")
+CASE_RE = re.compile(r'^        case "([^"]+)"\s*:')  # top-level cases of the switch only
+SETPARAM_RE = re.compile(r'<xsl:call-template name="setParameter">')
+WITHPARAM_RE = re.compile(r'<xsl:with-param name="(code|value|supplement)" select="(.*)"/>')
+
+
+def walk_concepts(concepts, parent=None):
+    """Yield (code, display, definition, parent) for every concept, depth first."""
+    for c in concepts:
+        yield c["code"], c.get("display", ""), c.get("definition", ""), parent
+        yield from walk_concepts(c.get("concept", []), c["code"])
+
+
+def loader_cases(text: str):
+    """{code: line} for the top-level `case "x":` labels of the IG parameter switch."""
+    lines = text.splitlines()
+    start = next((i for i, l in enumerate(lines) if SWITCH_RE.search(l)), None)
+    if start is None:
+        raise ValueError("IG parameter switch not found in PublisherIGLoader.java")
+    end = next(i for i in range(start, len(lines)) if 'pc.startsWith("wantGen-")' in lines[i])
+    cases = {}
+    for i in range(start, end):
+        m = CASE_RE.match(lines[i])
+        if m:
+            cases.setdefault(m.group(1), i + 1)
+    return cases, start + 1, end + 1
+
+
+def publisher_reads(code: str, cases, prefix_line: int):
+    """The line that handles code: its own case, or the default branch's `wantGen-` prefix test."""
+    if code in cases:
+        return cases[code]
+    if code.startswith("wantGen-"):
+        return prefix_line
+    return None
+
+
+def template_parameters(config_text: str):
+    """{code: line} for the entries of config.json's "template-parameters" array."""
+    data = json.loads(config_text)
+    codes = data.get("template-parameters", [])
+    lines = config_text.splitlines()
+    n = next(i for i, l in enumerate(lines) if '"template-parameters"' in l) + 1
+    return {c: n for c in codes}
+
+
+def unquote(select: str) -> str:
+    s = select.strip()
+    return s[1:-1] if len(s) >= 2 and s[0] == s[-1] == "'" else s
+
+
+def template_defaults(xslt_text: str):
+    """{code: [(value, supplement, line)]} for each setParameter call in the addParameters template."""
+    lines = xslt_text.splitlines()
+    # 0.8.1 has a named template; 1.0.0 a mode template, which derived templates can override
+    start = next(i for i, l in enumerate(lines)
+                 if '<xsl:template name="addParameters">' in l or 'mode="addParameters"' in l and '<xsl:template' in l)
+    end = next(i for i in range(start + 1, len(lines)) if "</xsl:template>" in lines[i])
+    out = {}
+    i = start
+    while i < end:
+        if SETPARAM_RE.search(lines[i]):
+            params, code_line = {}, None
+            j = i + 1
+            while j < end and "</xsl:call-template>" not in lines[j]:
+                m = WITHPARAM_RE.search(lines[j])
+                if m:
+                    params[m.group(1)] = m.group(2)
+                    if m.group(1) == "code":
+                        code_line = j + 1
+                j += 1
+            if "code" in params:
+                code = unquote(params["code"])
+                value = unquote(params.get("value", ""))
+                out.setdefault(code, []).append((value, unquote(params.get("supplement", "")) == "Y", code_line))
+            i = j
+        i += 1
+    return out
+
+
+def md_cell(s: str) -> str:
+    return s.replace("|", "\\|").replace("\n", " ")
+
+
+def render(cs, cases, switch_span, tparams, defaults):
+    prefix_line = switch_span[1]
+    concepts = list(walk_concepts(cs["concept"]))
+    defined = {c[0] for c in concepts}
+    out = []
+    w = out.append
+    w("# IG Parameters")
+    w("")
+    w("Baseline: hl7.fhir.uv.tools 1.3.0, IG Publisher 3.0.4, fhir.base.template 1.0.0.")
+    w("Sources: TOOLS-1.3.0, IGPUB-3.0.4, TPL-BASE-1.0.0")
+    w("")
+    w("<!-- Generated by scripts/gen_ig_parameters.py. Do not edit by hand. -->")
+    w("")
+    w("Every code in the FHIR Tooling IG's `ig-parameters` CodeSystem, with what two other layers do with it.")
+    w("The three columns answer different questions, so a disagreement between them is a finding, not an error")
+    w("to settle by rank:")
+    w("")
+    w("- **Publisher reads**: the code has a `case` in the IG parameter `switch` of `PublisherIGLoader.java` at")
+    w(f"  3.0.4 (lines {switch_span[0]}-{switch_span[1]}) [src: IGPUB-3.0.4 {LOADER_CITE}:{switch_span[0]}-{switch_span[1]}].")
+    w("  \"no\" means only that this `switch` doesn't handle it: other classes may still read the code, and an")
+    w("  unhandled code that isn't a template parameter is recorded as unknown (`pf.unknownParams`).")
+    w("- **Template parameter**: the code is listed in `template-parameters` in fhir.base.template 1.0.0's")
+    w("  `config.json`, so the publisher passes it through to the template instead of treating it as unknown.")
+    w("- **Base template default**: fhir.base.template 1.0.0's `onLoad.xslt` adds this parameter to every IG")
+    w("  built on it. *Added alongside* means the default is added even when the IG sets its own value; *only if")
+    w("  unset* means the IG's value replaces it.")
+    w("")
+    w("## Summary")
+    w("")
+    w("| Code | Display | Publisher reads | Template parameter | Base template default |")
+    w("| --- | --- | --- | --- | --- |")
+    for code, display, _, parent in concepts:
+        name = f"`{code}`" + (f" (under `{parent}`)" if parent else "")
+        ln = publisher_reads(code, cases, prefix_line)
+        reads = f"yes [src: IGPUB-3.0.4 {LOADER_CITE}:{ln}]" if ln else "no"
+        tp = (f"yes [src: TPL-BASE-1.0.0 config.json#L{tparams[code]}]" if code in tparams else "no")
+        dv = "; ".join(
+            f"`{md_cell(v)}` ({'added alongside' if sup else 'only if unset'}) "
+            f"[src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L{ln}]"
+            for v, sup, ln in defaults.get(code, [])) or "none"
+        w(f"| {name} | {md_cell(display)} | {reads} | {tp} | {dv} |")
+    w("")
+    w("## Read by the publisher but not defined in the CodeSystem")
+    w("")
+    extra = sorted(c for c in cases if c not in defined)
+    if extra:
+        w("| Code | Publisher reads |")
+        w("| --- | --- |")
+        for c in extra:
+            w(f"| `{c}` | [src: IGPUB-3.0.4 {LOADER_CITE}:{cases[c]}] |")
+    else:
+        w("None.")
+    w("")
+    w("## Template parameters and defaults not defined in the CodeSystem")
+    w("")
+    rows = [(c, f"template parameter [src: TPL-BASE-1.0.0 config.json#L{tparams[c]}]")
+            for c in tparams if c not in defined]
+    rows += [(c, f"default `{md_cell(v)}` [src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L{ln}]")
+             for c in defaults if c not in defined for v, _, ln in defaults[c]]
+    if rows:
+        w("| Code | In fhir.base.template 1.0.0 |")
+        w("| --- | --- |")
+        for c, what in sorted(rows):
+            w(f"| `{c}` | {what} |")
+    else:
+        w("None.")
+    w("")
+    w("## Definitions")
+    w("")
+    w(f"Verbatim from `CodeSystem.concept.definition`, `{cs['url']}` version {cs.get('version')}.")
+    w("")
+    for code, display, definition, parent in concepts:
+        w(f"### {code}")
+        w("")
+        w(f"Display: {display}" + (f". Child of `{parent}`." if parent else "") +
+          f" [src: TOOLS-1.3.0 {CS_FILE}#{code}]")
+        w("")
+        w("```text")
+        w(definition.rstrip())
+        w("```")
+        w("")
+    return "\n".join(out).rstrip("\n")
+
+
+def git_show(repo: Path, ref: str, path: str) -> str:
+    return subprocess.run(["git", "-C", str(repo), "show", f"{ref}:{path}"],
+                          capture_output=True, text=True, check=True).stdout
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--skill-dir", default=str(Path(__file__).resolve().parent.parent))
+    ap.add_argument("--igpub-repo", default=str(CACHE_DIR / "fhir-ig-publisher.git"))
+    ap.add_argument("--check", action="store_true")
+    args = ap.parse_args(argv)
+    skill = Path(args.skill_dir)
+    src = skill / "resources" / "sources"
+    cs = json.loads((src / "tools-1.3.0" / CS_FILE).read_text(encoding="utf-8"))
+    cases, a, b = loader_cases(git_show(Path(args.igpub_repo), IGPUB_REF, LOADER))
+    tparams = template_parameters((src / "tpl-base-1.0.0" / "config.json").read_text(encoding="utf-8"))
+    defaults = template_defaults((src / "tpl-base-1.0.0" / "scripts" / "onLoad.xslt").read_text(encoding="utf-8"))
+    text = render(cs, cases, (a, b), tparams, defaults) + "\n"
+    target = skill / "resources" / "ig-parameters.md"
+    if args.check:
+        same = target.exists() and target.read_text(encoding="utf-8") == text
+        print("up to date" if same else f"{target} is stale; re-run without --check")
+        return 0 if same else 1
+    target.write_text(text, encoding="utf-8")
+    print(f"wrote {target}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,44 @@
+# run 2 qa.txt: header
+DraftDQMContentCMSDerived : Validation Results
+=========================================
+
+err = 1502, warn = 1509, info = 248, broken links = 0
+IG Publisher Version: 3.0.1
+Generated Thu Oct 22 18:02:29 EDT 2026. FHIR version 4.0.1 for madie.cms.gov.dqms#2025.1.0 (canonical = https://madie.cms.gov)
+ Build Errors : 104 / 79 / 0
+ /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/dqm-content-cms-2025 : 2 / 57 / 2
+
+# run 2 qa.txt: every 'not associated' error naming a file that failed translation, and the modelinfo entry
+192:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testI37RecordedAmbiguousOverload.cql: CQL source was not associated with a library resource in the IG.
+218:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testE18DateTimeCompare.cql: CQL source was not associated with a library resource in the IG.
+255:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/usqualitycore-modelinfo-0.1.0-cibuild.xml: CQL source was not associated with a library resource in the IG.
+
+# run 2 qa.txt: counts
+'CQL source was not associated' lines: 104
+'CQL Processing failed' lines: 0
+'SDE Race is not supported' lines: 72
+path-liquid-ig lines:
+362:ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The System URI could not be determined for the code 'path-liquid-ig' in the ValueSet 'http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0'
+363:ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The value provided ('path-liquid-ig') was not found in the value set 'ig-parameters Codes ValueSet' (http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0), and a code is required from this value set  (error message = The System URI could not be determined for the code 'path-liquid-ig' in the ValueSet 'http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0'; The provi
+
+# run 3 qa.txt: header
+DraftDQMContentCMSDerived : Validation Results
+=========================================
+
+err = 1502, warn = 1437, info = 248, broken links = 0
+IG Publisher Version: 3.0.1
+Generated Thu Oct 22 18:07:12 EDT 2026. FHIR version 4.0.1 for madie.cms.gov.dqms#2025.1.0 (canonical = https://madie.cms.gov)
+ Build Errors : 104 / 79 / 0
+ /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/dqm-content-cms-2025 : 2 / 57 / 2
+
+# run 3 qa.txt: counts
+'SDE Race is not supported' lines: 0
+path-liquid-ig lines:
+362:ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The System URI could not be determined for the code 'path-liquid-ig' in the ValueSet 'http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0'
+363:ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The value provided ('path-liquid-ig') was not found in the value set 'ig-parameters Codes ValueSet' (http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0), and a code is required from this value set  (error message = The System URI could not be determined for the code 'path-liquid-ig' in the ValueSet 'http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0'; The provi
+
+# run 2 qa.txt: every line naming one of the four files that failed translation
+218:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testE18DateTimeCompare.cql: CQL source was not associated with a library resource in the IG.
+192:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testI37RecordedAmbiguousOverload.cql: CQL source was not associated with a library resource in the IG.
+260:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testE15Passing.cql: CQL source was not associated with a library resource in the IG.
+258:ERROR: /private/tmp/claude-501/-Users-raleigh-thompson--claude-skills-cql/c5e3b628-a757-4bbc-ade8-d7c63b3c7acd/scratchpad/probe/ig/input/cql/testI28ChoiceArgumentProbeA.cql: CQL source was not associated with a library resource in the IG.

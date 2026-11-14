@@ -1,0 +1,22 @@
+# run 3 output/*.tgz: package.json name, version, fhirVersions, dependencies (read 2026-10-23, no new build)
+
+## package.tgz (2775669 bytes)
+name: madie.cms.gov.dqms
+version: 2025.1.0
+fhirVersions: ['4.0.1']
+dependencies: {"hl7.fhir.r4.core": "4.0.1", "hl7.fhir.us.cqfmeasures": "5.0.0", "hl7.fhir.us.cql": "2.0.0-ballot", "hl7.fhir.uv.cql": "2.0.0", "hl7.fhir.uv.extensions.r4": "5.3.0", "hl7.terminology.r4": "6.5.0"}
+
+## package.r4.tgz (2769784 bytes)
+name: madie.cms.gov.dqms.r4
+version: 2025.1.0
+fhirVersions: ['4.0.1']
+dependencies: {"hl7.fhir.r4.core": "4.0.1", "hl7.fhir.us.cqfmeasures": "5.0.0", "hl7.fhir.us.cql": "2.0.0-ballot", "hl7.fhir.uv.cql": "2.0.0", "hl7.fhir.uv.extensions.r4": "5.3.0", "hl7.terminology.r4": "6.5.0"}
+
+## package.r4b.tgz (2769729 bytes)
+name: madie.cms.gov.dqms.r4b
+version: 2025.1.0
+fhirVersions: ['4.3.0']
+dependencies: {"hl7.fhir.r4b.core": "4.3.0", "hl7.fhir.us.cqfmeasures": "5.0.0", "hl7.fhir.us.cql": "2.0.0-ballot", "hl7.fhir.uv.cql": "2.0.0", "hl7.fhir.uv.extensions.r4": "5.3.0", "hl7.terminology.r4": "6.5.0"}
+
+## output/sub-package-list.json
+[]

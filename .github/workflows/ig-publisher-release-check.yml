@@ -1,0 +1,53 @@
+name: ig-publisher release check
+
+# Weekly: compare the ig-publisher skill's pinned IG Publisher, core library, templates and tools IG
+# with their latest releases. If any is newer, open (or update) one issue listing the citations a
+# re-pin must re-read. Re-pinning itself stays a reviewed pull request.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compare pins with latest releases
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          python skills/ig-publisher/scripts/check_release.py --cache "$RUNNER_TEMP/igpub-cache" --report "$RUNNER_TEMP/report.md"
+          code=$?
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" = 1 ]; then exit 1; fi
+      - name: Open or update the release issue
+        if: steps.check.outputs.code == '3'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          label="ig-publisher-release"
+          gh label create "$label" --color FBCA04 --description "A source the ig-publisher skill is pinned to has a newer release" --force
+          {
+            cat "$RUNNER_TEMP/report.md"
+            echo
+            echo "_Checked by [this workflow run](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})._"
+          } > "$RUNNER_TEMP/body.md"
+          title="ig-publisher: newer upstream release to re-pin"
+          number=$(gh issue list --label "$label" --state open --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh issue create --title "$title" --label "$label" --body-file "$RUNNER_TEMP/body.md"
+          fi
