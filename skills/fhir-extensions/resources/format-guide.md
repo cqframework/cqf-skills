@@ -184,5 +184,9 @@ Each action level shows: title, code, condition, dynamic values. Depth rarely ex
 
 The converter also has a compact style (word flags such as `modifier` and `summary`, a
 `## Changes from base` table, and `## Invariants` and `## Slices and fixed values` sections instead
-of Element Details). The `fhir` skill's base R4 element tables use that style. This KB uses the
-full style described above.
+of Element Details). The `fhir` skill's base R4 element tables use that style, and so do KBs built
+in package mode (`--package-dir`), such as the `uscore` skill's. A compact file's header carries the
+same Standards Status and Status Reason lines as the full style, and lists contexts in its own
+`## Context` section. Package mode also writes a `README.md` index with a Status column, which shows
+the resource status and, when it is draft or deprecated, the standards status, for example
+`retired (deprecated)`. This KB uses the full style described above.

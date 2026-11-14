@@ -399,7 +399,13 @@ def write(files: dict[str, str]) -> None:
         target = RES / folder
         if target.exists():
             for old in sorted(target.rglob("*"), reverse=True):
-                old.unlink() if old.is_file() else old.rmdir()
+                if old.is_file():
+                    old.unlink()
+                else:
+                    try:
+                        old.rmdir()
+                    except OSError:  # held open (e.g. by an editor); it is reused below
+                        pass
     for rel, body in files.items():
         path = RES / rel
         path.parent.mkdir(parents=True, exist_ok=True)

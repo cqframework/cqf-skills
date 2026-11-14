@@ -101,6 +101,39 @@ def test_extension_header_shows_context_and_status(mod, tmp_path, monkeypatch):
     assert "**Context:** element `Patient`; element `RelatedPerson`" in text
 
 
+def test_package_mode_shows_status_in_header_and_index(mod, tmp_path, monkeypatch):
+    pkg = tmp_path / "package"
+    pkg.mkdir()
+    base = "http://hl7.org/fhir/StructureDefinition/"
+    (pkg / "package.json").write_text(json.dumps({"name": "example.pkg", "version": "1.0.0"}),
+                                      encoding="utf-8")
+    (pkg / "StructureDefinition-old-ext.json").write_text(json.dumps({
+        "resourceType": "StructureDefinition", "id": "old-ext", "url": "http://example.org/old-ext",
+        "name": "OldExt", "title": "Old Ext", "status": "retired", "kind": "complex-type",
+        "abstract": False, "type": "Extension", "derivation": "constraint",
+        "baseDefinition": base + "Extension",
+        "extension": [{"url": base + "structuredefinition-standards-status",
+                       "valueCode": "deprecated",
+                       "_valueCode": {"extension": [{
+                           "url": base + "structuredefinition-standards-status-reason",
+                           "valueMarkdown": "Use new-ext instead."}]}}],
+        "context": [{"type": "element", "expression": "Patient"}],
+        "snapshot": {"element": [{"id": "Extension", "path": "Extension", "min": 0, "max": "1"}]},
+        "differential": {"element": [{"id": "Extension", "path": "Extension"}]},
+    }), encoding="utf-8")
+    out = tmp_path / "out"
+    monkeypatch.setattr("sys.argv", ["x", "--package-dir", str(pkg), "--output", str(out),
+                                     "--naming", "id"])
+    mod.main()
+    text = (out / "old-ext.md").read_text(encoding="utf-8")
+    assert "**Standards Status:** deprecated" in text
+    assert "**Status Reason:** Use new-ext instead." in text
+    assert "**Context:**" not in text  # compact renderings have their own Context section
+    index = (out / "README.md").read_text(encoding="utf-8")
+    assert "scripts/convert-resource-to-markdown.py" in index
+    assert "| complex-type | retired (deprecated) | [`old-ext.md`](old-ext.md) |" in index
+
+
 def test_default_paths_anchor_to_module_file(mod, tmp_path, monkeypatch):
     # Sanity: argparse defaults resolve relative to the script's location, even when CWD is elsewhere.
     monkeypatch.chdir(tmp_path)
