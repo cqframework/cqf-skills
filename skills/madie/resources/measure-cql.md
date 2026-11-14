@@ -1,6 +1,6 @@
 # Measure CQL in MADiE
 
-Baseline: MADiE `develop` as of 2026-11-14 (commits in SOURCES.md), for QI-Core measures. Untagged statements hold at these commits only.
+Baseline: MADiE `develop` as of 2026-11-14 (commits in SOURCES.md), for US Quality Core 0.5.0 measures. Untagged statements hold at these commits only.
 Sources: MSVC-251a73d, MEASURE-18c8d4d, EDITOR-e2635c7, JMODELS-49ffdec, DQMCMS-757d7c6
 
 What MADiE checks and changes in a measure's CQL. How to write the CQL itself (style, patterns, the
@@ -33,15 +33,18 @@ hand. When a measure is versioned, MADiE rewrites the version in the `library` l
 
 ## What MADiE rejects
 
-- **The `using` statement** must match the measure's model: a QI-Core measure can't use `QDM`, and a
-  QDM measure must use `QDM '5.6'`. "Missing a using statement" is an error too
+- **A missing `using` statement** is an error, and a FHIR-based measure can't use `QDM`
   [src: MEASURE-18c8d4d src/…/editor/MeasureEditor.tsx:284-302]
-  [src: MEASURE-18c8d4d src/…/editor/MeasureEditor.tsx:516].
-- **Value set URLs.** In a QI-Core measure, a value set must be a VSAC FHIR URL,
-  `http://cts.nlm.nih.gov/fhir/ValueSet/<OID>` [src: EDITOR-e2635c7 src/validations/valuesetValidation.ts:53-66].
-  The server checks value sets against VSAC with the same prefix
-  [src: MSVC-251a73d src/…/services/TerminologyValidationService.java:94-103]. `urn:oid:` value sets,
-  used in the CQL specification's examples, aren't accepted.
+  [src: MEASURE-18c8d4d src/…/editor/MeasureEditor.tsx:516]. Nothing else checks that a US Quality Core
+  measure's `using` names US Quality Core: keep the three `using` lines of the template (below).
+- **Value set URLs.** Write value sets as VSAC FHIR URLs, `http://cts.nlm.nih.gov/fhir/ValueSet/<OID>`.
+  The editor looks every value set up in VSAC by the OID it takes from the URL
+  [src: EDITOR-e2635c7 src/validations/valuesetValidation.ts:7-51]; its explicit check of the URL form
+  runs only for libraries whose first `using` is `QICore`
+  [src: EDITOR-e2635c7 src/validations/valuesetValidation.ts:53-66], and the server's check of the prefix
+  [src: MSVC-251a73d src/…/services/TerminologyValidationService.java:94-103] runs when a measure is
+  created [src: MSVC-251a73d src/…/services/MeasureService.java:139-143]. `urn:oid:` value sets, used in
+  the CQL specification's examples, won't resolve.
 - **Codes.** Each `code` declaration is checked against MADiE's terminology service, and one invalid
   code fails the check [src: MSVC-251a73d src/…/services/TerminologyValidationService.java:47-59]. A
   code from a code system MADiE doesn't have fails, even when the CQL compiles and runs locally. Code
@@ -53,44 +56,48 @@ hand. When a measure is versioned, MADiE rewrites the version in the `library` l
 ## The default CQL
 
 A new measure created with default CQL starts from a template for its model
-[src: MSVC-251a73d src/…/services/MeasureService.java:167-207]. For QI-Core 6.0.0
-[src: MSVC-251a73d src/test/resources/QICore600_CQLTemplate.txt:1-24], shown here with the measure's
-library name filled in:
+[src: MSVC-251a73d src/…/services/MeasureService.java:167-207]. For US Quality Core 0.5.0
+[src: MSVC-251a73d src/test/resources/USQC050_CQLTemplate.txt:1-12], shown here with the measure's library
+name filled in:
 
 ```cql
 library ExampleFollowUp version '0.0.000'
 
-using QICore version '6.0.0'
+using USQualityCore version '0.5.0'
+using USCore version '6.1.0-derived'
+using FHIR version '4.0.1'
 
-include CQMCommon version '4.1.000' called CQMCommon
-include FHIRHelpers version '4.4.000' called FHIRHelpers
-include QICoreCommon version '4.0.000' called QICoreCommon
-include SupplementalDataElements version '5.1.000' called SDE
+include hl7.fhir.uv.cql.FHIRHelpers version '4.0.1' called FHIRHelpers
+include hl7.fhir.uv.cql.FHIRCommon version '2.0.0' called FHIRCommon
 
 parameter "Measurement Period" Interval<DateTime>
 
 context Patient
-
-define "SDE Ethnicity":
-  SDE."SDE Ethnicity"
-
-define "SDE Payer":
-  SDE."SDE Payer"
-
-define "SDE Race":
-  SDE."SDE Race"
-
-define "SDE Sex":
-  SDE."SDE Sex"
 ```
 
-The QI-Core 4.1.1 template is the same with `using QICore version '4.1.1'`, CQMCommon `2.0.000`,
-FHIRHelpers `4.3.000`, QICoreCommon `2.0.000` and SupplementalDataElements `3.4.000`
-[src: MSVC-251a73d src/test/resources/QICore411_CQLTemplate.txt:1-8].
+Unlike the QI-Core templates, it has no supplemental data element definitions or CQMCommon include; add
+the CMS libraries the measure uses (see the `cms-qmd` skill). This is the copy kept in measure-service's
+tests; the live templates are loaded from configuration
+[src: MSVC-251a73d src/…/services/CqlTemplateConfigService.java:34-41], so production may differ.
 
-These are the copies kept in measure-service's tests; the live templates are loaded from configuration
-[src: MSVC-251a73d src/…/services/CqlTemplateConfigService.java:34-41], so the library versions in
-production may be newer. Check the versions MADiE offers before pinning includes in a new measure.
+## Drafting a QI-Core measure as US Quality Core
+
+A QI-Core 6.0.0 measure can be drafted as a US Quality Core 0.5.0 measure, and a US Quality Core
+measure only as US Quality Core [src: MEASURE-18c8d4d src/components/common/draftMeasureDialog/DraftMeasureDialog.tsx:150-162].
+When the model changes, MADiE rewrites `using QICore version '…'` to
+`using USQualityCore version '0.5.0'` and adds `using USCore version '6.1.0-derived'` and
+`using FHIR version '4.0.1'` if they're missing
+[src: MSVC-251a73d src/…/services/VersionService.java:294-298]
+[src: MSVC-251a73d src/…/services/VersionService.java:360-398]. It changes nothing else: `include`s of
+QI-Core libraries (QICoreCommon, the QI-Core CQMCommon and FHIRHelpers), type names qualified with
+`QICore.`, and the profiles in the test cases all have to be converted by hand.
+
+## No return-type check
+
+For QI-Core measures MADiE checks that each population definition's result type fits the group's
+population basis; it doesn't for US Quality Core measures
+[src: MSVC-251a73d src/…/utils/MeasureUtil.java:65-72]. A definition returning a list of encounters
+mapped to a boolean-basis group (or the reverse) isn't flagged, so check the population basis yourself.
 
 ## Populations
 

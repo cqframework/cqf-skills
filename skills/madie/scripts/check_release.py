@@ -36,8 +36,7 @@ CACHE_DIR = Path(os.environ.get("MADIE_SKILL_CACHE", Path.home() / ".cache" / "m
 PIN_RE = re.compile(r"^\|\s*([A-Z0-9]+-[0-9a-f]{7})\s*\|.*?\|\s*([\w.\-]+/[\w.\-]+)@([0-9a-f]{40})\s*\|", re.M)
 SRC_RE = re.compile(r"\[src:\s*([A-Za-z0-9.\-]+)\s+([^\]]+?)\s*\]")
 LINE_LOC_RE = re.compile(r"^(.+?):(\d+)(?:-(\d+))?$")
-BRANCHES = {"MeasureAuthoringTool/madie-models": "main", "cqframework/ecqm-content-qicore-2025": "HEAD",
-            "cqframework/dqm-content-cms-2026": "main"}
+BRANCHES = {"MeasureAuthoringTool/madie-models": "main", "cqframework/dqm-content-cms-2026": "main"}
 DEFAULT_BRANCH = "develop"
 MAX_ROWS = 150  # per source, so the report fits in an issue body (65,536 characters)
 NEEDS_REPIN = ("CHANGED", "missing", "multi")

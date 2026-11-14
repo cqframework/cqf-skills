@@ -10,7 +10,7 @@
         "id": "22222222-2222-4222-8222-222222222222",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-patient"
+            "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-patient"
           ]
         },
         "identifier": [
@@ -38,7 +38,7 @@
         "id": "enc-inpatient-2",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-encounter"
+            "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-encounter"
           ]
         },
         "status": "finished",
@@ -74,7 +74,7 @@
         "id": "enc-followup-2",
         "meta": {
           "profile": [
-            "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-encounter"
+            "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-encounter"
           ]
         },
         "status": "finished",

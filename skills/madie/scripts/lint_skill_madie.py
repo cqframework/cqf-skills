@@ -44,7 +44,6 @@ DEFAULT_REPOS = {
     "JMODELS-49ffdec": CACHE_DIR / "madie-java-models.git",
     "TSMODELS-960ea63": CACHE_DIR / "madie-models.git",
     "EDITOR-e2635c7": CACHE_DIR / "madie-editor.git",
-    "ECQM2025-d4e0edd": CACHE_DIR / "ecqm-content-qicore-2025.git",
     "DQMCMS-757d7c6": CACHE_DIR / "dqm-content-cms-2026.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")

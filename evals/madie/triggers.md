@@ -7,7 +7,7 @@ installed and no other instructions, and record whether the skill loaded.
 
 1. MADiE says "Unable to find any valid test case json" when I import my test case zip.
 2. What goes in the .madie file in a MADiE test case export?
-3. Build a NUMERPass test case bundle I can import into MADiE for my QI-Core 6 measure.
+3. Build a NUMERPass test case bundle I can import into MADiE for my US Quality Core measure.
 4. Why did MADiE overwrite the library statement in my measure's CQL?
 5. My imported MADiE test cases have no expected values.
 6. How do I copy test cases from one MADiE measure to another?

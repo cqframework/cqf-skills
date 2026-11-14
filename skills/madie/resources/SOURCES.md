@@ -18,10 +18,9 @@ behind them.
 | JMODELS-49ffdec | implementation-source | n/a | madie-java-models (server data model) `develop`, 2026-11-12 | MeasureAuthoringTool/madie-java-models@49ffdec50b29635bbe2e88a6a4fbbdd3c75f4af2 | <https://github.com/MeasureAuthoringTool/madie-java-models/tree/49ffdec50b29635bbe2e88a6a4fbbdd3c75f4af2> | none (the fetch script caches a clone) | 2026-11-14 |
 | TSMODELS-960ea63 | implementation-source | n/a | madie-models (browser data model) `main`, 2026-10-29, the branch it's published from | MeasureAuthoringTool/madie-models@960ea6339f0e00178d32c14684fa9e65bd26f589 | <https://github.com/MeasureAuthoringTool/madie-models/tree/960ea6339f0e00178d32c14684fa9e65bd26f589> | none (the fetch script caches a clone) | 2026-11-14 |
 | EDITOR-e2635c7 | implementation-source | n/a | madie-editor (CQL editor) `develop`, 2026-11-12 | MeasureAuthoringTool/madie-editor@e2635c76318164a282fcad7e8c204b4bbc7a822d | <https://github.com/MeasureAuthoringTool/madie-editor/tree/e2635c76318164a282fcad7e8c204b4bbc7a822d> | none (the fetch script caches a clone) | 2026-11-14 |
-| ECQM2025-d4e0edd | implementation-source | n/a | eCQM content for QI-Core 6.0.0, 2025 measures: the `Status` 1.15.000 and `QICoreCommon` 4.0.000 libraries | cqframework/ecqm-content-qicore-2025@d4e0edd01b7da2a3b43d5360156b43761438190a | <https://github.com/cqframework/ecqm-content-qicore-2025/tree/d4e0edd01b7da2a3b43d5360156b43761438190a> | none (the fetch script caches a clone) | 2026-11-14 |
 | DQMCMS-757d7c6 | observed-behavior | n/a | The CMS 2026 dQM content repository's CQL skill, recording what its authors observed testing shared libraries in MADiE (engine differences, code systems MADiE lacks, the Cohort-measure test pattern) | cqframework/dqm-content-cms-2026@757d7c6fd01998287d622d03fb02e133c700e22a | <https://github.com/cqframework/dqm-content-cms-2026/blob/757d7c6fd01998287d622d03fb02e133c700e22a/.claude/skills/cql/SKILL.md> | none (the fetch script caches a clone) | 2026-11-14 |
-| QICORE-4.1.1 | package | trial-use | hl7.fhir.us.qicore 4.1.1 | hl7.fhir.us.qicore#4.1.1 | <https://hl7.org/fhir/us/qicore/STU4.1.1/> | none | 2026-11-14 |
-| QICORE-6.0.0 | package | trial-use | hl7.fhir.us.qicore 6.0.0 | hl7.fhir.us.qicore#6.0.0 | <https://hl7.org/fhir/us/qicore/STU6/> | none | 2026-11-14 |
+| USQC-0.5.0 | package | trial-use | fhir.onc.us-quality-core 0.5.0 (US Quality Core) | fhir.onc.us-quality-core#0.5.0 | <https://fhir.org/guides/onc/us-quality-core/0.5.0/> | none | 2026-11-14 |
+| CQLIG-2.0.0 | package | trial-use | hl7.fhir.uv.cql 2.0.0 (Using CQL With FHIR), for the FHIRCommon 2.0.0 library | hl7.fhir.uv.cql#2.0.0 | <https://hl7.org/fhir/uv/cql/STU2/> | none | 2026-11-14 |
 | CQM-2.0.0 | package | trial-use | hl7.fhir.uv.cqm 2.0.0 (Quality Measures IG), for the `cqm-testcase` profile | hl7.fhir.uv.cqm#2.0.0 | <https://hl7.org/fhir/uv/cqm/STU2/> | none | 2026-11-14 |
 
 ## Looking up a citation
@@ -32,7 +31,6 @@ No local copy is needed to check a claim. Read a citation at its pinned commit, 
 | Source | URL |
 | --- | --- |
 | MADiE repositories | `https://github.com/MeasureAuthoringTool/<repo>/blob/<commit or develop>/<path>#L<a>-L<b>` (`main` for madie-models, which has no `develop`) |
-| ECQM2025 | `https://github.com/cqframework/ecqm-content-qicore-2025/blob/<commit>/<path>#L<a>-L<b>` |
 | DQMCMS | `https://github.com/cqframework/dqm-content-cms-2026/blob/<commit or main>/<path>#L<a>-L<b>` |
 | Packages | `https://packages.fhir.org/<package>/<version>` (a tgz), or the published IG's page for the profile |
 
@@ -72,6 +70,7 @@ lines.
 | FHIRSVC | `src/main/java/gov/cms/madie/madiefhirservice/utils/FhirResourceHelpers.java` |
 | PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/PackagingUtilityFactory.java` |
 | PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/qicore411/PackagingUtilityImpl.java` |
+| PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/usqualitycore/PackagingUtilityImpl.java` |
 | JMODELS | `src/main/java/gov/cms/madie/models/common/ModelType.java` |
 | JMODELS | `src/main/java/gov/cms/madie/models/common/Version.java` |
 | JMODELS | `src/main/java/gov/cms/madie/models/dto/TestCaseExportMetaData.java` |

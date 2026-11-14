@@ -15,7 +15,8 @@ import sys
 from pathlib import Path
 
 UUID_RE = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
-QI = "http://hl7.org/fhir/us/qicore/StructureDefinition/"
+USQC = "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/"
+QICORE = "http://hl7.org/fhir/us/qicore/StructureDefinition/"
 POP_SYSTEM = "http://terminology.hl7.org/CodeSystem/measure-population"
 POP_ORDER = ["initial-population", "denominator", "denominator-exclusion", "numerator"]
 # (series, title) -> expected counts in POP_ORDER
@@ -24,9 +25,6 @@ EXPECTED = {
     ("NUMERPass", "FollowUpVisit"): [1, 1, 0, 1],
     ("DENEXPass", "HospiceCare"): [1, 1, 1, 0],
 }
-QICORE_411_ONLY = {"qicore-condition", "qicore-observation", "qicore-observationnotdone",
-                   "qicore-immunizationrec", "qicore-mednotadministered", "qicore-mednotdispensed",
-                   "qicore-mednotrequested", "qicore-encounter-procedure"}
 
 
 class Grader:
@@ -78,14 +76,17 @@ def grade(root: Path) -> Grader:
             g.check(False, f"B0 {tag} the bundle is valid JSON")
             continue
         resources = [e.get("resource", {}) for e in bundle.get("entry", []) if isinstance(e, dict)]
-        g.check(bundle.get("resourceType") == "Bundle" and bundle.get("type") in ("collection", "transaction"),
-                f"B1 {tag} a collection or transaction Bundle")
+        g.check(bundle.get("resourceType") == "Bundle" and bundle.get("type") == "collection"
+                and not any("request" in e for e in bundle.get("entry", []) if isinstance(e, dict)),
+                f"B1 {tag} a collection Bundle with no request entries (MADiE keeps US Quality Core bundles as given)")
         patients = [r for r in resources if r.get("resourceType") == "Patient"]
         g.check(len(patients) == 1, f"B2 {tag} exactly one Patient")
         name = (patients[0].get("name") or [{}])[0] if patients else {}
         g.check(bool(name.get("given")) and bool(name.get("family")), f"B3 {tag} the Patient has given and family names")
         g.check(bool(patients) and bool(patients[0].get("identifier")) and bool(patients[0].get("gender")),
-                f"B3a {tag} the Patient has an identifier and a gender (QI-Core requires them)")
+                f"B3a {tag} the Patient has an identifier and a gender (US Quality Core requires them)")
+        g.check(bool(patients) and patients[0].get("id") == folder.name,
+                f"B3b {tag} the Patient's id is the folder's UUID")
         ids = [r.get("id") for r in resources]
         g.check(all(ids) and len(ids) == len(set(ids)), f"B4 {tag} every resource has an id, unique in the bundle")
         keys = {f"{r.get('resourceType')}/{r.get('id')}" for r in resources}
@@ -95,8 +96,11 @@ def grade(root: Path) -> Grader:
                 refs += re.findall(r'"reference":\s*"([^"]+)"', json.dumps(r))
         g.check(all(not ref.startswith("urn:") and "://" not in ref and ref in keys for ref in refs),
                 f"B5 {tag} every reference is <Type>/<id> and resolves in the bundle")
-        profiles = {p[len(QI):] for r in resources for p in r.get("meta", {}).get("profile", []) if p.startswith(QI)}
-        g.check(bool(profiles) and not profiles & QICORE_411_ONLY, f"B6 {tag} QI-Core 6.0.0 profiles, none from 4.1.1")
+        declared = [p for r in resources for p in r.get("meta", {}).get("profile", [])]
+        clinical = [r for r in resources if r.get("resourceType") in ("Patient", "Encounter", "Condition")]
+        g.check(all(any(p.startswith(USQC) for p in r.get("meta", {}).get("profile", [])) for r in clinical)
+                and not any(p.startswith(QICORE) for p in declared),
+                f"B6 {tag} US Quality Core profiles on the Patient, Encounters and Condition; no QI-Core profiles")
 
         encs = [r for r in resources if r.get("resourceType") == "Encounter"]
         g.check(any(e.get("status") == "finished" and e.get("class", {}).get("code") == "IMP" for e in encs),

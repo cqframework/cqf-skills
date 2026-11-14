@@ -1,17 +1,19 @@
 # Test Case Files: Export, Import and the `.madie` File
 
-Baseline: MADiE `develop` as of 2026-11-14 (commits in SOURCES.md), for QI-Core measures. Untagged statements hold at these commits only.
+Baseline: MADiE `develop` as of 2026-11-14 (commits in SOURCES.md), for US Quality Core 0.5.0 measures. Untagged statements hold at these commits only.
 Sources: FHIRSVC-51b9b37, MSVC-251a73d, MEASURE-18c8d4d, PKGUTIL-dd71537, JMODELS-49ffdec, TSMODELS-960ea63, CQM-2.0.0
 
-What MADiE writes when it exports QI-Core test cases, what it accepts on import, and what it changes in
-the JSON. QDM test cases use the same import screen with different rules; they aren't covered here.
+What MADiE writes when it exports test cases for a US Quality Core measure, what it accepts on import,
+and what it changes in the JSON. MADiE's other FHIR models share most of this; QDM test cases use the
+same import screen with different rules. Neither is covered here.
 
 ## The export zip
 
 Export is from a measure's Test Cases tab. The user chooses **Transaction Bundle** or **Collection
 Bundle** [src: MEASURE-18c8d4d src/…/ActionCenter/ActionCenter.tsx:599-613]; the API's default is
-collection [src: MSVC-251a73d src/…/resources/ExportController.java:123-125]. Packaging exists for
-QI-Core 4.1.1, QI-Core 6.0.0 and US Quality Core 0.5.0 measures [src: PKGUTIL-dd71537 src/…/PackagingUtilityFactory.java:19-26].
+collection [src: MSVC-251a73d src/…/resources/ExportController.java:123-125]. US Quality Core measures
+are packaged the same way as QI-Core ones [src: PKGUTIL-dd71537 src/…/PackagingUtilityFactory.java:19-26]
+[src: PKGUTIL-dd71537 src/…/usqualitycore/PackagingUtilityImpl.java:3-5].
 
 ```text
 CMS9999FHIR-v1.2.000-FHIR-TestCases.zip
@@ -84,11 +86,14 @@ A JSON array with one entry per exported test case
 ## Importing a zip
 
 Import is **Import Test Cases** on the Test Cases tab. It takes one `.zip` file and nothing else: there's
-no single-JSON import for QI-Core measures
+no single-JSON import for FHIR-based measures
 [src: MEASURE-18c8d4d src/…/import/TestCaseImportDialog.tsx:49-66]. The browser has the file
 virus-scanned, opens it with JSZip, and sends the server only the JSON text of each test case
 [src: MEASURE-18c8d4d src/…/import/TestCaseImportDialog.tsx:72-134]. The scan upload is limited to
-10 MB [src: MSVC-251a73d src/main/resources/application.yml:12-14].
+10 MB [src: MSVC-251a73d src/main/resources/application.yml:12-14]. The server imports every FHIR-based
+measure's test cases the same way, as QI-Core 4.1.1 internally
+[src: MSVC-251a73d src/…/resources/TestCaseController.java:150-152], so a US Quality Core import reads
+`.madie`, the Patient's name and the MeasureReport exactly as below.
 
 **Which entries count** [src: MEASURE-18c8d4d src/…/import/TestCaseImportDialog.tsx:107-131]:
 
@@ -122,21 +127,24 @@ virus-scanned, opens it with JSZip, and sends the server only the JSON text of e
 
 ## What MADiE changes in the JSON
 
-On every save, including import, a QI-Core test case's JSON is rewritten before validation; import
-also removes the MeasureReport
-[src: MSVC-251a73d src/…/services/TestCaseService.java:282-295]:
+**Import removes the MeasureReport**, after reading the expected values from it
+[src: MSVC-251a73d src/…/utils/TestCaseServiceUtil.java:744-752].
 
-| Change | Detail |
-| --- | --- |
-| MeasureReport removed (import only) | Import reads the expected values from it, then drops it [src: MSVC-251a73d src/…/utils/TestCaseServiceUtil.java:744-752] |
-| Patient id | Set to the test case's patient id, and its `fullUrl` to `https://madie.cms.gov/Patient/<id>` [src: MSVC-251a73d src/…/utils/JsonUtil.java:426-456] |
-| Other `fullUrl`s | Rewritten to `https://madie.cms.gov/<Type>/<id>`, only for entries that already have one; ids are kept [src: MSVC-251a73d src/…/utils/JsonUtil.java:459-491] |
-| Patient references | Every `"reference": "Patient/<anything>"` becomes `Patient/<patient id>`. Absolute URLs and `urn:uuid:` references aren't touched [src: MSVC-251a73d src/…/utils/JsonUtil.java:129-132] |
-| Bundle type | `transaction` becomes `collection`, and every `entry.request` is removed [src: MSVC-251a73d src/…/utils/JsonUtil.java:363-380] |
+**Nothing else is rewritten for a US Quality Core measure.** On save, MADiE normalises the JSON of
+QI-Core test cases only: it sets the Patient's id to the patient id, rewrites `Patient/…` references and
+`fullUrl`s, and turns transaction bundles into collections. That code is skipped for every other model
+[src: MSVC-251a73d src/…/services/TestCaseService.java:282-295]. For a US Quality Core test case, what you
+import is what MADiE stores, so:
 
-So a transaction bundle with `request` entries imports fine, but MADiE stores a collection. New test
-cases start as a collection bundle with a Patient whose `fullUrl` is on `https://madie.cms.gov/`
-[src: MEASURE-18c8d4d src/…/util/QiCoreTestCaseHelper.ts:22-40].
+- **Set the Patient's `id` to the folder's UUID** and reference it as `Patient/<uuid>`. MADiE won't
+  align them; a mismatch is only corrected when the case is exported.
+- **Use a `collection` bundle with no `request` entries.** A transaction bundle is stored as a
+  transaction, `request` entries and all.
+- Give `fullUrl`s as `https://madie.cms.gov/<Type>/<id>`, the form MADiE uses for the resources it
+  creates [src: MEASURE-18c8d4d src/…/api/fhirDefinitionServiceUtilities.tsx:830-845], or leave them out.
+
+New test cases made in MADiE start as a collection bundle holding a Patient with the US Quality Core
+Patient profile [src: MEASURE-18c8d4d src/…/util/QiCoreTestCaseHelper.ts:5-40].
 
 **On export** the reverse happens [src: FHIRSVC-51b9b37 src/…/services/TestCaseBundleService.java:122-162]:
 

@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import check_test_cases as T  # noqa: E402
 
 PID = "6b1a7c1e-4c0f-4e8f-9b0a-1f2e3d4c5b6a"
-QI = "http://hl7.org/fhir/us/qicore/StructureDefinition/"
+QI = "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/"
 POP = "http://terminology.hl7.org/CodeSystem/measure-population"
 
 
@@ -21,13 +21,13 @@ def bundle() -> dict:
         "resourceType": "Bundle", "id": "b1", "type": "collection",
         "entry": [
             {"fullUrl": f"https://madie.cms.gov/Patient/{PID}",
-             "resource": {"resourceType": "Patient", "id": PID, "meta": {"profile": [QI + "qicore-patient"]},
+             "resource": {"resourceType": "Patient", "id": PID, "meta": {"profile": [QI + "us-quality-core-patient"]},
                           "identifier": [{"system": "https://madie.cms.gov/", "value": "SYN-0001"}],
                           "gender": "female", "name": [{"family": "DENOMPass", "given": ["InpatientStay"]}]}},
-            {"resource": {"resourceType": "Encounter", "id": "enc-1", "meta": {"profile": [QI + "qicore-encounter"]},
+            {"resource": {"resourceType": "Encounter", "id": "enc-1", "meta": {"profile": [QI + "us-quality-core-encounter"]},
                           "subject": {"reference": f"Patient/{PID}"}}},
             {"resource": {"resourceType": "Condition", "id": "cond-1",
-                          "meta": {"profile": [QI + "qicore-condition-encounter-diagnosis"]},
+                          "meta": {"profile": [QI + "us-quality-core-condition-encounter-diagnosis"]},
                           "subject": {"reference": f"Patient/{PID}"}, "encounter": {"reference": "Encounter/enc-1"}}},
             {"resource": {"resourceType": "MeasureReport", "id": "mr-1", "status": "complete", "type": "individual",
                           "measure": "https://madie.cms.gov/Measure/ExampleFollowUp",
@@ -57,8 +57,8 @@ def write(root: Path, b=None, md=None, extra=None) -> Path:
     return root
 
 
-def errors(path: Path, model=None) -> str:
-    return "\n".join(T.check(path, model).errors)
+def errors(path: Path) -> str:
+    return "\n".join(T.check(path).errors)
 
 
 def test_valid_folder_and_zip_pass(tmp_path):
@@ -123,12 +123,23 @@ def test_metadata_rules(tmp_path):
     assert any("no entry" in w for w in rep.warnings)
 
 
-def test_qicore_versions(tmp_path):
+def test_qicore_profile(tmp_path):
     b = bundle()
-    b["entry"][1]["resource"]["meta"]["profile"] = [QI + "qicore-condition"]
-    assert "mixes QI-Core 4.1.1" in errors(write(tmp_path / "a", b=b))
-    assert "6.0.0 profiles in a 4.1.1 measure" in errors(write(tmp_path / "b"), model="qicore4")
-    assert errors(tmp_path / "b", model="qicore6") == ""
+    b["entry"][1]["resource"]["meta"]["profile"] = ["http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-encounter"]
+    assert "declares QI-Core profile" in errors(write(tmp_path / "a", b=b))
+
+
+def test_patient_id_and_bundle_type(tmp_path):
+    b = bundle()
+    b["type"] = "transaction"
+    b["entry"][0]["resource"]["id"] = "p1"
+    for e in b["entry"][1:3]:
+        for k in ("subject",):
+            e["resource"][k] = {"reference": "Patient/p1"}
+    rep = T.check(write(tmp_path / "a", b=b))
+    assert rep.errors == []
+    assert any("isn't the folder name" in w for w in rep.warnings)
+    assert any("not a collection" in w for w in rep.warnings)
 
 
 def test_measure_report(tmp_path):

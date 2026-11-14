@@ -8,8 +8,13 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
-- `madie` skill, in the `cql` plugin, for QI-Core test cases and measure CQL in MADiE, from
-  raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on import:
+- `madie` skill, in the `cql` plugin, for US Quality Core 0.5.0 test cases and measure CQL in MADiE,
+  from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on import:
+  - Retargeted from QI-Core to US Quality Core 0.5.0 (MADiE's "US Quality Core v0.5.0" model). MADiE
+    treats it differently from QI-Core in places, all recorded: test case JSON isn't rewritten on save
+    (Patient id, references, bundle type), validation is against US Quality Core 0.5.0 and US Core
+    6.1.0, population return types aren't checked, and the default CQL is the US Quality Core
+    template. Drafting a QI-Core 6.0.0 measure as US Quality Core rewrites only its `using` lines.
   - MADiE has no releases, so the skill is pinned to `develop` commits of its repositories from
     2026-11-14, and every behaviour is cited to that code. `scripts/check_release.py` compares each
     cited range with the current branch and runs in the weekly release check, which opens an issue
@@ -22,9 +27,9 @@ All notable changes to this project are documented here. The format is based on
     resource except the Patient a new id; the exported MeasureReport uses the CQM IG's
     `cqm-testcase` profile with a contained Parameters resource, not `test-case-cqfm` with an
     Organization.
-  - Corrections to the resource notes: QI-Core Simple Observation has a value and no fixed
-    category; `verificationStatus` needn't be `confirmed`; DeviceRequest's `code[x]` may be a
-    reference; the profiles differ between QI-Core 4.1.1 and 6.0.0.
+  - Corrections to the resource notes: Simple Observation has a value and no fixed category;
+    `verificationStatus` needn't be `confirmed`; DeviceRequest's `code[x]` may be a reference; a
+    Patient needs an `identifier` and a `gender`.
   - Added what MADiE checks and rewrites in measure CQL (library line, FHIRHelpers alias, value set
     versions and URLs, library names) and its default CQL templates. CQL style is left to `cms-qmd`.
   - Removed one project's conventions that MADiE doesn't need: deterministic resource ids, an

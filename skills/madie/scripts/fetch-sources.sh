@@ -22,7 +22,6 @@ REPOS=(
   "TSMODELS-960ea63|MeasureAuthoringTool/madie-models|960ea6339f0e00178d32c14684fa9e65bd26f589|madie-models"
   "EDITOR-e2635c7|MeasureAuthoringTool/madie-editor|e2635c76318164a282fcad7e8c204b4bbc7a822d|madie-editor"
   "DQMCMS-757d7c6|cqframework/dqm-content-cms-2026|757d7c6fd01998287d622d03fb02e133c700e22a|dqm-content-cms-2026"
-  "ECQM2025-d4e0edd|cqframework/ecqm-content-qicore-2025|d4e0edd01b7da2a3b43d5360156b43761438190a|ecqm-content-qicore-2025"
 )
 
 mkdir -p "$CACHE_DIR"

@@ -1,6 +1,6 @@
 ---
 name: madie
-description: Build, import, export and troubleshoot QI-Core test cases and measure CQL in MADiE, the CMS Measure Authoring Development Integrated Environment. Use for MADiE test case zips and the .madie file, test case bundles and their MeasureReport expected values, import errors, test case validation, test case series and titles, and what MADiE checks or rewrites in a measure's CQL. Each behaviour is cited to MADiE's source code.
+description: Build, import, export and troubleshoot US Quality Core test cases and measure CQL in MADiE, the CMS Measure Authoring Development Integrated Environment. Use for MADiE test case zips and the .madie file, test case bundles and their MeasureReport expected values, import errors, test case validation, test case series and titles, and what MADiE checks or rewrites in a measure's CQL. Each behaviour is cited to MADiE's source code.
 license: Apache-2.0
 ---
 
@@ -8,10 +8,11 @@ license: Apache-2.0
 
 MADiE (Measure Authoring Development Integrated Environment) is the CMS tool for writing electronic
 clinical quality measures in CQL and testing them against test cases: FHIR bundles of synthetic patient
-data with expected population results. This skill covers QI-Core measures (QI-Core 4.1.1 and 6.0.0).
+data with expected population results. This skill covers measures on **US Quality Core 0.5.0**, the model
+of current CMS FHIR measures.
 
-Related skills: `cms-qmd` for how to write CMS measure CQL, `cql` for the language, `usqualitycore` for
-US Quality Core measures, `vscode-cql` for running CQL and test cases locally.
+Related skills: `cms-qmd` for how to write CMS measure CQL, `usqualitycore` for the US Quality Core
+profiles, `cql` for the language, `vscode-cql` for running CQL and test cases locally.
 
 ## Versions
 
@@ -22,8 +23,8 @@ skill is pinned to `develop` commits of **2026-11-14**; production may be a spri
 | --- | --- |
 | madie-measure, measure-service, madie-fhir-service, packaging-utility, madie-java-models, madie-editor | `develop` commits, 2026-11-10 to 2026-11-13 |
 | madie-models | `main`, 2026-10-29 |
-| QI-Core | 4.1.1 and 6.0.0, the two QI-Core versions MADiE supports |
-| eCQM `Status` and `QICoreCommon` libraries | the 2025 QI-Core 6.0.0 content |
+| US Quality Core | 0.5.0, MADiE's "US Quality Core v0.5.0" model |
+| FHIRCommon | 2.0.0, included by MADiE's default US Quality Core CQL |
 
 ## When MADiE Has Changed
 
@@ -57,11 +58,12 @@ tests.zip                    ← zip the contents, not a parent folder
   1 or 0 for a boolean basis. MADiE then removes the MeasureReport from the stored JSON.
 - `testCaseId` in `.madie` is MADiE's internal id and isn't read on import.
 - The Patient needs a `name` with `given` and `family`, or import fails, and an `identifier` and
-  `gender`, which QI-Core requires, or the test case is invalid.
+  `gender`, which the US Quality Core Patient profile requires, or the test case is invalid.
 
-**What MADiE does to the bundle on save:** sets the Patient's id to the patient id, points every
-relative `Patient/…` reference at it, changes `transaction` to `collection` and removes `request`,
-rewrites existing `fullUrl`s to `https://madie.cms.gov/<Type>/<id>`, and drops the MeasureReport.
+**What MADiE does to the bundle on import:** drops the MeasureReport, and nothing else. For US Quality
+Core measures (unlike QI-Core ones) it doesn't set the Patient's id, rewrite references or convert
+transaction bundles, so **set the Patient's id to the folder UUID and use a `collection` bundle**
+yourself.
 
 **What export produces:** `{eCQM title}-v{version}-{series}-{title}.json` in a folder per patient id, a
 `README.txt` and `.madie`, transaction or collection bundles with **new random ids for every resource
@@ -70,12 +72,14 @@ except the Patient**, and a MeasureReport with the `cqm-testcase` profile.
 **Validation** (details in [test-case-content.md](resources/test-case-content.md)): every resource needs
 a unique id; missing `meta.profile` is a warning; a reference that doesn't resolve within the bundle
 drops that resource from execution (an error if it's in the Patient); profiles are validated against
-the measure's QI-Core version. A test case with errors can't run or be exported.
+US Quality Core 0.5.0 and US Core 6.1.0. A test case with errors can't run or be exported.
 
-**CQL** (details in [measure-cql.md](resources/measure-cql.md)): MADiE rewrites the `library` line to
-the measure's name and version, forces `called FHIRHelpers`, strips value set versions, and requires
-`http://cts.nlm.nih.gov/fhir/ValueSet/<OID>` value sets and a `using` that matches the model. Library
-names are `^[A-Z][a-zA-Z0-9]*$`, at most 64 characters; versions are `x.y.zzz`.
+**CQL** (details in [measure-cql.md](resources/measure-cql.md)): the default CQL is `using USQualityCore
+version '0.5.0'`, `using USCore version '6.1.0-derived'` and `using FHIR version '4.0.1'`, with
+FHIRHelpers 4.0.1 and FHIRCommon 2.0.0. MADiE rewrites the `library` line to the measure's name and
+version, forces `called FHIRHelpers` and strips value set versions; value sets must be VSAC FHIR URLs,
+`http://cts.nlm.nih.gov/fhir/ValueSet/<OID>`. Library names are `^[A-Z][a-zA-Z0-9]*$`, at most 64
+characters; versions are `x.y.zzz`.
 
 ## Known Gotchas
 
@@ -93,8 +97,13 @@ names are `^[A-Z][a-zA-Z0-9]*$`, at most 64 characters; versions are `x.y.zzz`.
   rejects `_` too.
 - **Descriptions are lost** when a zip without `.madie` is imported: the fallback reads the old CQFM
   extension URL, and MADiE exports the CQM one.
-- **Profile names differ between QI-Core 4.1.1 and 6.0.0** (Condition and Observation especially). Use
-  the profiles of the measure's model.
+- **A Patient id that isn't the folder UUID**, a transaction bundle or `request` entries stay as they
+  are in a US Quality Core test case; MADiE only normalises QI-Core test cases.
+- **QI-Core profiles** in a US Quality Core measure's test case aren't validated at all. Use
+  `http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-<resource>`.
+- **Drafting a QI-Core 6.0.0 measure as US Quality Core** rewrites the `using` lines only; includes,
+  `QICore.` type names and test case profiles must be converted by hand.
+- **Population return types aren't checked** for US Quality Core measures, unlike QI-Core ones.
 - **MADiE runs test cases with a different engine** from VS Code (fqm-execution, the JavaScript
   engine), and with the Patient's `id` set to the test case's internal id. Logic that passes locally can
   fail in MADiE: don't match on `Patient.id` or resource ids; give test resources identifier keys.
@@ -108,8 +117,8 @@ names are `^[A-Z][a-zA-Z0-9]*$`, at most 64 characters; versions are `x.y.zzz`.
 | File | Contents |
 | --- | --- |
 | [resources/test-case-files.md](resources/test-case-files.md) | The export zip, the `.madie` file, import rules and errors, what MADiE rewrites, the MeasureReport and expected values, titles and series |
-| [resources/test-case-content.md](resources/test-case-content.md) | Validation, ids and references, how MADiE runs test cases, QI-Core profiles by version, notes on the resources measures test |
-| [resources/measure-cql.md](resources/measure-cql.md) | Library names and versions, what MADiE rewrites or rejects in CQL (including codes), the default CQL template, testing a shared library with a Cohort measure |
+| [resources/test-case-content.md](resources/test-case-content.md) | Validation, ids and references, how MADiE runs test cases, US Quality Core profiles, notes on the resources measures test |
+| [resources/measure-cql.md](resources/measure-cql.md) | Library names and versions, what MADiE rewrites or rejects in CQL (including codes), the default CQL template, drafting a QI-Core measure as US Quality Core, testing a shared library with a Cohort measure |
 | [resources/SOURCES.md](resources/SOURCES.md) | The pinned sources and how to read a citation on GitHub |
 | [scripts/check_test_cases.py](scripts/check_test_cases.py) | Checks a test case folder or zip against MADiE's import rules before uploading |
 | [scripts/check_release.py](scripts/check_release.py) | For maintainers: reports cited code that has changed on `develop` |

@@ -86,11 +86,29 @@ def test_duplicate_ids(tmp_path):
     assert "B4" in failed(root)
 
 
-def test_qicore_411_profile(tmp_path):
+def test_qicore_profile(tmp_path):
     root = copy(tmp_path)
     edit(root, HOSPICE, lambda b: b["entry"][2]["resource"]["meta"].update(
-        profile=["http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition"]))
+        profile=["http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns"]))
     assert failed(root) == {"B6"}
+
+
+def test_transaction_bundle(tmp_path):
+    root = copy(tmp_path)
+    edit(root, HOSPICE, lambda b: b.update(type="transaction"))
+    assert failed(root) == {"B1"}
+
+
+def test_patient_id_not_folder(tmp_path):
+    root = copy(tmp_path)
+    def change(b):
+        b["entry"][0]["resource"]["id"] = "p1"
+        for e in b["entry"][1:]:
+            for k in ("subject",):
+                if k in e["resource"]:
+                    e["resource"][k] = {"reference": "Patient/p1"}
+    edit(root, HOSPICE, change)
+    assert failed(root) == {"B3b"}
 
 
 def test_missing_followup_encounter(tmp_path):

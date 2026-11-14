@@ -63,13 +63,24 @@ have learned from; those are marked. "Skill" says where the skill covers it.
 
 ### IM-04. A transaction bundle
 
-- **Expected:** transaction bundles are accepted; MADiE stores them as collections and removes the
-  `request` entries. But MADiE resolves references only as `<Type>/<id>` within the bundle, so
+- **Expected:** transaction bundles are accepted, and for a US Quality Core measure stored as they are
+  (a collection is better). But MADiE resolves references only as `<Type>/<id>` within the bundle, so
   `urn:uuid:` references don't resolve: the referencing resources are left out of execution (an error if
   it's the Patient). Give resources ids and use `Patient/<id>`, `Encounter/<id>` references.
 - **Pass if:** transaction is fine; `urn:uuid` references aren't.
 - **Fail if:** it says transaction bundles are rejected.
 - **Skill:** `resources/test-case-files.md`, `resources/test-case-content.md` (Ids and references).
+
+### IM-05. Patient ids
+
+- **Expected:** the JSON as given, minus the MeasureReport: for a US Quality Core measure MADiE doesn't set
+  the Patient's id to the folder UUID, rewrite `Patient/p1` references or turn transactions into
+  collections (it does all three for QI-Core measures only). The test case's patient id is the folder
+  UUID, so the two disagree until the case is exported. Set the Patient's id to the folder UUID, reference
+  it as `Patient/<uuid>`, and use collection bundles.
+- **Pass if:** stored unchanged, and set the id to the folder UUID.
+- **Fail if:** it says MADiE replaces the Patient id or references (true of QI-Core measures only).
+- **Skill:** `resources/test-case-files.md` (What MADiE changes in the JSON).
 
 ## Exporting
 
@@ -100,7 +111,7 @@ have learned from; those are marked. "Skill" says where the skill covers it.
 ### VA-01. meta.profile
 
 - **Expected:** yes: a missing `meta.profile` is a warning, not an error. The resource isn't validated
-  against a QI-Core profile, though, and MADiE warns it may give incorrect results.
+  against a US Quality Core profile, though, and MADiE warns it may give incorrect results.
 - **Pass if:** warning only.
 - **Skill:** `resources/test-case-content.md` (Validation).
 
@@ -113,28 +124,28 @@ have learned from; those are marked. "Skill" says where the skill covers it.
 
 ### RS-01. Simple Observation
 
-- **Expected:** no. In QI-Core 6.0.0, Simple Observation's `value[x]` is optional and must-support, and
-  its category isn't fixed. Whether the Observation counts depends on the measure's CQL; many measures
+- **Expected:** no. In US Quality Core 0.5.0, Simple Observation's `value[x]` is optional and
+  must-support, and its category isn't fixed. Whether the Observation counts depends on the measure's CQL; many measures
   test that a value is present and the status is final, amended or corrected.
 - **Fail if:** it agrees that the profile forbids a value (the original skill's claim).
 - **Skill:** `resources/test-case-content.md` (Resource notes).
 
 ### RS-02. Confirmed conditions
 
-- **Expected:** no. `verificationStatus` is optional. The common `Status` library's `verified()` keeps
-  conditions with no verification status, or confirmed, unconfirmed, provisional or differential; it
-  drops refuted and entered-in-error. QICoreCommon's `isActive()` looks at `clinicalStatus`. The
-  measure's own CQL decides.
+- **Expected:** no. `verificationStatus` is optional. FHIRCommon's `verified()` keeps conditions with no
+  verification status, or confirmed, unconfirmed, provisional or differential; it drops refuted and
+  entered-in-error. Its `isActive()` looks at `clinicalStatus`. The measure's own CQL decides.
 - **Fail if:** "must be confirmed".
 - **Skill:** `resources/test-case-content.md`.
 
 ### RS-03. A Condition profile
 
-- **Expected:** yes. `qicore-condition` is QI-Core 4.1.1. In 6.0.0 it's
-  `qicore-condition-problems-health-concerns` or `qicore-condition-encounter-diagnosis`; MADiE validates
-  against the measure's QI-Core version only.
-- **Pass if:** names the 6.0.0 profiles.
-- **Skill:** `resources/test-case-content.md` (QI-Core profiles by version).
+- **Expected:** no. MADiE validates a US Quality Core measure's test cases against US Quality Core 0.5.0
+  and US Core 6.1.0 only, and silently skips a profile it doesn't have, so "no errors" means the
+  Condition wasn't checked. Use
+  `http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-condition-problems-health-concerns`.
+- **Pass if:** not validated, and the US Quality Core profile URL.
+- **Skill:** `resources/test-case-content.md` (Validation, Profiles).
 
 ## Measure CQL
 
@@ -148,7 +159,8 @@ have learned from; those are marked. "Skill" says where the skill covers it.
 
 ### CQ-02. A value set URL
 
-- **Expected:** QI-Core measures need VSAC FHIR URLs:
+- **Expected:** MADiE looks value sets up in VSAC by the OID after `ValueSet/`, so a `urn:oid:` URL isn't
+  found. Use the VSAC FHIR URL:
   `'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1001'`.
 - **Pass if:** the VSAC URL form.
 - **Skill:** `resources/measure-cql.md`.
@@ -159,6 +171,17 @@ have learned from; those are marked. "Skill" says where the skill covers it.
   most 64 characters. `FollowUpMeasure` works.
 - **Pass if:** no underscores.
 - **Skill:** `resources/measure-cql.md`.
+
+### CQ-04. Moving to US Quality Core
+
+- **Expected:** MADiE rewrote `using QICore version '6.0.0'` to `using USQualityCore version '0.5.0'` and
+  added `using USCore version '6.1.0-derived'` and `using FHIR version '4.0.1'`. Nothing else: replace
+  the QI-Core includes (QICoreCommon, the QI-Core CQMCommon and FHIRHelpers) with US Quality Core ones
+  (FHIRHelpers 4.0.1 and FHIRCommon 2.0.0 from `hl7.fhir.uv.cql`, and the CMS libraries), fix any
+  `QICore.` type names, and convert the test cases' profiles. MADiE won't check population return types
+  for the new measure.
+- **Pass if:** `using` lines only; includes and test cases by hand.
+- **Skill:** `resources/measure-cql.md` (Drafting a QI-Core measure as US Quality Core).
 
 ## Series
 
@@ -191,7 +214,8 @@ Run `python grade_testcases.py <answer>/tk-01`. It checks:
   folder);
 - `.madie` (an entry per folder with the given series and title, unique);
 - each bundle (one Patient with given and family names, an identifier and a gender; unique ids;
-  relative references that resolve; QI-Core 6.0.0 profiles only);
+  relative references that resolve; a Patient id equal to the folder name; a collection bundle; US
+  Quality Core profiles on the Patient, Encounters and Condition, and no QI-Core profiles);
 - the data (a finished Encounter with class `IMP` for every case, a `type` on every Encounter, an `AMB`
   Encounter for the follow-up case, an active Condition for the hospice case);
 - a MeasureReport per bundle: `Group_1`, the four populations in order with `measure-population` codes,
@@ -199,5 +223,5 @@ Run `python grade_testcases.py <answer>/tk-01`. It checks:
 
 - **Pass if:** every check passes. **Partial if:** one fails.
 - **Reference:** [reference/tk-01/](reference/tk-01/). It also passes the skill's
-  `scripts/check_test_cases.py --model qicore6`, and the FHIR validator against QI-Core 6.0.0 with no
+  `scripts/check_test_cases.py`, and the FHIR validator against US Quality Core 0.5.0 with no
   errors.

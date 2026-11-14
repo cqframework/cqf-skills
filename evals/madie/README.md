@@ -22,7 +22,8 @@ as of 2026-11-14. When the skill is re-pinned, check every answer in the key aga
    confirm three test cases are created with the expected values and that they pass when run. Have a
    separate agent, or a person, grade the other answers against `answers.md` as PASS, PARTIAL or FAIL.
 4. **Compare.** The skill should pass more questions than the baseline. ZP-02, EX-03, RS-01 and RS-02
-   are where the skill's original source was wrong; IM-01, IM-03 and IM-04 need MADiE's code.
+   are where the skill's original source was wrong; IM-01, IM-03, IM-04, IM-05 and CQ-04 need MADiE's
+   code.
 5. **Triggers.** Run each prompt in `triggers.md` in a fresh session with the skill installed, and
    record whether it loaded.
 

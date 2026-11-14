@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check QI-Core test cases against MADiE's import rules before uploading them.
+"""Check test cases for a US Quality Core measure against MADiE's import rules before uploading them.
 
 Takes a zip, or a folder laid out like one:
 
@@ -10,7 +10,7 @@ Reports what MADiE would reject or quietly change, following the rules in
 resources/test-case-files.md and resources/test-case-content.md (MADiE develop, 2026-11-14).
 It doesn't run FHIR profile validation or the measure's CQL.
 
-Usage: check_test_cases.py PATH [--model qicore4|qicore6]
+Usage: check_test_cases.py PATH
 Exit status: 1 if any error was found, else 0. Warnings never fail.
 """
 from __future__ import annotations
@@ -30,18 +30,8 @@ POPULATION_CODES = {
     "initial-population", "numerator", "numerator-exclusion", "denominator", "denominator-exclusion",
     "denominator-exception", "measure-population", "measure-population-exclusion", "measure-observation",
 }
+USQC = "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/"
 QICORE = "http://hl7.org/fhir/us/qicore/StructureDefinition/"
-# Profile ids found in only one of the two QI-Core versions MADiE supports.
-ONLY_411 = {"qicore-condition", "qicore-observation", "qicore-observationnotdone", "qicore-immunizationrec",
-            "qicore-mednotadministered", "qicore-mednotdispensed", "qicore-mednotrequested",
-            "qicore-encounter-procedure"}
-ONLY_600 = {"qicore-condition-problems-health-concerns", "qicore-condition-encounter-diagnosis",
-            "qicore-observation-clinical-result", "qicore-observation-lab",
-            "qicore-observation-screening-assessment", "qicore-simple-observation",
-            "qicore-nonpatient-observation", "qicore-observationcancelled", "qicore-immunizationrecommendation",
-            "qicore-medicationadministrationnotdone", "qicore-medicationdispensedeclined",
-            "qicore-medicationnotrequested", "qicore-claimresponse", "qicore-questionnaireresponse",
-            "qicore-taskrejected", "qicore-keyelement"}
 
 
 @dataclass
@@ -173,12 +163,11 @@ def walk_references(node, path=""):
             yield from walk_references(v, path)
 
 
-def profile_ids(resource: dict) -> list[str]:
-    return [p[len(QICORE):].split("|")[0] for p in resource.get("meta", {}).get("profile", [])
-            if isinstance(p, str) and p.startswith(QICORE)]
+def profiles(resource: dict) -> list[str]:
+    return [p.split("|")[0] for p in resource.get("meta", {}).get("profile", []) if isinstance(p, str)]
 
 
-def check_bundle(where: str, text: str, model: str | None, rep: Report) -> None:
+def check_bundle(where: str, text: str, folder: str, rep: Report) -> None:
     try:
         bundle = json.loads(text)
     except json.JSONDecodeError as e:
@@ -187,12 +176,18 @@ def check_bundle(where: str, text: str, model: str | None, rep: Report) -> None:
     if not isinstance(bundle, dict) or bundle.get("resourceType") != "Bundle":
         rep.error(where, "not a FHIR Bundle")
         return
+    if bundle.get("type") != "collection" or any("request" in e for e in bundle.get("entry", []) if isinstance(e, dict)):
+        rep.warn(where, "not a collection bundle without request entries; MADiE stores a US Quality Core "
+                        "test case as given, so use a collection")
     resources = [e.get("resource") for e in bundle.get("entry", []) if isinstance(e, dict)]
     resources = [r for r in resources if isinstance(r, dict)]
     patients = [r for r in resources if r.get("resourceType") == "Patient"]
     if len(patients) != 1:
         rep.error(where, f"{len(patients)} Patient resources; a test case has exactly one")
     for p in patients:
+        if p.get("id") != folder:
+            rep.warn(where, f"Patient id {p.get('id')!r} isn't the folder name; MADiE doesn't align them for a "
+                            "US Quality Core measure, so set it to the folder's UUID")
         names = p.get("name") or []
         if not any(n.get("given") for n in names if isinstance(n, dict)):
             rep.error(where, "Patient has no given name: a new test case fails with \"Test Case Title is required.\"")
@@ -227,15 +222,11 @@ def check_bundle(where: str, text: str, model: str | None, rep: Report) -> None:
                 level = rep.error if r.get("resourceType") == "Patient" else rep.warn
                 level(where, f"{r.get('resourceType')}/{r.get('id')} {path} = {ref!r} isn't in the bundle; "
                              "MADiE leaves this resource out of execution")
-    used = {pid for r in resources for pid in profile_ids(r)}
-    old, new = used & ONLY_411, used & ONLY_600
-    if old and new:
-        rep.error(where, f"mixes QI-Core 4.1.1 profiles ({', '.join(sorted(old))}) and 6.0.0 profiles "
-                         f"({', '.join(sorted(new))})")
-    elif model == "qicore6" and old:
-        rep.error(where, f"QI-Core 4.1.1 profiles in a 6.0.0 measure: {', '.join(sorted(old))}")
-    elif model == "qicore4" and new:
-        rep.error(where, f"QI-Core 6.0.0 profiles in a 4.1.1 measure: {', '.join(sorted(new))}")
+    for r in resources:
+        qicore = [p for p in profiles(r) if p.startswith(QICORE)]
+        if qicore:
+            rep.error(where, f"{r.get('resourceType')}/{r.get('id')} declares QI-Core profile {qicore[0]}; a US Quality "
+                             f"Core measure validates against {USQC}<id> profiles only")
     reports = [r for r in resources if r.get("resourceType") == "MeasureReport"]
     if not reports:
         rep.warn(where, "no MeasureReport: a new test case is imported with no expected values")
@@ -255,26 +246,25 @@ def check_bundle(where: str, text: str, model: str | None, rep: Report) -> None:
                     rep.error(where, f"MeasureReport group {gid}: population code {codes} isn't a measure-population code")
 
 
-def check(path: Path, model: str | None = None) -> Report:
+def check(path: Path) -> Report:
     rep = Report()
     entries = read_entries(path)
     folders, metadata = check_layout(entries, rep)
     check_metadata(metadata, folders, rep)
     for uuid, files in sorted(folders.items()):
         if len(files) == 1:
-            check_bundle(files[0], entries[files[0]] or "", model, rep)
+            check_bundle(files[0], entries[files[0]] or "", uuid, rep)
     return rep
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("path", type=Path, help="a test case zip, or a folder laid out like one")
-    ap.add_argument("--model", choices=["qicore4", "qicore6"], help="the measure's QI-Core version")
     args = ap.parse_args(argv)
     if not args.path.exists():
         print(f"{args.path}: not found", file=sys.stderr)
         return 1
-    rep = check(args.path, args.model)
+    rep = check(args.path)
     for w in rep.warnings:
         print("WARN ", w)
     for e in rep.errors:
