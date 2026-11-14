@@ -1,0 +1,32 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "example.fhir.screening",
+  "url": "http://example.org/fhir/screening/ImplementationGuide/example.fhir.screening",
+  "version": "0.1.0",
+  "name": "ExampleScreening",
+  "title": "Example Screening Measure IG",
+  "status": "draft",
+  "experimental": true,
+  "publisher": "Example Publisher",
+  "description": "A synthetic IG with one measure and its CQL library, used to evaluate the ig-publisher skill.",
+  "packageId": "example.fhir.screening",
+  "license": "CC0-1.0",
+  "fhirVersion": ["4.0.1"],
+  "definition": {
+    "resource": [
+      { "reference": { "reference": "Library/ExampleScreening" }, "name": "Example Screening Library" },
+      { "reference": { "reference": "Measure/ExampleScreening" }, "name": "Example Screening Measure" }
+    ],
+    "page": {
+      "nameUrl": "toc.html",
+      "title": "Table of Contents",
+      "generation": "html",
+      "page": [
+        { "nameUrl": "index.html", "title": "Home", "generation": "markdown" }
+      ]
+    },
+    "parameter": [
+      { "code": "path-binary", "value": "input/cql" }
+    ]
+  }
+}

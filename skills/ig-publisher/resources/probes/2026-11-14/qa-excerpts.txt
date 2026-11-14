@@ -1,0 +1,24 @@
+# qa.txt excerpts from run 1, paths replaced with <probe>
+
+DraftDQMContentCMSDerived : Validation Results
+=========================================
+
+err = 1505, warn = 1516, info = 248, broken links = 0
+IG Publisher Version: 3.0.4
+Generated Sat Nov 14 10:39:20 MST 2026. FHIR version 4.0.1 for madie.cms.gov.dqms#2025.1.0 (canonical = https://madie.cms.gov)
+ Build Errors : 104 / 79 / 0
+
+## 'CQL source was not associated' lines: 104; 'CQL Processing failed' lines: 0
+
+ERROR: <probe>\ig\input\cql\testI28ChoiceArgumentProbeA.cql: CQL source was not associated with a library resource in the IG.
+ERROR: <probe>\ig\input\cql\testE18DateTimeCompare.cql: CQL source was not associated with a library resource in the IG.
+ERROR: <probe>\ig\input\cql\usqualitycore-modelinfo-0.1.0-cibuild.xml: CQL source was not associated with a library resource in the IG.
+ERROR: <probe>\ig\input\cql\testI37RecordedAmbiguousOverload.cql: CQL source was not associated with a library resource in the IG.
+ERROR: <probe>\ig\input\cql\testE15Passing.cql: CQL source was not associated with a library resource in the IG.
+
+## path-liquid-ig errors on the IG resource
+
+ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The System URI could not be determined for the code 'path-liquid-ig' in the ValueSet 'http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0'
+ERROR: ImplementationGuide/madie.cms.gov.dqms: ImplementationGuide.definition.extension[13].extension[0].value.ofType(code): The value provided ('path-liquid-ig') was not found in the value set 'ig-parameters Codes ValueSet' (http://hl7.org/fhir/tools/ValueSet/ig-parameters|1.3.0), and a code is req
+
+## 'SDE Race is not supported' lines: 72

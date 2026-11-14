@@ -8,6 +8,31 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `ig-publisher` skill, in the `fhir-ig` plugin, for configuring, running and debugging the HL7 IG
+  Publisher, from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson.
+  Changes on import:
+  - Re-pinned from IG Publisher 3.0.1, org.hl7.fhir.core 7.0.2 and the 0.7.1/0.8.1 templates to
+    IG Publisher 3.0.4, org.hl7.fhir.core 7.0.6, cqf.fhir.template 1.0.0 and fhir.base.template
+    1.0.0. Every source-line citation was moved to the new tags and re-checked.
+  - A new probe build (`resources/probes/2026-11-14/`) on 3.0.4 confirms the CQL loader findings
+    with the 4.9.0 translator, and finds that fhir.base.template 1.0.0 now ships Liquid narratives,
+    that 3.0.4 rewords a CQL warning so an `ignoreWarnings.txt` line written for 3.0.1 stops
+    matching, and that `-package-cache-folder` is not used for every package. The cause of the
+    "Unknown FHIRTypes code 'Any'" ELM failure is traced in the source.
+  - New flags (`-ecosystem`, `-threads`), the terminology ecosystem and the change to `-tx`.
+  - When an IG was built with a different publisher version, the skill now says to check each cited
+    claim against the source at that version on GitHub. `SOURCES.md` gives the URL forms and the
+    full path behind every elided citation.
+  - The local copies under `resources/sources/` are only for maintainers (the linter and the
+    parameter-page generator). They are built by `scripts/fetch-sources.sh` and not committed. The
+    cache folder can be set with `IGPUB_SKILL_CACHE`.
+  - `scripts/check_release.py` compares the pins with the latest IG Publisher, core, template and
+    tools IG releases, and reports which citations a re-pin must re-read. A weekly workflow
+    (`.github/workflows/ig-publisher-release-check.yml`) runs it and opens or updates an issue
+    labelled `ig-publisher-release` when a newer release is out.
+  - `scripts/lint_skill.py` is a shared copy of the `cql` skill's linter, checked by
+    `validate_skills.py`.
+  - New evals in `evals/ig-publisher/`.
 - `usqualitycore` skill, in the `fhir` plugin, for US Quality Core 0.5.0
   (`fhir.onc.us-quality-core`), and `cms-qmd` skill, in the `cql` plugin, for the CMS FHIR Quality
   Measure Development IG. They replace the `usqualitycore`, `usqualitycore-clinical-patterns` and

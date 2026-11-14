@@ -1,0 +1,10 @@
+Library-*.json in output: 89; with ELM content: 0
+AdultOutpatientEncounters content types in/out: ['text/cql'] ['text/cql']
+CQL data identical: True ; dataRequirement in output: 0
+output Parameters-manifest parameters: 764 {'system-version': 15, 'default-canonical-version': 123, 'default-valueset-version': 626}
+input Parameters-manifest parameters: 1
+package.tgz madie.cms.gov.dqms ['4.0.1'] deps: [('hl7.fhir.r4.core', '4.0.1'), ('hl7.fhir.us.cqfmeasures', '5.0.0'), ('hl7.fhir.us.cql', '2.0.0-ballot'), ('hl7.fhir.uv.cql', '2.0.0'), ('hl7.fhir.uv.extensions.r4', '5.4.0'), ('hl7.terminology.r4', '6.5.0')]
+package.r4.tgz madie.cms.gov.dqms.r4 ['4.0.1'] deps: [('hl7.fhir.r4.core', '4.0.1'), ('hl7.fhir.us.cqfmeasures', '5.0.0'), ('hl7.fhir.us.cql', '2.0.0-ballot'), ('hl7.fhir.uv.cql', '2.0.0'), ('hl7.fhir.uv.extensions.r4', '5.4.0'), ('hl7.terminology.r4', '6.5.0')]
+package.r4b.tgz madie.cms.gov.dqms.r4b ['4.3.0'] deps: [('hl7.fhir.r4b.core', '4.3.0'), ('hl7.fhir.us.cqfmeasures', '5.0.0'), ('hl7.fhir.us.cql', '2.0.0-ballot'), ('hl7.fhir.uv.cql', '2.0.0'), ('hl7.fhir.uv.extensions.r4', '5.4.0'), ('hl7.terminology.r4', '6.5.0')]
+package-combined.tgz madie.cms.gov.dqms ['4.0.1'] deps: [('hl7.fhir.r4.core', '4.0.1')]
+sub-package-list.json: []

@@ -1,0 +1,139 @@
+# Log excerpts from run 1 (run1.log), paths replaced with <probe>
+
+FHIR IG Publisher Version 3.0.4 (Git# 7b7ccec6ce50). Built 2026-11-14T02:51:57.470Z (14 hours old)  
+Detected Java version: 21.0.9 from C:\Program Files\Eclipse Adoptium\jdk-21.0.9.10-hotspot on Windows 11/amd64 (64bit). 16184MB available
+dir = <probe>, path = <PATH>
+
+## Translation outcome per .cql file (parsed from the log)
+
+AHAOverall.cql	Any
+AdultOutpatientEncounters.cql	Any
+AdvancedIllnessandFrailty.cql	Any
+AlaraCommonFunctions.cql	Any
+Antibiotic.cql	Any
+CMS0334FHIRPCCesareanBirth.cql	Any
+CMS1017FHIRHHFI.cql	Any
+CMS1028FHIRPCSevereOBComps.cql	Any
+CMS104FHIRSTKDCAntithrombotic.cql	Any
+CMS1056FHIRCTClinical.cql	Any
+CMS1074FHIRCTIQR.cql	Any
+CMS108FHIRVTEProphylaxis.cql	Any
+CMS1154ScreeningPrediabetesFHIR.cql	Any
+CMS1157FHIRHIVRetention.cql	Any
+CMS1173FHIRDiagnosticDelayVTE.cql	Any
+CMS117FHIRChildImmunStatus.cql	Any
+CMS1188FHIRHIVSTITesting.cql	Any
+CMS1206FHIRCTOQR.cql	Any
+CMS1218FHIRHHRF.cql	Any
+CMS122FHIRDiabetesAssessGT9Pct.cql	Any
+CMS1244FHIRECATHOQR.cql	Any
+CMS124FHIRCervicalCancerScreen.cql	Any
+CMS125FHIRBreastCancerScreen.cql	Any
+CMS1264FHIRECATREHQR.cql	Any
+CMS128FHIRAntidepressantMgmt.cql	Any
+CMS129FHIRProstCaBoneScanUse.cql	Any
+CMS130FHIRColorectalCancerScrn.cql	Any
+CMS131FHIRDiabetesEyeExam.cql	Any
+CMS133FHIRCataracts2040BCVA90Days.cql	Any
+CMS135FHIRACEIorARBorARNIforHF.cql	Any
+CMS136FHIRChildADHDMedFollowUp.cql	Any
+CMS137FHIRSUDTxInitEngagement.cql	Any
+CMS138FHIRTobaccoScrnCessation.cql	Any
+CMS139FHIRFallRiskScreening.cql	Any
+CMS142FHIRCommWithDrManagingDiab.cql	Any
+CMS143FHIRPOAGOpticNerveEval.cql	Any
+CMS144FHIRHFBetaBlockerForLVSD.cql	Any
+CMS145FHIRCADBBlockerTPMIorLVSD.cql	Any
+CMS146FHIRApproTestPharyngitis.cql	Any
+CMS149FHIRDementiaCognitiveAssess.cql	Any
+CMS153FHIRChlamydiaScreening.cql	Any
+CMS154FHIRAppropriateTxforURI.cql	Any
+CMS155FHIRWgtAssessCounseling.cql	Any
+CMS156FHIRHighRiskMedsElderly.cql	Any
+CMS157FHIRPainIntensityQuantified.cql	Any
+CMS159FHIRDepRemissionat12Months.cql	Any
+CMS165FHIRControllingHighBP.cql	Any
+CMS177FHIRChildMDDSuicideAssmt.cql	Any
+CMS190FHIRVTEProphylaxisICU.cql	Any
+CMS22FHIRPCSBPScreeningFollowUp.cql	Any
+CMS2FHIRPCSDepScreenAndFollowUp.cql	Any
+CMS314FHIRHIVViralSuppression.cql	Any
+CMS347FHIRStatinPreventionTxCVD.cql	Any
+CMS349FHIRHIVScreening.cql	Any
+CMS506FHIRSafeUseofOpioids.cql	Any
+CMS50FHIRReceiptofSpecialistReport.cql	Any
+CMS56FHIRFuncStatHipReplacement.cql	Any
+CMS645FHIRBoneDensityPCADTherapy.cql	Any
+CMS646FHIRIntravesicalBCGTherapy.cql	Any
+CMS68FHIRDocumentationCurrentMeds.cql	Any
+CMS69FHIRPCSBMIScreenAndFollowUp.cql	Any
+CMS71FHIRSTKAnticoagAFFlutter.cql	Any
+CMS72FHIRSTKAntithromboticDay2.cql	Any
+CMS74FHIRDentalCariesPrevention.cql	Any
+CMS75FHIRChildrenDentalDecay.cql	Any
+CMS771FHIRUrinarySymptomScoreBPH.cql	Any
+CMS816FHIRHHHypo.cql	Any
+CMS819FHIRHHORAE.cql	Any
+CMS826FHIRHHPI.cql	Any
+CMS832FHIRHHAKI.cql	Any
+CMS871FHIRHHHyper.cql	Any
+CMS90FHIRFSAforHeartFailure.cql	Any
+CMS951FHIRKidneyHealthEval.cql	Any
+CMS986FHIRMalnutritionScore.cql	Any
+CMS996FHIRAptTxforSTEMI.cql	Any
+CMSFHIR529HybridHospitalWideReadmission.cql	Any
+CMSFHIR844HybridHospitalWideMortality.cql	Any
+CQMCommon.cql	Any
+Hospice.cql	Any
+NHSNAcuteCareHospitalMonthlyInitialPopulation1.cql	Any
+NHSNGlycemicControlHypoglycemiaInitialPopulation.cql	Any
+NHSNHelpers.cql	ok
+PCMaternal.cql	Any
+PalliativeCare.cql	Any
+Status.cql	Any
+SupplementalDataElements.cql	Any
+TJCOverall.cql	Any
+USQualityCoreCommon.cql	Any
+VTE.cql	Any
+defectHelper.cql	Any
+testCMS104IschemicStrokeEncounterCount.cql	Any
+testCMS72INRDenominatorException.cql	Any
+testCMS72IschemicStrokeEncounterCount.cql	Any
+testE11MedicationReference.cql	ok
+testE15ConditionUnionPrevalence.cql	Any
+testE15Passing.cql	failed 166
+testE18DateTimeCompare.cql	failed 2
+testI28ChoiceArgumentProbeA.cql	failed 1
+testI28ChoiceArgumentProbeC.cql	Any
+testI37RecordedAmbiguousOverload.cql	failed 2
+testI69IsIntervalNullBound.cql	ok
+testPrevalenceIntervalNullPath.cql	Any
+testProbeSingletonNullReturn.cql	ok
+
+## The four translation failures
+
+Translating CQL source in file <probe>\ig\input\cql\testE15Passing.cql (00:00.000 / 05:05.775, 1Gb)
+Translation failed with (166) errors; see the error log for more information.                        (00:00.008 / 05:05.784, 1Gb)
+Translating CQL source in file <probe>\ig\input\cql\testE18DateTimeCompare.cql (00:00.000 / 05:05.784, 1Gb)
+Translation failed with (2) errors; see the error log for more information.                          (00:00.039 / 05:05.824, 1Gb)
+Translating CQL source in file <probe>\ig\input\cql\testI28ChoiceArgumentProbeA.cql (00:00.000 / 05:05.824, 1Gb)
+Translation failed with (1) errors; see the error log for more information.                          (00:00.009 / 05:05.834, 1Gb)
+Translating CQL source in file <probe>\ig\input\cql\testI37RecordedAmbiguousOverload.cql (00:00.000 / 05:05.855, 1Gb)
+Translation failed with (2) errors; see the error log for more information.                          (00:00.006 / 05:05.861, 1Gb)
+
+## First three ELM failures
+
+CQL Translation succeeded for file: '<probe>\ig\input\cql\AdultOutpatientEncounters.cql', but ELM generation failed with the following error: Unknown FHIRTypes code 'Any' (00:02.238 / 04:59.312, 704Mb)
+CQL Translation succeeded for file: '<probe>\ig\input\cql\AdvancedIllnessandFrailty.cql', but ELM generation failed with the following error: Unknown FHIRTypes code 'Any' (00:00.272 / 04:59.585, 835Mb)
+CQL Translation succeeded for file: '<probe>\ig\input\cql\AHAOverall.cql', but ELM generation failed with the following error: Unknown FHIRTypes code 'Any' (00:00.334 / 04:59.920, 689Mb)
+
+## Terminology server
+
+Connect to Terminology Server at https://tx.fhir.org (ecosystem: https://ecosystem.hl7.org/tx-reg)   (00:22.176 / 00:29.625, 426Mb)
+
+## End of run
+
+Validation output in <probe>\ig\output\qa.html
+Errors: 1505, Warnings: 1516, Info: 248, Broken Links: 0 (00:01.153 / 09:19.353, 2Gb)
+Finished @ 11/14/26, 10:39 AM. Max Memory Used = 3Gb. Log file saved in <probe>\tmp\fhir-ig-publisher-tmp.log (00:00.034 / 09:19.387, 2Gb)
+exit=1

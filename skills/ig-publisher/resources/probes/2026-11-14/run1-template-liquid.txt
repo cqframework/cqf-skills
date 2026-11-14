@@ -1,0 +1,4 @@
+template/liquid/ActivityDefinition.liquid
+template/liquid/Library.liquid
+template/liquid/Measure.liquid
+template/liquid/PlanDefinition.liquid

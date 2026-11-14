@@ -39,6 +39,7 @@ SHARED_FILES = [
     "scripts/test_convert_resource.py",
     "scripts/fixtures/crmi-shareablelibrary.json",
     "resources/format-guide.md",
+    "scripts/lint_skill.py",
 ]
 
 

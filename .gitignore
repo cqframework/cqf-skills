@@ -20,3 +20,8 @@ skills/fhir-extensions/resources/profiles/
 skills/cql-ig/resources/profiles/
 skills/uscore/resources/profiles/
 skills/usqualitycore/resources/profiles/
+
+# ig-publisher: local copies of the tools IG, templates, publisher docs and sample IG are
+# built by skills/ig-publisher/scripts/fetch-sources.sh from pinned locators.
+skills/ig-publisher/resources/sources/*
+!skills/ig-publisher/resources/sources/README.md
