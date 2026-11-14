@@ -8,6 +8,25 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `uscore` skill, in the `fhir` plugin, for US Core 6.1.0 and 9.0.0 (`hl7.fhir.us.core`). It was
+  split from the `uscore` skill in raleigh-claude-skills at `8224e28`, originally written by
+  raleigh-g-thompson, which mixed US Core profile tables with CQL patterns. Changes on import:
+  - The profile tables are a local knowledge base built by `scripts/build-kb.sh` with the shared
+    converter, for 6.1.0 and the current 9.0.0 (the source had 6.1.0 and 7.0.0).
+  - SKILL.md covers Must Support, Additional USCDI Requirements, missing data and bindings, with
+    9.0.0's CONF numbers, and the 6.1.0 to 9.0.0 changes, such as `Patient.gender` becoming
+    optional and the sex and gender identity extensions being replaced.
+  - New evals in `evals/uscore/`.
+- `us-cql-ig` skill, in the `cql` plugin, for the Common CQL Artifacts for FHIR (US-Based) IG
+  (`hl7.fhir.us.cql` 2.0.0), the CQL half of the source `uscore` skill. `scripts/build-ig.py`
+  regenerates the committed pages, libraries (USCoreCommon, USCoreElements,
+  CumulativeMedicationDuration, QICoreCommon and C4BBCommon) and the condensed USCore ModelInfo
+  from the pinned package and HL7/us-cql-ig source (CC0). CQL was checked with the CQL-to-ELM
+  translator 3.29.0, which showed that many USCore classes have no primary code path and that
+  unqualified class names shared with FHIR resolve to FHIR. New evals in `evals/us-cql-ig/`, with
+  a grader that reads translated ELM.
+- The shared converter's compact renderings now show the standards status and status reason in
+  each header, and its package-mode index has a Status column and names the right script.
 - `cql-ig` skill, in the `cql` plugin, for the Using CQL With FHIR IG (`hl7.fhir.uv.cql` 2.0.0).
   It covers the IG's conformance requirements for CQL against FHIR and for packaging CQL in FHIR
   Library resources, the CQL-to-FHIR type mapping, `$cql` and `Library/$evaluate`, and the FHIR

@@ -14,7 +14,7 @@
       "description": "Author, test, and translate Clinical Quality Language (CQL) libraries, and use CQL with FHIR",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/cql", "./skills/cql-ig"]
+      "skills": ["./skills/cql", "./skills/cql-ig", "./skills/us-cql-ig"]
     },
     {
       "name": "cql-mcp",
@@ -45,10 +45,10 @@
     },
     {
       "name": "fhir",
-      "description": "FHIR R4 resources, bundles, and base resource element tables",
+      "description": "FHIR R4 resources, bundles, standard extensions, and US Core profiles",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/fhir", "./skills/fhir-extensions"]
+      "skills": ["./skills/fhir", "./skills/fhir-extensions", "./skills/uscore"]
     },
     {
       "name": "clinical-reasoning",

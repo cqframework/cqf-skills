@@ -1,0 +1,351 @@
+{
+ "library": {
+  "annotation": [
+   {
+    "translatorVersion": "3.29.0",
+    "translatorOptions": "",
+    "signatureLevel": "None",
+    "type": "CqlToElmInfo"
+   },
+   {
+    "message": "The function FHIRCommon.active has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "libraryId": "HypertensionCheck",
+    "libraryVersion": "1.0.0",
+    "startLine": 19,
+    "startChar": 3,
+    "endLine": 19,
+    "endChar": 48,
+    "message": "Retrieve has a terminology target but does not specify a code path and the type of the retrieve does not have a primary code path defined.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "libraryId": "HypertensionCheck",
+    "libraryVersion": "1.0.0",
+    "startLine": 19,
+    "startChar": 3,
+    "endLine": 19,
+    "endChar": 48,
+    "message": "Could not resolve membership operator for terminology target of the retrieve.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   },
+   {
+    "message": "The function FHIRHelpers.ToString has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+    "errorType": "semantic",
+    "errorSeverity": "warning",
+    "type": "CqlToElmError"
+   }
+  ],
+  "identifier": {
+   "id": "HypertensionCheck",
+   "version": "1.0.0"
+  },
+  "schemaIdentifier": {
+   "id": "urn:hl7-org:elm",
+   "version": "r1"
+  },
+  "usings": {
+   "def": [
+    {
+     "localIdentifier": "System",
+     "uri": "urn:hl7-org:elm-types:r1",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "USCore",
+     "uri": "http://hl7.org/fhir",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "FHIR",
+     "uri": "http://hl7.org/fhir",
+     "version": "4.0.1",
+     "annotation": []
+    }
+   ]
+  },
+  "includes": {
+   "def": [
+    {
+     "localIdentifier": "FHIRHelpers",
+     "path": "FHIRHelpers",
+     "version": "4.0.1",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "FC",
+     "path": "FHIRCommon",
+     "version": "2.0.0",
+     "annotation": []
+    },
+    {
+     "localIdentifier": "UC",
+     "path": "USCoreCommon",
+     "version": "2.0.0",
+     "annotation": []
+    }
+   ]
+  },
+  "valueSets": {
+   "def": [
+    {
+     "name": "Essential Hypertension",
+     "id": "http://example.org/fhir/ValueSet/essential-hypertension",
+     "accessLevel": "Public",
+     "annotation": [],
+     "codeSystem": []
+    },
+    {
+     "name": "Blood Pressure Codes",
+     "id": "http://example.org/fhir/ValueSet/blood-pressure",
+     "accessLevel": "Public",
+     "annotation": [],
+     "codeSystem": []
+    }
+   ]
+  },
+  "contexts": {
+   "def": [
+    {
+     "name": "Patient",
+     "annotation": []
+    }
+   ]
+  },
+  "statements": {
+   "def": [
+    {
+     "name": "Patient",
+     "context": "Patient",
+     "annotation": [],
+     "expression": {
+      "type": "SingletonFrom",
+      "annotation": [],
+      "signature": [],
+      "operand": {
+       "dataType": "{http://hl7.org/fhir}Patient",
+       "templateId": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+       "type": "Retrieve",
+       "annotation": [],
+       "include": [],
+       "codeFilter": [],
+       "dateFilter": [],
+       "otherFilter": []
+      }
+     }
+    },
+    {
+     "name": "Active Confirmed Hypertension Problems",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "name": "active",
+      "libraryName": "FC",
+      "type": "FunctionRef",
+      "annotation": [],
+      "signature": [],
+      "operand": [
+       {
+        "dataType": "{http://hl7.org/fhir}Condition",
+        "templateId": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns",
+        "codeProperty": "code",
+        "codeComparator": "in",
+        "type": "Retrieve",
+        "annotation": [],
+        "codes": {
+         "name": "Essential Hypertension",
+         "preserve": true,
+         "type": "ValueSetRef",
+         "annotation": []
+        },
+        "include": [],
+        "codeFilter": [],
+        "dateFilter": [],
+        "otherFilter": []
+       }
+      ]
+     }
+    },
+    {
+     "name": "Final Blood Pressure Readings",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "type": "Query",
+      "annotation": [],
+      "source": [
+       {
+        "alias": "BP",
+        "annotation": [],
+        "expression": {
+         "dataType": "{http://hl7.org/fhir}Observation",
+         "templateId": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-blood-pressure",
+         "codeComparator": "in",
+         "type": "Retrieve",
+         "annotation": [],
+         "codes": {
+          "name": "Blood Pressure Codes",
+          "preserve": true,
+          "type": "ValueSetRef",
+          "annotation": []
+         },
+         "include": [],
+         "codeFilter": [],
+         "dateFilter": [],
+         "otherFilter": []
+        }
+       }
+      ],
+      "let": [],
+      "relationship": [],
+      "where": {
+       "type": "Equal",
+       "annotation": [],
+       "signature": [],
+       "operand": [
+        {
+         "name": "ToString",
+         "libraryName": "FHIRHelpers",
+         "type": "FunctionRef",
+         "annotation": [],
+         "signature": [],
+         "operand": [
+          {
+           "path": "status",
+           "scope": "BP",
+           "type": "Property",
+           "annotation": []
+          }
+         ]
+        },
+        {
+         "valueType": "{urn:hl7-org:elm-types:r1}String",
+         "value": "final",
+         "type": "Literal",
+         "annotation": []
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Most Recent Systolic Blood Pressure Quantity",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "strict": false,
+      "type": "As",
+      "annotation": [],
+      "signature": [],
+      "operand": {
+       "path": "value",
+       "type": "Property",
+       "annotation": [],
+       "source": {
+        "name": "systolic",
+        "libraryName": "UC",
+        "type": "FunctionRef",
+        "annotation": [],
+        "signature": [],
+        "operand": [
+         {
+          "type": "First",
+          "annotation": [],
+          "signature": [],
+          "source": {
+           "type": "Query",
+           "annotation": [],
+           "source": [
+            {
+             "alias": "BP",
+             "annotation": [],
+             "expression": {
+              "name": "Final Blood Pressure Readings",
+              "type": "ExpressionRef",
+              "annotation": []
+             }
+            }
+           ],
+           "let": [],
+           "relationship": [],
+           "sort": {
+            "annotation": [],
+            "by": [
+             {
+              "direction": "desc",
+              "type": "ByExpression",
+              "annotation": [],
+              "expression": {
+               "type": "Start",
+               "annotation": [],
+               "signature": [],
+               "operand": {
+                "name": "toInterval",
+                "libraryName": "FC",
+                "type": "FunctionRef",
+                "annotation": [],
+                "signature": [],
+                "operand": [
+                 {
+                  "name": "effective",
+                  "type": "IdentifierRef",
+                  "annotation": []
+                 }
+                ]
+               }
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      "asTypeSpecifier": {
+       "name": "{http://hl7.org/fhir}Quantity",
+       "type": "NamedTypeSpecifier",
+       "annotation": []
+      }
+     }
+    },
+    {
+     "name": "Patient Race Categories",
+     "context": "Patient",
+     "accessLevel": "Public",
+     "annotation": [],
+     "expression": {
+      "path": "ombCategory",
+      "type": "Property",
+      "annotation": [],
+      "source": {
+       "name": "race",
+       "libraryName": "UC",
+       "type": "FunctionRef",
+       "annotation": [],
+       "signature": [],
+       "operand": [
+        {
+         "name": "Patient",
+         "type": "ExpressionRef",
+         "annotation": []
+        }
+       ]
+      }
+     }
+    }
+   ]
+  }
+ }
+}
