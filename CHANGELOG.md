@@ -8,6 +8,35 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `madie` skill, in the `cql` plugin, for QI-Core test cases and measure CQL in MADiE, from
+  raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on import:
+  - MADiE has no releases, so the skill is pinned to `develop` commits of its repositories from
+    2026-11-14, and every behaviour is cited to that code. `scripts/check_release.py` compares each
+    cited range with the current branch and runs in the weekly release check, which opens an issue
+    only when cited code changes.
+  - Corrections against the code: the export file name uses the eCQM abbreviated title and has no
+    fixed series list; `testCaseId` in `.madie` is MADiE's own id and isn't read on import (it isn't
+    an md5 of the patient id); import matches test cases by patient id and updates an existing one;
+    a parent folder in the zip makes it unimportable; MADiE turns transaction bundles into
+    collections and drops the MeasureReport after reading the expected values; export gives every
+    resource except the Patient a new id; the exported MeasureReport uses the CQM IG's
+    `cqm-testcase` profile with a contained Parameters resource, not `test-case-cqfm` with an
+    Organization.
+  - Corrections to the resource notes: QI-Core Simple Observation has a value and no fixed
+    category; `verificationStatus` needn't be `confirmed`; DeviceRequest's `code[x]` may be a
+    reference; the profiles differ between QI-Core 4.1.1 and 6.0.0.
+  - Added what MADiE checks and rewrites in measure CQL (library line, FHIRHelpers alias, value set
+    versions and URLs, library names) and its default CQL templates. CQL style is left to `cms-qmd`.
+  - Removed one project's conventions that MADiE doesn't need: deterministic resource ids, an
+    md5-derived `testCaseId`, reusing patient ids, and a mandatory change summary file, and the
+    follow-up window example. Bonnie-style series names are kept as an optional convention.
+  - New `scripts/check_test_cases.py` checks a test case zip or folder against MADiE's import rules.
+  - Added from the CQL skill in cqframework/dqm-content-cms-2026: MADiE runs test cases in the
+    browser with fqm-execution (the JavaScript engine), with the Patient's id replaced by the test
+    case's internal id; engine differences and code systems MADiE lacks, as observed there; finding
+    test resources by identifier key; and testing a shared library with a Cohort measure on a
+    `_Passed` define.
+
 - `vscode-cql` skill, in the `cql` plugin, for the VS Code CQL extension (`cqframework.cql`) 1.0.0 and
   cql-language-server 5.0.0, from raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson. Changes on import:
