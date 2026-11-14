@@ -1,0 +1,5 @@
+canonical: http://example.org/fhir/fsh-eval
+fhirVersion: 4.0.1
+FSHOnly: true
+status: draft
+version: 0.1.0

@@ -8,6 +8,17 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `fsh` skill, in the `fhir-ig` plugin, imported from raleigh-claude-skills at `8224e28`, originally
+  written by raleigh-g-thompson. Changes on import:
+  - The FSH 3.0.0 language reference is regenerated from the HL7 specification source
+    (HL7/fhir-shorthand at tag 3.0.0, CC0-1.0) by `scripts/build-spec.py`, one file per section,
+    with links between sections and the trial-use and optional markers kept. The source's copy had
+    lost table cells and markers in conversion.
+  - New guidance on the SUSHI workflow and on mistakes that SUSHI rejects or that compile to the
+    wrong thing, each checked with SUSHI 3.21.0.
+  - The SUSHI project notes were rewritten and checked against SUSHI 3.21.0, and no longer refer
+    to skills that this repository doesn't have.
+  - New evals in `evals/fsh/`, with a grader that checks the JSON SUSHI generates.
 - `fhir-extensions` skill, in the `fhir` plugin: a locally built knowledge base of the FHIR
   Extensions Pack for R4 (`hl7.fhir.uv.extensions.r4` 5.4.0), with guidance on checking an
   extension's status, context and value type, and on writing extensions in JSON. New evals in

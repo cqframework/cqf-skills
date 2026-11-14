@@ -1,0 +1,69 @@
+{
+  "resourceType": "Observation",
+  "id": "example-bp",
+  "meta": {
+    "profile": [
+      "http://example.org/fhir/fsh-eval/StructureDefinition/simple-bp"
+    ]
+  },
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "code": "85354-9",
+        "system": "http://loinc.org"
+      }
+    ]
+  },
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "8480-6",
+            "system": "http://loinc.org"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "code": "mm[Hg]",
+        "system": "http://unitsofmeasure.org",
+        "value": 120
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "8462-4",
+            "system": "http://loinc.org"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "code": "mm[Hg]",
+        "system": "http://unitsofmeasure.org",
+        "value": 80
+      }
+    }
+  ],
+  "extension": [
+    {
+      "url": "http://example.org/fhir/fsh-eval/StructureDefinition/reviewed-by",
+      "valueReference": {
+        "reference": "Practitioner/example"
+      }
+    }
+  ],
+  "subject": {
+    "reference": "Patient/example"
+  },
+  "method": {
+    "coding": [
+      {
+        "code": "auto",
+        "system": "http://example.org/fhir/fsh-eval/CodeSystem/bp-method"
+      }
+    ]
+  }
+}

@@ -62,7 +62,7 @@
       "description": "Author, publish, and package FHIR content Implementation Guides (FSH, IG Publisher, CRMI)",
       "source": "./",
       "strict": false,
-      "skills": []
+      "skills": ["./skills/fsh"]
     }
   ]
 }

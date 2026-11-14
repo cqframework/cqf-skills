@@ -1,0 +1,54 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "reviewed-by",
+  "url": "http://example.org/fhir/fsh-eval/StructureDefinition/reviewed-by",
+  "version": "0.1.0",
+  "name": "ReviewedBy",
+  "title": "Reviewed By",
+  "status": "draft",
+  "description": "The practitioner who reviewed the reading.",
+  "fhirVersion": "4.0.1",
+  "kind": "complex-type",
+  "abstract": false,
+  "context": [
+    {
+      "expression": "Observation",
+      "type": "element"
+    }
+  ],
+  "type": "Extension",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Extension",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Extension",
+        "path": "Extension",
+        "short": "Reviewed By",
+        "definition": "The practitioner who reviewed the reading."
+      },
+      {
+        "id": "Extension.extension",
+        "path": "Extension.extension",
+        "max": "0"
+      },
+      {
+        "id": "Extension.url",
+        "path": "Extension.url",
+        "fixedUri": "http://example.org/fhir/fsh-eval/StructureDefinition/reviewed-by"
+      },
+      {
+        "id": "Extension.value[x]",
+        "path": "Extension.value[x]",
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "http://hl7.org/fhir/StructureDefinition/Practitioner"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

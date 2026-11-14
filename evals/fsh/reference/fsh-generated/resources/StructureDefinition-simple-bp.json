@@ -1,0 +1,167 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "simple-bp",
+  "url": "http://example.org/fhir/fsh-eval/StructureDefinition/simple-bp",
+  "version": "0.1.0",
+  "name": "SimpleBP",
+  "title": "Simple Blood Pressure",
+  "status": "draft",
+  "description": "A blood pressure reading with systolic and diastolic components.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Observation",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Observation",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Observation.extension",
+        "path": "Observation.extension",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "url"
+            }
+          ],
+          "ordered": false,
+          "rules": "open"
+        }
+      },
+      {
+        "id": "Observation.extension:reviewedBy",
+        "path": "Observation.extension",
+        "sliceName": "reviewedBy",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://example.org/fhir/fsh-eval/StructureDefinition/reviewed-by"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Observation.status",
+        "path": "Observation.status",
+        "patternCode": "final"
+      },
+      {
+        "id": "Observation.code",
+        "path": "Observation.code",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "85354-9",
+              "system": "http://loinc.org"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Observation.subject",
+        "path": "Observation.subject",
+        "min": 1,
+        "type": [
+          {
+            "code": "Reference",
+            "targetProfile": [
+              "http://hl7.org/fhir/StructureDefinition/Patient"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Observation.method",
+        "path": "Observation.method",
+        "min": 1,
+        "binding": {
+          "strength": "required",
+          "valueSet": "http://example.org/fhir/fsh-eval/ValueSet/bp-method"
+        }
+      },
+      {
+        "id": "Observation.component",
+        "path": "Observation.component",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "pattern",
+              "path": "code"
+            }
+          ],
+          "rules": "open"
+        },
+        "min": 2
+      },
+      {
+        "id": "Observation.component:systolic",
+        "path": "Observation.component",
+        "sliceName": "systolic",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "Observation.component:systolic.code",
+        "path": "Observation.component.code",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "8480-6",
+              "system": "http://loinc.org"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Observation.component:systolic.value[x]",
+        "path": "Observation.component.value[x]",
+        "type": [
+          {
+            "code": "Quantity"
+          }
+        ],
+        "patternQuantity": {
+          "code": "mm[Hg]",
+          "system": "http://unitsofmeasure.org"
+        }
+      },
+      {
+        "id": "Observation.component:diastolic",
+        "path": "Observation.component",
+        "sliceName": "diastolic",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "Observation.component:diastolic.code",
+        "path": "Observation.component.code",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "8462-4",
+              "system": "http://loinc.org"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Observation.component:diastolic.value[x]",
+        "path": "Observation.component.value[x]",
+        "type": [
+          {
+            "code": "Quantity"
+          }
+        ],
+        "patternQuantity": {
+          "code": "mm[Hg]",
+          "system": "http://unitsofmeasure.org"
+        }
+      }
+    ]
+  }
+}
