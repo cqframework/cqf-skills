@@ -8,6 +8,24 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `usqualitycore` skill, in the `fhir` plugin, for US Quality Core 0.5.0
+  (`fhir.onc.us-quality-core`), and `cms-qmd` skill, in the `cql` plugin, for the CMS FHIR Quality
+  Measure Development IG. They replace the `usqualitycore`, `usqualitycore-clinical-patterns` and
+  `usqualitycore-claims-patterns` skills in raleigh-claude-skills at `8224e28`, originally
+  written by raleigh-g-thompson. Changes on import:
+  - `usqualitycore`: the profile tables are a local knowledge base built by `scripts/build-kb.sh`
+    with the USCDI+ Quality flag. `scripts/build-ig.py` regenerates the committed pages
+    (FHIR/us-quality-core at the 0.5.0 release, including the QDM 5.6 mapping), the condensed
+    USQualityCore ModelInfo and USQualityCoreCommon from the pinned sources (CC0).
+  - `cms-qmd`: `scripts/build-ig.py` regenerates every page of the IG and its shared CQL libraries
+    from cqframework/cms-qmd at a pinned commit of the continuous build (0.8.0-cibuild), replacing
+    the source's summaries of the Pattern Index.
+  - Checked with the CQL-to-ELM translator 3.29.0. A library needs `using FHIR` alongside the
+    derived model for the FHIRHelpers conversions to apply, and then unqualified class names
+    resolve to base FHIR. Several retrieves in CQMCommon, CQMConcepts and CQMElements do this.
+  - New evals in `evals/usqualitycore/` and `evals/cms-qmd/`.
+- The `us-cql-ig` skill says to keep `using FHIR` alongside `using USCore`, and the `cql` skill
+  points to `cms-qmd` for measure authoring patterns.
 - `uscore` skill, in the `fhir` plugin, for US Core 6.1.0 and 9.0.0 (`hl7.fhir.us.core`). It was
   split from the `uscore` skill in raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson, which mixed US Core profile tables with CQL patterns. Changes on import:
