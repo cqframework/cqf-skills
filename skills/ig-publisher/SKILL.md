@@ -151,7 +151,8 @@ Each link leads to the evidence and the versions it holds for.
   (possible defect, by code read): [publication.md](resources/publication.md#possible-defects-by-code-read)
 - **`<root>/template/` is wiped on every run**:
   [ig-ini-and-ig-resource.md](resources/ig-ini-and-ig-resource.md#the-template-value)
-- **The VS Code CQL extension reads `input/cql` and `input/tests` whatever `path-binary` says**:
+- **The VS Code CQL extension reads `input/cql` and `input/tests` whatever `path-binary` says**
+  (the `vscode-cql` skill covers the extension):
   [layout.md](resources/layout.md#tools-that-assume-the-default-layout)
 
 ## Supporting Files

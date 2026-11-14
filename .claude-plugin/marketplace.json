@@ -14,7 +14,7 @@
       "description": "Author, test, and translate Clinical Quality Language (CQL) libraries, use CQL with FHIR, and author CMS quality measures",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/cql", "./skills/cql-ig", "./skills/us-cql-ig", "./skills/cms-qmd"]
+      "skills": ["./skills/cql", "./skills/cql-ig", "./skills/us-cql-ig", "./skills/cms-qmd", "./skills/vscode-cql"]
     },
     {
       "name": "cql-mcp",

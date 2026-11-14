@@ -148,9 +148,11 @@ it, or depends on a setting. Each link leads to a block with the probe, the spec
 and a workaround. Silent wrong values come first.
 
 Every translator and engine observation in this skill is on 5.4.0. Other tools bundle other
-versions: IG Publisher 3.0.1 compiles CQL with cqframework 3.29.0, so the ELM in a package it builds
-can differ from these probes (for example `Choice`/`As` emission, `if`-branch typing or list
-typing). None of these gotchas was probed on 3.29.0.
+versions: IG Publisher 3.0.4 compiles CQL with cqframework 4.9.0 (3.0.1 used 3.29.0), and the VS Code
+extension 1.0.0 runs 5.5.0 in its language server (see the `ig-publisher` and `vscode-cql` skills).
+So the ELM in a package the publisher builds can differ from these probes (for example
+`Choice`/`As` emission, `if`-branch typing or list typing). None of these gotchas was probed on 4.9.0
+or 3.29.0.
 
 - **Integer and Long overflow wraps**, including `Sum` (engine):
   [nulls.md](resources/nulls.md#gotcha-integer-and-long-overflow-wraps-instead-of-returning-null)

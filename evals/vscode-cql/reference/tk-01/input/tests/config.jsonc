@@ -1,0 +1,24 @@
+{
+  // Results as one JSON file per test case, listed under each test case in the CQL Explorer.
+  // VS Code flags this key "not allowed": the bundled schema is incomplete in 1.0.0.
+  "resultFormat": "individual",
+  "testCasesToExclude": [
+    {
+      "library": "WeightCheck",
+      "testCase": "33333333-3333-4333-8333-333333333333",
+      "reason": "Synthetic placeholder patient with no data yet"
+    }
+  ],
+  "parameters": [
+    { "name": "Measurement Period", "type": "Interval<DateTime>", "value": "Interval[@2024-01-01, @2025-01-01)" },
+    {
+      "library": "WeightCheck",
+      "parameters": [],
+      "testCases": {
+        "22222222-2222-4222-8222-222222222222": [
+          { "name": "Product Line", "type": "String", "value": "'Medicaid'" }
+        ]
+      }
+    }
+  ]
+}
