@@ -1,0 +1,22 @@
+{
+  "resourceType": "CodeSystem",
+  "status": "draft",
+  "content": "complete",
+  "name": "BPMethodCS",
+  "id": "bp-method",
+  "title": "Blood Pressure Method",
+  "version": "0.1.0",
+  "url": "http://example.org/fhir/fsh-eval/CodeSystem/bp-method",
+  "concept": [
+    {
+      "code": "auto",
+      "display": "Automated cuff"
+    },
+    {
+      "code": "manual",
+      "display": "Manual auscultation"
+    }
+  ],
+  "caseSensitive": true,
+  "count": 2
+}

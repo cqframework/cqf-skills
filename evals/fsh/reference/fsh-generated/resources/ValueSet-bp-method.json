@@ -1,0 +1,16 @@
+{
+  "resourceType": "ValueSet",
+  "status": "draft",
+  "name": "BPMethodVS",
+  "id": "bp-method",
+  "title": "Blood Pressure Method",
+  "version": "0.1.0",
+  "url": "http://example.org/fhir/fsh-eval/ValueSet/bp-method",
+  "compose": {
+    "include": [
+      {
+        "system": "http://example.org/fhir/fsh-eval/CodeSystem/bp-method"
+      }
+    ]
+  }
+}
