@@ -1,0 +1,141 @@
+{
+  "resourceType": "Library",
+  "id": "DiabetesScreening",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/cql/StructureDefinition/cql-library"
+    ]
+  },
+  "url": "http://example.org/fhir/Library/DiabetesScreening",
+  "version": "1.0.0",
+  "name": "DiabetesScreening",
+  "status": "draft",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "relatedArtifact": [
+    {
+      "type": "depends-on",
+      "display": "FHIR model information",
+      "resource": "http://hl7.org/fhir/uv/cql/Library/FHIR-ModelInfo|4.0.1"
+    },
+    {
+      "type": "depends-on",
+      "display": "Library FHIRHelpers",
+      "resource": "http://hl7.org/fhir/uv/cql/Library/FHIRHelpers|4.0.1"
+    },
+    {
+      "type": "depends-on",
+      "display": "Code system LOINC",
+      "resource": "http://loinc.org"
+    },
+    {
+      "type": "depends-on",
+      "display": "Value set Diabetes",
+      "resource": "http://example.org/fhir/ValueSet/diabetes"
+    }
+  ],
+  "parameter": [
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
+          "valueString": "Interval<System.DateTime>"
+        }
+      ],
+      "name": "Measurement Period",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "type": "Period"
+    },
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
+          "valueString": "FHIR.Patient"
+        }
+      ],
+      "name": "Patient",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "type": "Patient"
+    },
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
+          "valueString": "System.Boolean"
+        }
+      ],
+      "name": "Has Diabetes",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "type": "boolean"
+    },
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
+          "valueString": "List<FHIR.Observation>"
+        }
+      ],
+      "name": "HbA1c Results",
+      "use": "out",
+      "min": 0,
+      "max": "*",
+      "type": "Observation"
+    }
+  ],
+  "dataRequirement": [
+    {
+      "type": "Patient",
+      "profile": [
+        "http://hl7.org/fhir/StructureDefinition/Patient"
+      ]
+    },
+    {
+      "type": "Condition",
+      "profile": [
+        "http://hl7.org/fhir/StructureDefinition/Condition"
+      ],
+      "codeFilter": [
+        {
+          "path": "code",
+          "valueSet": "http://example.org/fhir/ValueSet/diabetes"
+        }
+      ]
+    },
+    {
+      "type": "Observation",
+      "profile": [
+        "http://hl7.org/fhir/StructureDefinition/Observation"
+      ],
+      "codeFilter": [
+        {
+          "path": "code",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "content": [
+    {
+      "contentType": "text/cql; version=1.5",
+      "data": "bGlicmFyeSBEaWFiZXRlc1NjcmVlbmluZyB2ZXJzaW9uICcxLjAuMCcKCnVzaW5nIEZISVIgdmVyc2lvbiAnNC4wLjEnCgppbmNsdWRlIEZISVJIZWxwZXJzIHZlcnNpb24gJzQuMC4xJyBjYWxsZWQgRkhJUkhlbHBlcnMKCmNvZGVzeXN0ZW0gIkxPSU5DIjogJ2h0dHA6Ly9sb2luYy5vcmcnCgp2YWx1ZXNldCAiRGlhYmV0ZXMiOiAnaHR0cDovL2V4YW1wbGUub3JnL2ZoaXIvVmFsdWVTZXQvZGlhYmV0ZXMnCgpjb2RlICJIYkExYyI6ICc0NTQ4LTQnIGZyb20gIkxPSU5DIiBkaXNwbGF5ICdIZW1vZ2xvYmluIEExYycKCnBhcmFtZXRlciAiTWVhc3VyZW1lbnQgUGVyaW9kIiBJbnRlcnZhbDxEYXRlVGltZT4KCmNvbnRleHQgUGF0aWVudAoKZGVmaW5lICJIYXMgRGlhYmV0ZXMiOgogIGV4aXN0cyBbQ29uZGl0aW9uOiAiRGlhYmV0ZXMiXQoKZGVmaW5lICJIYkExYyBSZXN1bHRzIjoKICBbT2JzZXJ2YXRpb246ICJIYkExYyJdIE8KICAgIHdoZXJlIE8uc3RhdHVzID0gJ2ZpbmFsJwo="
+    }
+  ]
+}
