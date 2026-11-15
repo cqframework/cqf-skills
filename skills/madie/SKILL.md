@@ -1,6 +1,6 @@
 ---
 name: madie
-description: Build, import, export and troubleshoot US Quality Core test cases and measure CQL in MADiE, the CMS Measure Authoring Development Integrated Environment. Use for MADiE test case zips and the .madie file, test case bundles and their MeasureReport expected values, import errors, test case validation, test case series and titles, and what MADiE checks or rewrites in a measure's CQL. Each behaviour is cited to MADiE's source code.
+description: Build, check and move US Quality Core measure test cases between VS Code and MADiE, the CMS Measure Authoring Development Integrated Environment. Use for building test cases in VS Code to import into MADiE, running MADiE-exported test cases in VS Code and checking them against their expected values, MADiE test case zips and the .madie file, MeasureReport expected values, import errors, validation, and what MADiE checks or rewrites in a measure's CQL. Each behaviour is cited to MADiE's, the VS Code extension's and fqm-execution's source code.
 license: Apache-2.0
 ---
 
@@ -9,7 +9,15 @@ license: Apache-2.0
 MADiE (Measure Authoring Development Integrated Environment) is the CMS tool for writing electronic
 clinical quality measures in CQL and testing them against test cases: FHIR bundles of synthetic patient
 data with expected population results. This skill covers measures on **US Quality Core 0.5.0**, the model
-of current CMS FHIR measures.
+of current CMS FHIR measures, and moving their test cases between MADiE and VS Code:
+
+- **VS Code to MADiE:** build test cases in VS Code, check them with the CQL extension, and package them
+  as a zip MADiE imports.
+- **MADiE to VS Code:** unpack a MADiE export, run it with Execute CQL, and check each case against the
+  expected values MADiE stored, deciding pass or fail the way MADiE does.
+
+When the two disagree on the same CQL and data, one engine doesn't follow the CQL specification:
+report it as a test in cqframework/cql-tests ([vscode.md](resources/vscode.md)).
 
 Related skills: `cms-qmd` for how to write CMS measure CQL, `usqualitycore` for the US Quality Core
 profiles, `cql` for the language, `vscode-cql` for running CQL and test cases locally.
@@ -41,6 +49,23 @@ reports an error message the skill doesn't mention:
    message's text to find its rule.
 
 ## Quick Reference
+
+**Moving test cases** (details in [vscode.md](resources/vscode.md)):
+
+```bash
+# MADiE export -> input/tests/<Library>/<patient UUID>/<Type>-<id>.json, one resource per file
+python3 scripts/madie_to_vscode.py export.zip --library MyMeasure
+# after Execute CQL with "resultFormat": "individual": pass/fail per case, as MADiE decides it
+python3 scripts/check_results.py input/tests/MyMeasure input/tests/results/MyMeasure --measure Measure.json
+# input/tests/<Library>/ -> a zip MADiE imports, checked against its import rules
+python3 scripts/vscode_to_madie.py input/tests/MyMeasure -o MyMeasure-tests.zip
+```
+
+- The VS Code extension ignores Bundles, so each case is one file per resource; the MeasureReport file
+  carries the expected values. Set the measurement period in `config.jsonc` (MADiE uses the measure's
+  setting, not the CQL default) and provide the value sets in `input/vocabulary`.
+- A case passes when every expected population matches **after** the measure's population rules: an
+  excluded patient isn't in the Numerator even when the `"Numerator"` definition is true.
 
 **A test case zip that imports** (details in [test-case-files.md](resources/test-case-files.md)):
 
@@ -83,6 +108,11 @@ characters; versions are `x.y.zzz`.
 
 ## Known Gotchas
 
+- **A MADiE export doesn't run in VS Code as is**: the extension ignores Bundles. Unpack it with
+  `madie_to_vscode.py`.
+- **Comparing raw definition values with expected counts** gives false failures; apply the population
+  rules (`check_results.py` does).
+
 - **A parent folder in the zip** makes every entry invalid: "Unable to find any valid test case json".
 - **No `.madie` file:** "Zip file is in an incorrect format…". Old exports (before June 2024) lack it.
 - **Re-importing an exported zip into the same measure updates, not duplicates**, because the patient
@@ -119,9 +149,13 @@ characters; versions are `x.y.zzz`.
 | [resources/test-case-files.md](resources/test-case-files.md) | The export zip, the `.madie` file, import rules and errors, what MADiE rewrites, the MeasureReport and expected values, titles and series |
 | [resources/test-case-content.md](resources/test-case-content.md) | Validation, ids and references, how MADiE runs test cases, US Quality Core profiles, notes on the resources measures test |
 | [resources/measure-cql.md](resources/measure-cql.md) | Library names and versions, what MADiE rewrites or rejects in CQL (including codes), the default CQL template, drafting a QI-Core measure as US Quality Core, testing a shared library with a Cohort measure |
+| [resources/vscode.md](resources/vscode.md) | Test cases in VS Code: the two layouts, converting both ways, checking results the way MADiE does, and reporting engine discrepancies to cql-tests |
 | [resources/SOURCES.md](resources/SOURCES.md) | The pinned sources and how to read a citation on GitHub |
+| [scripts/madie_to_vscode.py](scripts/madie_to_vscode.py) | Unpacks a MADiE export into the VS Code extension's test case layout |
+| [scripts/vscode_to_madie.py](scripts/vscode_to_madie.py) | Packages VS Code test cases as a zip MADiE imports |
+| [scripts/check_results.py](scripts/check_results.py) | Checks Execute CQL results against the test cases' expected values |
 | [scripts/check_test_cases.py](scripts/check_test_cases.py) | Checks a test case folder or zip against MADiE's import rules before uploading |
-| [scripts/check_release.py](scripts/check_release.py) | For maintainers: reports cited code that has changed on `develop` |
+| [scripts/check_release.py](scripts/check_release.py) | For maintainers: reports cited code that has changed on `develop` or in a newer release |
 
 To check test cases before importing them:
 

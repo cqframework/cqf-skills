@@ -45,6 +45,10 @@ DEFAULT_REPOS = {
     "TSMODELS-960ea63": CACHE_DIR / "madie-models.git",
     "EDITOR-e2635c7": CACHE_DIR / "madie-editor.git",
     "DQMCMS-757d7c6": CACHE_DIR / "dqm-content-cms-2026.git",
+    "VSCQL-855eac7": CACHE_DIR / "vscode-cql.git",
+    "CQLLS-68e601f": CACHE_DIR / "cql-language-server.git",
+    "FQM-8f1038a": CACHE_DIR / "fqm-execution.git",
+    "CQLTESTS-5747d2b": CACHE_DIR / "cql-tests.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")
 LINE_LOC_RE = re.compile(r"^(.+?):(\d+)(?:-(\d+))?$")

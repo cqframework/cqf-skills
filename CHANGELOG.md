@@ -36,6 +36,12 @@ All notable changes to this project are documented here. The format is based on
     md5-derived `testCaseId`, reusing patient ids, and a mandatory change summary file, and the
     follow-up window example. Bonnie-style series names are kept as an optional convention.
   - New `scripts/check_test_cases.py` checks a test case zip or folder against MADiE's import rules.
+  - New support for working on MADiE test cases in VS Code, in `resources/vscode.md`:
+    `scripts/madie_to_vscode.py` unpacks a MADiE export into the CQL extension's layout (which
+    ignores Bundles), `scripts/vscode_to_madie.py` packages VS Code test cases as an importable zip,
+    and `scripts/check_results.py` checks Execute CQL results against the MeasureReport expected
+    values by applying fqm-execution's population rules and MADiE's comparison. Differences between
+    the engines are to be reported as tests in cqframework/cql-tests.
   - Added from the CQL skill in cqframework/dqm-content-cms-2026: MADiE runs test cases in the
     browser with fqm-execution (the JavaScript engine), with the Patient's id replaced by the test
     case's internal id; engine differences and code systems MADiE lacks, as observed there; finding

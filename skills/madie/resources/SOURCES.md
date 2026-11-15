@@ -19,6 +19,10 @@ behind them.
 | TSMODELS-960ea63 | implementation-source | n/a | madie-models (browser data model) `main`, 2026-10-29, the branch it's published from | MeasureAuthoringTool/madie-models@960ea6339f0e00178d32c14684fa9e65bd26f589 | <https://github.com/MeasureAuthoringTool/madie-models/tree/960ea6339f0e00178d32c14684fa9e65bd26f589> | none (the fetch script caches a clone) | 2026-11-14 |
 | EDITOR-e2635c7 | implementation-source | n/a | madie-editor (CQL editor) `develop`, 2026-11-12 | MeasureAuthoringTool/madie-editor@e2635c76318164a282fcad7e8c204b4bbc7a822d | <https://github.com/MeasureAuthoringTool/madie-editor/tree/e2635c76318164a282fcad7e8c204b4bbc7a822d> | none (the fetch script caches a clone) | 2026-11-14 |
 | DQMCMS-757d7c6 | observed-behavior | n/a | The CMS 2026 dQM content repository's CQL skill, recording what its authors observed testing shared libraries in MADiE (engine differences, code systems MADiE lacks, the Cohort-measure test pattern) | cqframework/dqm-content-cms-2026@757d7c6fd01998287d622d03fb02e133c700e22a | <https://github.com/cqframework/dqm-content-cms-2026/blob/757d7c6fd01998287d622d03fb02e133c700e22a/.claude/skills/cql/SKILL.md> | none (the fetch script caches a clone) | 2026-11-14 |
+| VSCQL-855eac7 | implementation-source | n/a | vscode-cql 1.0.0, the VS Code CQL extension (tag `v1.0.0`) | cqframework/vscode-cql@855eac7b5f21c788d0e0e856d741cadc35e6bda9 | <https://github.com/cqframework/vscode-cql/tree/v1.0.0> | none (the fetch script caches a clone) | 2026-11-14 |
+| CQLLS-68e601f | implementation-source | n/a | cql-language-server 5.0.0, the server vscode-cql 1.0.0 runs (tag `v5.0.0`) | cqframework/cql-language-server@68e601fa6b8ef7df99f8ef29b86d4464d94bd400 | <https://github.com/cqframework/cql-language-server/tree/v5.0.0> | none (the fetch script caches a clone) | 2026-11-14 |
+| FQM-8f1038a | implementation-source | n/a | fqm-execution 1.8.6, the engine MADiE runs test cases with (tag `v1.8.6`) | projecttacoma/fqm-execution@8f1038add3658f720b1b851100b50454e40a431d | <https://github.com/projecttacoma/fqm-execution/tree/v1.8.6> | none (the fetch script caches a clone) | 2026-11-14 |
+| CQLTESTS-5747d2b | test-suite | informative | cqframework/cql-tests, the CQL conformance tests, `main` | cqframework/cql-tests@5747d2b72f29d733fbc114383c4a15a30999ffaf | <https://github.com/cqframework/cql-tests> | none (the fetch script caches a clone) | 2026-11-14 |
 | USQC-0.5.0 | package | trial-use | fhir.onc.us-quality-core 0.5.0 (US Quality Core) | fhir.onc.us-quality-core#0.5.0 | <https://fhir.org/guides/onc/us-quality-core/0.5.0/> | none | 2026-11-14 |
 | CQLIG-2.0.0 | package | trial-use | hl7.fhir.uv.cql 2.0.0 (Using CQL With FHIR), for the FHIRCommon 2.0.0 library | hl7.fhir.uv.cql#2.0.0 | <https://hl7.org/fhir/uv/cql/STU2/> | none | 2026-11-14 |
 | CQM-2.0.0 | package | trial-use | hl7.fhir.uv.cqm 2.0.0 (Quality Measures IG), for the `cqm-testcase` profile | hl7.fhir.uv.cqm#2.0.0 | <https://hl7.org/fhir/uv/cqm/STU2/> | none | 2026-11-14 |
@@ -32,6 +36,8 @@ No local copy is needed to check a claim. Read a citation at its pinned commit, 
 | --- | --- |
 | MADiE repositories | `https://github.com/MeasureAuthoringTool/<repo>/blob/<commit or develop>/<path>#L<a>-L<b>` (`main` for madie-models, which has no `develop`) |
 | DQMCMS | `https://github.com/cqframework/dqm-content-cms-2026/blob/<commit or main>/<path>#L<a>-L<b>` |
+| VSCQL, CQLLS, FQM | `https://github.com/<repo>/blob/v<version>/<path>#L<a>-L<b>` (tags are `v` plus the version) |
+| CQLTESTS | `https://github.com/cqframework/cql-tests/blob/<commit or main>/<path>#L<a>-L<b>` |
 | Packages | `https://packages.fhir.org/<package>/<version>` (a tgz), or the published IG's page for the profile |
 
 Line numbers move between commits, so at `develop` find the cited code by its content near the cited
@@ -71,6 +77,8 @@ lines.
 | PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/PackagingUtilityFactory.java` |
 | PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/qicore411/PackagingUtilityImpl.java` |
 | PKGUTIL | `src/main/java/gov/cms/madie/packaging/utils/usqualitycore/PackagingUtilityImpl.java` |
+| CQLLS | `ls/server/src/main/kotlin/org/opencds/cqf/cql/ls/server/command/CqlEvaluator.kt` |
+| CQLLS | `ls/server/src/main/kotlin/org/opencds/cqf/cql/ls/server/repository/ig/standard/IgStandardRepository.kt` |
 | JMODELS | `src/main/java/gov/cms/madie/models/common/ModelType.java` |
 | JMODELS | `src/main/java/gov/cms/madie/models/common/Version.java` |
 | JMODELS | `src/main/java/gov/cms/madie/models/dto/TestCaseExportMetaData.java` |

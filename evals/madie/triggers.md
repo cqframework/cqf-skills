@@ -11,6 +11,8 @@ installed and no other instructions, and record whether the skill loaded.
 4. Why did MADiE overwrite the library statement in my measure's CQL?
 5. My imported MADiE test cases have no expected values.
 6. How do I copy test cases from one MADiE measure to another?
+7. Run the test cases I exported from MADiE in VS Code and tell me which ones fail.
+8. Package my VS Code test cases so I can import them into MADiE.
 
 ## Should not load the skill
 

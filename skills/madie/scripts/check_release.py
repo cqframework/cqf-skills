@@ -2,7 +2,8 @@
 
 MADiE has no releases: each repository is developed on a branch (`develop`, or `main` for
 madie-models) and deployed from it in sprints. So instead of comparing versions, every
-[src: …] citation of a git-pinned source is looked up at the branch's current head:
+[src: …] citation of a git-pinned source is looked up at the branch's current head (for the released
+tools, vscode-cql, cql-language-server and fqm-execution, at their latest release):
 
   same     the cited lines are identical at the same line numbers
   moved    the identical text is at one other place (the citation only needs new line numbers)
@@ -11,7 +12,7 @@ madie-models) and deployed from it in sprints. So instead of comparing versions,
   missing  the cited file no longer exists
 
 A source needs a re-pin when any of its citations is CHANGED, missing or multi. Commits that touch
-none of the cited code are reported but don't count. Package sources (QI-Core, CQM) are fixed
+none of the cited code are reported but don't count. Package sources (US Quality Core, CQM) are fixed
 versions and aren't checked. Nothing in the skill is changed; re-pinning stays a reviewed change.
 
 Usage: python3 scripts/check_release.py [--report FILE] [--cache DIR]
@@ -21,10 +22,12 @@ Needs git and network access.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
 import sys
+import urllib.request
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -36,7 +39,11 @@ CACHE_DIR = Path(os.environ.get("MADIE_SKILL_CACHE", Path.home() / ".cache" / "m
 PIN_RE = re.compile(r"^\|\s*([A-Z0-9]+-[0-9a-f]{7})\s*\|.*?\|\s*([\w.\-]+/[\w.\-]+)@([0-9a-f]{40})\s*\|", re.M)
 SRC_RE = re.compile(r"\[src:\s*([A-Za-z0-9.\-]+)\s+([^\]]+?)\s*\]")
 LINE_LOC_RE = re.compile(r"^(.+?):(\d+)(?:-(\d+))?$")
-BRANCHES = {"MeasureAuthoringTool/madie-models": "main", "cqframework/dqm-content-cms-2026": "main"}
+BRANCHES = {"MeasureAuthoringTool/madie-models": "main", "cqframework/dqm-content-cms-2026": "main",
+            "cqframework/cql-tests": "main",
+            # released tools: compared with their latest GitHub release
+            "cqframework/vscode-cql": "release", "cqframework/cql-language-server": "release",
+            "projecttacoma/fqm-execution": "release"}
 DEFAULT_BRANCH = "develop"
 MAX_ROWS = 150  # per source, so the report fits in an issue body (65,536 characters)
 NEEDS_REPIN = ("CHANGED", "missing", "multi")
@@ -182,7 +189,17 @@ def render_report(results: list[SourceResult]) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# Git
+# Network and git
+
+def http_json(url: str) -> dict:
+    headers = {"Accept": "application/json", "User-Agent": "cqf-skills-release-check"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token and url.startswith("https://api.github.com/"):
+        headers["Authorization"] = f"Bearer {token}"
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r:
+        return json.load(r)
+
+
 
 class GitRepo:
     """A blobless bare clone holding the commits asked for."""
@@ -200,11 +217,25 @@ class GitRepo:
         return subprocess.run(cmd, capture_output=True, check=check)
 
     def head(self, branch: str) -> str:
+        if branch == "release":
+            return self.latest_release()
         ref = "HEAD" if branch == "HEAD" else f"refs/heads/{branch}"
         out = self._git("ls-remote", "origin", ref).stdout.decode().split()
         if not out:
             raise RuntimeError(f"branch {branch} not found")
         return out[0]
+
+    def latest_release(self) -> str:
+        """The commit of the repository's latest GitHub release (a peeled tag)."""
+        repo = self._git("remote", "get-url", "origin").stdout.decode().strip()
+        repo = repo.removeprefix("https://github.com/").removesuffix(".git")
+        tag = http_json(f"https://api.github.com/repos/{repo}/releases/latest")["tag_name"]
+        out = self._git("ls-remote", "origin", f"refs/tags/{tag}", f"refs/tags/{tag}^{{}}").stdout.decode()
+        refs = {ref: sha for sha, ref in (line.split("	") for line in out.splitlines() if "	" in line)}
+        sha = refs.get(f"refs/tags/{tag}^{{}}") or refs.get(f"refs/tags/{tag}")
+        if not sha:
+            raise RuntimeError(f"release tag {tag} not found")
+        return sha
 
     def fetch(self, sha: str) -> None:
         if self._git("rev-parse", "-q", "--verify", f"{sha}^{{commit}}", check=False).returncode != 0:

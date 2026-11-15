@@ -83,6 +83,25 @@ measure in MADiE. What did MADiE change in the CQL, and what's left for me to do
 
 **SE-01. Series names.** Must test case series be named `IPPPass`, `NUMERFail` and so on?
 
+## VS Code
+
+**VS-01. Running an export.** I put a MADiE test case export into `input/tests/MyMeasure/` exactly as
+it came out of the zip, and Execute CQL finds no data for any test case. Why?
+
+**VS-02. A failing Numerator.** In VS Code, my test case's `"Numerator"` definition is `true`, but the
+case's MeasureReport from MADiE expects a Numerator count of 0, and MADiE shows the case passing. The
+case is also in the Denominator Exclusion. Which is right?
+
+**VS-03. The measurement period.** My US Quality Core measure's test cases pass in MADiE, but in VS
+Code every population is false. The measure's CQL is MADiE's default template. What's the likely
+cause?
+
+**VS-04. The engines disagree.** With the same data, value sets and measurement period, a definition
+evaluates to `true` in VS Code and `false` in MADiE. What should I do?
+
+**VS-05. Building in VS Code.** I've built test cases in VS Code under `input/tests/MyMeasure/`. How do
+I get them into MADiE with their titles and expected values?
+
 ## Versions
 
 **VR-01. A newer MADiE.** MADiE shows an import error message the skill doesn't mention. How should the

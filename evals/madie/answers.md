@@ -194,6 +194,55 @@ have learned from; those are marked. "Skill" says where the skill covers it.
 - **Pass if:** free text, a convention only.
 - **Skill:** `resources/test-case-files.md` (Titles and series).
 
+## VS Code
+
+### VS-01. Running an export
+
+- **Expected:** the VS Code extension ignores Bundles in test case folders; it reads one resource per
+  file. Split each bundle into `<ResourceType>-<id>.json` files in `input/tests/MyMeasure/<patient
+  UUID>/` (`madie_to_vscode.py` does this, keeping the MeasureReport and `.madie`).
+- **Pass if:** Bundles ignored; one file per resource.
+- **Skill:** `resources/vscode.md` (The two layouts).
+
+### VS-02. A failing Numerator
+
+- **Expected:** MADiE is right. Population rules apply after the definitions: a case in the Denominator
+  Exclusion isn't counted in the Numerator (or Numerator Exclusion, or Denominator Exception), whatever
+  the `"Numerator"` definition says. Compare after applying the rules, as `check_results.py` does.
+- **Pass if:** the exclusion clears the Numerator.
+- **Fail if:** it calls the test case or MADiE wrong.
+- **Skill:** `resources/vscode.md` (Checking results).
+
+### VS-03. The measurement period
+
+- **Expected:** MADiE runs with the measurement period set on the measure; the US Quality Core template
+  declares `"Measurement Period"` with no default, so in VS Code it's null unless `config.jsonc` sets
+  it. Add a `Measurement Period` parameter (`Interval<DateTime>`) for the library. Missing value sets
+  (no `ig.ini` or nothing in `input/vocabulary`) is the other common cause.
+- **Pass if:** the measurement period in `config.jsonc`.
+- **Skill:** `resources/vscode.md` (From MADiE to VS Code).
+
+### VS-04. The engines disagree
+
+- **Expected:** rule out the inputs (measurement period, value sets, library versions, logic that uses
+  `Patient.id`, which MADiE replaces), reduce it to the smallest expression that differs, preferably
+  with literals rather than data, decide what the CQL specification requires, and add a test
+  demonstrating it to cqframework/cql-tests as a pull request, naming the engine and version that's
+  wrong, with an issue on that engine. Don't work around it in the measure.
+- **Pass if:** a cql-tests pull request with a minimal test.
+- **Fail if:** it treats either engine's result as the answer without checking the specification.
+- **Skill:** `resources/vscode.md` (When VS Code and MADiE disagree).
+
+### VS-05. Building in VS Code
+
+- **Expected:** keep each case as `input/tests/MyMeasure/<UUID>/` with the Patient's id equal to the
+  folder name, a `MeasureReport-<id>.json` with the expected values (`Group_1`, populations in the
+  measure's order), and the title and series in `input/tests/MyMeasure/.madie` or the Patient's given and
+  family names. Package them with `vscode_to_madie.py`, which writes the zip layout and `.madie` and
+  checks it, and import the zip.
+- **Pass if:** the zip layout, the MeasureReport for expected values, and where the titles come from.
+- **Skill:** `resources/vscode.md` (From VS Code to MADiE).
+
 ## Versions
 
 ### VR-01. A newer MADiE

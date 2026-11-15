@@ -14,7 +14,7 @@ SOURCES = (SKILL / "resources" / "SOURCES.md").read_text(encoding="utf-8")
 
 def test_read_pins():
     pins = C.read_pins(SOURCES)
-    assert len(pins) == 8
+    assert len(pins) == 12
     for p in pins:
         assert re.fullmatch(r"[0-9a-f]{40}", p.sha)
         assert p.sid.endswith("-" + p.sha[:7]), f"{p.sid}: the ID must end with the commit's short SHA"
