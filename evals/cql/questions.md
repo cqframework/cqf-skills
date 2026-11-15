@@ -140,3 +140,31 @@ Guide gives an answer for this exact expression; is that answer right?
 
 What should `@2024-11-15T12:30:00.0Z = @2024-11-15T12:30:00Z` return, and what does engine 5.4.0
 return?
+
+## Functions, strings and testing
+
+### TQ-24. A fluent function in two libraries
+
+A library includes `CommonA` and then `CommonB`. Both define a fluent function `widen`: `CommonA`'s
+takes an `Integer`, `CommonB`'s a `Decimal`. Which one does `1.widen()` call, and does the translator
+say anything?
+
+### TQ-25. A fluent `toString`
+
+I defined `define fluent function toString(x Integer): 'n=' + ToString(x)` and `5.toString()`
+returns `'5'`. Why?
+
+### TQ-26. Calling a function on a query
+
+Why does `define "Codes": GetCodes(X) C where C.system = 'http://loinc.org'` fail with
+`Syntax error at C`?
+
+### TQ-27. Is a string blank?
+
+How do I test in CQL whether a string is empty or only whitespace? Does `Matches(s, '\\s*')` work
+for that?
+
+### TQ-28. Combining test results
+
+My test library ends with `define AllPassed: AllTrue({ TestA, TestB, TestC })`. Is that a good way
+to know every test passed?

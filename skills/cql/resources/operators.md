@@ -1,7 +1,7 @@
 # CQL Operators and Functions Reference
 
 Baseline: CQL 1.5.3. Untagged statements hold in 1.4, 1.5.3 and 2.0.0.
-Sources: CQL-1.4, CQL-1.5.3, CQL-2.0.0, CQL-TESTS
+Sources: CQL-1.4, CQL-1.5.3, CQL-2.0.0, CQL-TESTS, PROBES-2026-11-14
 
 A summary of the CQL Reference (`09-b-cqlreference`) and related sections. Quote the section file,
 not this page, when a result matters. Source IDs are defined in [SOURCES.md](SOURCES.md). For
@@ -48,6 +48,16 @@ null." [src: CQL-1.5.3 09-b-cqlreference > List Operators > Equal]
   ([spec/README.md](spec/README.md#pages-worth-knowing)), so `{ null } = { null }` is `true` at
   1.4 and 1.5.3 too. CQL-TESTS agrees
   [src: CQL-TESTS CqlListOperatorsTest.xml EqualNullNull].
+
+### Code equivalence and case
+
+"For Code values, equivalence is defined based on the code and system elements only. The version
+and display elements are ignored" (same in 2.0) [src: CQL-1.5.3 09-b-cqlreference > Comparison Operators > Equivalent].
+The text doesn't say whether the code element is compared with or without regard to case, while
+String equivalence ignores case. Engine 5.5.0 ignores it: `Code 'lab' from "V2-0074" ~ Code 'LAB'
+from "V2-0074"` is `true`, and `=` on the same codes is `false`
+[src: PROBES-2026-11-14 RESULTS.md §8]. That's a spec gap: when case matters for a code system (as
+FHIR code systems mostly declare), compare with `=` or the code strings, not `~`.
 
 ---
 
@@ -195,7 +205,7 @@ arithmetic wraps around midnight (`@T23:30:00 + 1 hour` is `@T00:30:00`)
 | `Avg` / `Median` | `Avg(List<Decimal>) Decimal`, `Avg(List<Quantity>) Quantity` | Ignores nulls. No non-null elements → null (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > Avg] [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > Median] |
 | `Mode` | `Mode(List<T>) T` | A single most frequent value, any T (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > Mode] [src: CQL-TESTS CqlAggregateFunctionsTest.xml ModeTestInteger] |
 | `StdDev` / `Variance` | `List<Decimal>` → Decimal, `List<Quantity>` → Quantity | Spec says "statistical"; its examples match sample (n-1) values, against `PopulationStdDev` / `PopulationVariance` (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > StdDev] [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > Variance] [src: CQL-TESTS CqlAggregateFunctionsTest.xml StdDevTest1] |
-| `AllTrue` | `AllTrue(List<Boolean>) Boolean` | True if all non-null elements are true. Empty, all-null or null source → true (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > AllTrue] [src: CQL-TESTS CqlAggregateFunctionsTest.xml AllTrueEmptyList] |
+| `AllTrue` | `AllTrue(List<Boolean>) Boolean` | True if all non-null elements are true. Empty, all-null or null source → true (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > AllTrue] [src: CQL-TESTS CqlAggregateFunctionsTest.xml AllTrueEmptyList]. So `AllTrue({ A, B })` is true when `B` is null; to require every Boolean be true, use `A and B` (null if any is) [src: PROBES-2026-11-14 RESULTS.md §7] |
 | `AnyTrue` | `AnyTrue(List<Boolean>) Boolean` | True if any non-null element is true. Empty, all-null or null source → false (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > AnyTrue] [src: CQL-TESTS CqlAggregateFunctionsTest.xml AnyTrueEmptyList] |
 
 ---
@@ -241,8 +251,9 @@ arithmetic wraps around midnight (`@T23:30:00 + 1 hour` is `@T00:30:00`)
 | `Substring(source, start, length)` | Extract substring (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > String Operators > Substring] |
 | `StartsWith(source, prefix)` | Prefix test (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > String Operators > StartsWith] |
 | `EndsWith(source, suffix)` | Suffix test (same in 1.4, 2.0) [src: CQL-1.5.3 09-b-cqlreference > String Operators > EndsWith] |
-| `Matches(source, pattern)` | Regex test; (1.5+) the regex uses partial matching, so anchor with `^` and `$` to match the whole string [src: CQL-1.5.3 09-b-cqlreference > String Operators > Matches] |
+| `Matches(source, pattern)` | Regex test. (1.5+) The spec says the regex uses partial matching, with `^` and `$` to match the whole string [src: CQL-1.5.3 09-b-cqlreference > String Operators > Matches]; its 1.5.3 example `Matches('1,2three', '\\w+')` = false fits only whole-string matching, and 2.0 changed it to `'^\\w+$'` [src: CQL-2.0.0 09-b-cqlreference > String Operators > Matches]. **Engine 5.5.0 matches the whole string**: `Matches('abc', 'b')` is false [src: PROBES-2026-11-14 RESULTS.md §7], and no CQL-TESTS test tells the two apart. Write patterns that give the same result either way: anchored (`'^…$'`), or with `.*` on both sides for "contains". A blank test: `Matches(s, '^\\s*$')` |
 | `ReplaceMatches(source, pattern, replacement)` | Regex substitution; (1.5+) partial matching, as for `Matches` [src: CQL-1.5.3 09-b-cqlreference > String Operators > ReplaceMatches] |
+| (no `Trim`) | The CQL Reference defines no `Trim` operator in 1.4, 1.5.3 or 2.0 ((2.0+) the FHIRPath translation appendix maps `.trim()` to `Trim(X)` all the same [src: CQL-2.0.0 16-i-fhirpathtranslation > .trim()]). Translator 5.5.0: `Trim(s)` fails with `Could not resolve call to operator Trim` [src: PROBES-2026-11-14 RESULTS.md §7]. Test for blank with `Matches`, as above |
 
 ---
 
