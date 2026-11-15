@@ -94,6 +94,19 @@ take the id from after the first `-` in the file name, so they work reliably onl
 [src: VSCQL-1.0.0 src/cql-explorer/idReplacer.ts:25-35]. Clone gives the copy a new folder UUID and
 new ids, rewritten in file names and content [src: VSCQL-1.0.0 src/cql-explorer/testCaseCloner.ts:14-52].
 
+**A MeasureReport in a test case folder** is read by the extension, not the CQL: a file whose name
+starts with `MeasureReport` gives the case's description and expected population counts
+[src: VSCQL-1.0.0 src/model/testCase.ts:72-101]. Two limits at 1.0.0:
+
+- The description is read only from the CQFM extension, `cqfm-testCaseDescription`
+  [src: VSCQL-1.0.0 src/model/testCase.ts:113-123]. MADiE and the CQM IG write `cqm-testCaseDescription`,
+  so a MADiE export's descriptions don't show.
+- The expected counts are parsed but **never compared** with the results; nothing reports pass or
+  fail against them. The `madie` skill's `check_results.py` does that comparison, with the measure's
+  population rules.
+
+To test a library itself (not a measure) with CQL, see the `cql` skill's testing guide.
+
 ## The CQL Explorer
 
 A tree in the Explorer sidebar (not its own activity bar icon): projects, libraries, test cases,

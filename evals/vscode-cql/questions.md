@@ -49,6 +49,17 @@ resultFormat is not allowed". Is the setting wrong?
 
 After Execute CQL, where are the results by default, and how do you get one JSON file per test case?
 
+### CF-03. Only an error
+
+After Execute CQL, one test case's results show just `Error=Invalid Interval - the ending boundary
+must be greater than or equal to the starting boundary.`, with no other values, while the other test
+cases look normal. The library has forty definitions. What happened, and how do I find the problem?
+
+### CF-04. Expected values
+
+My test case folders each have a MeasureReport with the expected population counts. How does the
+extension tell me which test cases pass?
+
 ### PA-01. An unquoted string
 
 `config.jsonc` has `{ "name": "Product Line", "type": "String", "value": "HMO" }` alongside a

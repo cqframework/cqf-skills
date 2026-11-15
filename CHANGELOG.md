@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `vscode-cql` skill: a run-time error in any definition replaces that test case's results with a
+  single `Error` entry while other cases still run (from the language server's evaluation code);
+  the extension reads a test case MeasureReport's expected populations but never compares them,
+  and reads its description only under the CQFM URL; how result values are formatted; pointers to
+  the `madie` skill's results checker and the `cql` skill's testing guide; eval questions CF-03 and
+  CF-04.
 - `cql` skill: pitfalls from the CQL skill in cqframework/dqm-content-cms-2026, each checked with
   translator and engine 5.5.0 (new probe record `resources/probes/2026-11-14/`, with its harness):
   - A fluent call resolves to the first included library with a compatible overload, even over an

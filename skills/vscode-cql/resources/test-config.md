@@ -85,6 +85,23 @@ In the flat log, not every message is an error: look for `ERROR:` at the start o
 `parameters`, `results` (one per top-level `define`) and `errors`
 [src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:367-418] [src: WIKI-c9e1023 User-Guide.md:487-519].
 
+Results are text, formatted by the server: `true`, `false`, `null`, a FHIR resource as
+`Encounter(id=enc-1)`, a list in brackets, an interval with its brackets and bounds
+[src: CQLLS-5.0.0 ls/server/…/command/CqlEvaluator.kt:345-372].
+
+### When a definition fails at run time
+
+Each test case is evaluated on its own, all of the library's definitions together. If any definition
+throws a run-time error, that test case gets **no results at all**: its block in the flat log is a
+single `Error=<message>` line (with `(cause: …)` when the root cause differs), and an individual result
+file has an empty `results` and the message in `errors`. The other test cases still run
+[src: CQLLS-5.0.0 ls/server/…/command/CqlEvaluator.kt:545-631]
+[src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:380-388]. So one failing definition hides every
+other value for that case. To find it, read the message (the language server log has the full cause
+chain), then comment definitions out, or debug the test case, until the rest run. Compiling cleanly
+doesn't rule this out: an invalid interval, a cast that fails, or a value the data provider can't
+build all compile and fail at run time.
+
 ## Parameters
 
 Values for a library's `parameter` declarations, at three levels. The same name at a higher level

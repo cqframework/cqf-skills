@@ -93,13 +93,18 @@ A weekly check in this repository reports new extension and server releases and 
 - **A hand-written `launch.json` needs `libraryUri` as the `.cql` file's `file:` URI, plus
   `libraryName` and `fhirVersion`**; the wiki's example has neither right. Prefer Debug Test Case:
   [debugging.md](resources/debugging.md#a-launchjson-of-your-own)
+- **One run-time error in any definition wipes out that test case's results**: the case shows only
+  `Error=…`, the other cases still run:
+  [test-config.md](resources/test-config.md#when-a-definition-fails-at-run-time)
+- **Expected values in a test case's MeasureReport aren't checked**, and its description shows only
+  under the CQFM URL: [user-guide.md](resources/user-guide.md#test-cases-and-test-data)
 - **The server's translator is 5.5.0; the IG Publisher's is its own** (4.9.0 in 3.0.4), so diagnostics
   and ELM can differ: [user-guide.md](resources/user-guide.md#viewing-elm)
 
 ## Supporting Files
 
 For installing, Java, project layout, test cases, the CQL Explorer, editing, running, terminology, ELM and troubleshooting: see [user-guide.md](resources/user-guide.md)
-For `config.jsonc` keys, exclusions, result formats and parameters: see [test-config.md](resources/test-config.md)
+For `config.jsonc` keys, exclusions, result formats, run-time errors and parameters: see [test-config.md](resources/test-config.md)
 For include resolution, namespaces, packages and `dev` dependencies, `cql-options.json` and caching: see [library-resolution.md](resources/library-resolution.md)
 For starting and using the debugger, and `launch.json`: see [debugging.md](resources/debugging.md)
 For every command, view and debugger attribute, generated from `package.json`: see [commands.md](resources/commands.md)
