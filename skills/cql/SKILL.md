@@ -118,8 +118,9 @@ For operators, type system, and built-in functions: see [operators.md](resources
 For how CQL types, the translator and the engine relate (casting, overloads, `Choice` arguments): see [types-and-engine.md](resources/types-and-engine.md)
 For the verbatim spec, ELM schema, conformance tests and running them: see [resources/spec/README.md](resources/spec/README.md)
 To diagnose a surprising result (six questions and verdicts, with worked examples): see [resources/diagnosing.md](resources/diagnosing.md)
+To unit-test a library with a CQL test library (test definitions, fixtures, branch coverage): see [resources/testing.md](resources/testing.md)
 For the source IDs used in `[src: …]` citations: see [resources/SOURCES.md](resources/SOURCES.md)
-For recorded probe runs (CQL, outputs, configuration): see [resources/probes/](resources/probes/2026-10-22/RESULTS.md)
+For recorded probe runs (CQL, outputs, configuration): see [resources/probes/](resources/probes/2026-10-22/RESULTS.md) (5.4.0) and [2026-11-14](resources/probes/2026-11-14/RESULTS.md) (5.5.0)
 For authoring patterns and worked pitfalls (informative; never semantics): see [resources/guides/README.md](resources/guides/README.md)
 To check citation and version-tag conventions: `python3 scripts/lint_skill.py` (tests: `scripts/test_lint_skill.py`); to check spec quotes: `python3 scripts/check_citations.py <file.md>`
 To see what really changed in a cited section before tagging it: `python3 scripts/section_diff.py 'page|Heading > Path'`; to re-wrap long prose without changing text: `python3 scripts/reflow_md.py <file.md>`
@@ -147,13 +148,26 @@ Where translator or engine 5.4.0, or the language server, departs from the spec,
 it, or depends on a setting. Each link leads to a block with the probe, the spec text, the layer
 and a workaround. Silent wrong values come first.
 
-Every translator and engine observation in this skill is on 5.4.0. Other tools bundle other
-versions: IG Publisher 3.0.4 compiles CQL with cqframework 4.9.0 (3.0.1 used 3.29.0), and the VS Code
+Translator and engine observations are on 5.4.0 (PROBES-2026-10-22), except those from
+PROBES-2026-11-14, which are on 5.5.0. Other tools bundle other versions: IG Publisher 3.0.4 compiles CQL with cqframework 4.9.0 (3.0.1 used 3.29.0), and the VS Code
 extension 1.0.0 runs 5.5.0 in its language server (see the `ig-publisher` and `vscode-cql` skills).
 So the ELM in a package the publisher builds can differ from these probes (for example
 `Choice`/`As` emission, `if`-branch typing or list typing). None of these gotchas was probed on 4.9.0
 or 3.29.0.
 
+- **A fluent call resolves to the first included library with a compatible overload**, even over an
+  exact match in a later one, without a warning (translator; spec gap):
+  [library-syntax.md](resources/library-syntax.md#function-definitions)
+- **`Matches` matches the whole string**, though the spec says partial matching (engine):
+  [operators.md](resources/operators.md#string-functions)
+- **A fluent function named like a FHIRPath function is never called**; `.toString()` is
+  `ToString` (translator): [library-syntax.md](resources/library-syntax.md#function-definitions)
+- **Two functions with the same signature compile**, and calls use the first (translator):
+  [library-syntax.md](resources/library-syntax.md#function-definitions)
+- **`AllTrue` passes a null**, so combine tests with `and` (spec):
+  [testing.md](resources/testing.md#the-test-library)
+- **A function call or list literal as a query source needs parentheses** (grammar):
+  [library-syntax.md](resources/library-syntax.md#query-syntax)
 - **Integer and Long overflow wraps**, including `Sum` (engine):
   [nulls.md](resources/nulls.md#gotcha-integer-and-long-overflow-wraps-instead-of-returning-null)
 - **A typed null tuple element drops a whole union operand** (spec gap):

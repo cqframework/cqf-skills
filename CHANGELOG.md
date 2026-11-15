@@ -6,6 +6,27 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+
+- `cql` skill: pitfalls from the CQL skill in cqframework/dqm-content-cms-2026, each checked with
+  translator and engine 5.5.0 (new probe record `resources/probes/2026-11-14/`, with its harness):
+  - A fluent call resolves to the first included library with a compatible overload, even over an
+    exact match in a later one, without a warning; a fluent function named like a FHIRPath function
+    (`toString`, `toBoolean`…) is never called; a fluent function can't be called with ordinary
+    call syntax; two functions with the same signature compile without a diagnostic.
+  - A function call or list literal as a query source needs parentheses; a `Concept` selector takes
+    only Code selectors; with `using FHIR` an unqualified `Quantity` selector is `FHIR.Quantity`; a
+    string literal spelled like a definition draws a warning.
+  - `Matches` on the engine matches the whole string, though the spec says partial matching (the
+    skill previously stated only the spec reading); there is no `Trim`; `AllTrue` ignores nulls;
+    `~` on Codes ignores the case of the code (a spec gap).
+  - New `resources/testing.md`: unit-testing a library with a CQL test library (test definitions
+    combined with `and`, case tests with `else true`, fixture builders, branch coverage).
+  - Not reproduced at 5.5.0, so not added: an empty or blank `FHIR.string` reading back as null,
+    setting `id` on a backbone element failing at run time, and `flatten (C.item I return …)` being
+    a syntax error.
+  - Eval questions TQ-24 to TQ-28.
+
 ### Added
 
 - `madie` skill, in the `cql` plugin, for US Quality Core 0.5.0 test cases and measure CQL in MADiE,

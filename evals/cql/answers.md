@@ -339,3 +339,51 @@ behaviour as the spec, or names a layer that the cited evidence does not support
 - **Observed:** [src: PROBES-2026-10-22 RESULTS.md §43].
 - **Skill:**
   [datetime.md](../resources/datetime.md#gotcha-a-value-with-milliseconds-and-one-without-compare-as-null).
+
+### TQ-24. A fluent function in two libraries
+
+- **Expected:** `CommonA`'s `widen(Integer)`, but only because `CommonA` is included first:
+  translator 5.5.0 sends a fluent call to the first included library with a compatible overload, with
+  no warning. Swap the includes and `1.widen()` converts the argument and calls `CommonB`'s
+  `widen(Decimal)`, although `CommonA` has an exact match. The spec doesn't say how a fluent call is
+  resolved across included libraries. Give such functions distinct names.
+- **Observed:** [src: PROBES-2026-11-14 RESULTS.md §2].
+- **Pass if:** include order decides, silently.
+- **Skill:** [library-syntax.md](../resources/library-syntax.md#function-definitions).
+
+### TQ-25. A fluent `toString`
+
+- **Expected:** a dot call named after a FHIRPath function is translated to the CQL operator the
+  FHIRPath translation gives (`X.toString()` is `ToString(X)`) before user fluent functions are
+  considered, so the user's `toString` is never called. Rename it (for example `toDisplayString`).
+- **Spec:** [src: CQL-1.5.3 16-i-fhirpathtranslation > .toString()].
+- **Observed:** [src: PROBES-2026-11-14 RESULTS.md §3].
+- **Skill:** [library-syntax.md](../resources/library-syntax.md#function-definitions).
+
+### TQ-26. Calling a function on a query
+
+- **Expected:** a query source must be a retrieve, a qualified identifier or a parenthesised
+  expression, so a function call needs parentheses: `(GetCodes(X)) C where …`.
+- **Spec:** [src: CQL-1.5.3 08-a-cqlsyntax > Queries].
+- **Observed:** [src: PROBES-2026-11-14 RESULTS.md §1].
+- **Skill:** [library-syntax.md](../resources/library-syntax.md#query-syntax).
+
+### TQ-27. Is a string blank?
+
+- **Expected:** there's no `Trim` in CQL. Use an anchored pattern, `Matches(s, '^\\s*$')`. The spec
+  says `Matches` uses partial matching, under which `'\\s*'` matches any string; engine 5.5.0
+  matches the whole string, under which it works. An anchored pattern gives the same answer either
+  way. (A null `s` gives null; add `s is null or …` if null counts as blank.)
+- **Spec:** [src: CQL-1.5.3 09-b-cqlreference > String Operators > Matches].
+- **Observed:** [src: PROBES-2026-11-14 RESULTS.md §7].
+- **Pass if:** no `Trim`, and an anchored pattern or the partial/whole-match difference.
+- **Skill:** [operators.md](../resources/operators.md#string-functions).
+
+### TQ-28. Combining test results
+
+- **Expected:** no. `AllTrue` ignores nulls, so a test that evaluated to null counts as passing (and
+  `AllTrue` of all nulls is true). Combine with `and`: `TestA and TestB and TestC` is true only when
+  every test is true.
+- **Spec:** [src: CQL-1.5.3 09-b-cqlreference > Aggregate Functions > AllTrue].
+- **Observed:** [src: PROBES-2026-11-14 RESULTS.md §7].
+- **Skill:** [testing.md](../resources/testing.md#the-test-library).

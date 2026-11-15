@@ -13,6 +13,8 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 | CQLWIKI | guide | informative | wiki commit cc3c351 (2026-10-16) | cqframework/CQL-Formatting-and-Usage-Wiki.wiki@cc3c3512c0829bf0dad6752123f3ff2ce48ef57d | <https://github.com/cqframework/CQL-Formatting-and-Usage-Wiki/wiki> | none | 2026-10-22 |
 | CMSQMD | guide | informative | CMS Quality Measure Development IG, CI build (2026-11-03) | cqframework/cms-qmd@9bcc541e1ca4e12488fbca4e108727108be8c1aa | <https://build.fhir.org/ig/cqframework/cms-qmd/branches/main/> | none | 2026-11-13 |
 | PROBES-2026-10-22 | observed-behavior | n/a | translator 5.4.0, engine 5.4.0, CQL language server 4.11.0-SNAPSHOT | `resources/probes/2026-10-22/` | none | `resources/probes/2026-10-22/` | 2026-10-22 |
+| PROBES-2026-11-14 | observed-behavior | n/a | translator 5.5.0, engine 5.5.0, run with the embedded harness in `harness/` | `resources/probes/2026-11-14/` | none | `resources/probes/2026-11-14/` | 2026-11-14 |
+| DQMCMS-757d7c6 | convention | informative | the CQL skill of the CMS 2026 dQM content repository: its test-library method and the pitfalls PROBES-2026-11-14 checks | cqframework/dqm-content-cms-2026@757d7c6fd01998287d622d03fb02e133c700e22a | <https://github.com/cqframework/dqm-content-cms-2026/blob/757d7c6fd01998287d622d03fb02e133c700e22a/.claude/skills/cql/SKILL.md> | none | 2026-11-14 |
 
 ## Notes
 
@@ -31,5 +33,5 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
   it at the pinned commit. Cite it as `[src: CQLWIKI <Page>.md]` or
   `[src: CQLWIKI <Page>.md#<anchor>]`, for idioms and pitfalls only. Prefer CMSQMD for new
   citations.
-- PROBES-2026-10-22 records what one implementation did, with the configuration noted in its
+- PROBES-2026-10-22 (5.4.0) and PROBES-2026-11-14 (5.5.0) record what one implementation did, with the configuration noted in its
   `RESULTS.md`. It is evidence of behaviour, not of what the spec requires.
