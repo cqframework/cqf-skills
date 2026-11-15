@@ -1,0 +1,22 @@
+{
+  "resourceType": "Library",
+  "id": "PopRules",
+  "url": "http://example.org/fhir/Library/PopRules",
+  "version": "1.0.0",
+  "name": "PopRules",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "content": [
+    {
+      "contentType": "text/cql",
+      "data": "bGlicmFyeSBQb3BSdWxlcyB2ZXJzaW9uICcxLjAuMCcKCnVzaW5nIEZISVIgdmVyc2lvbiAnNC4wLjEnCgppbmNsdWRlIEZISVJIZWxwZXJzIHZlcnNpb24gJzQuMC4xJyBjYWxsZWQgRkhJUkhlbHBlcnMKCmNvZGVzeXN0ZW0gIkxPSU5DIjogJ2h0dHA6Ly9sb2luYy5vcmcnCmNvZGUgIkJvZHkgd2VpZ2h0IjogJzI5NDYzLTcnIGZyb20gIkxPSU5DIgoKY29udGV4dCBQYXRpZW50CgpkZWZpbmUgIkdpdmVuIE5hbWUiOiBQYXRpZW50Lm5hbWVbMF0uZ2l2ZW5bMF0KZGVmaW5lICJXZWlnaHQgT2JzZXJ2YXRpb25zIjogW09ic2VydmF0aW9uOiAiQm9keSB3ZWlnaHQiXQpkZWZpbmUgIldlaWdodHMiOiAiV2VpZ2h0IE9ic2VydmF0aW9ucyIgTyByZXR1cm4gKE8udmFsdWUgYXMgUXVhbnRpdHkpLnZhbHVlCmRlZmluZSAiTGFzdCBXZWlnaHQiOgogIExhc3QoIldlaWdodCBPYnNlcnZhdGlvbnMiIE8gc29ydCBieSBGSElSSGVscGVycy5Ub0RhdGVUaW1lKGVmZmVjdGl2ZSBhcyBGSElSLmRhdGVUaW1lKSkKZGVmaW5lICJMYXN0IFdlaWdodCBRdWFudGl0eSI6ICJMYXN0IFdlaWdodCIudmFsdWUgYXMgUXVhbnRpdHkKZGVmaW5lICJHZW5kZXIgQ29kZSI6IFBhdGllbnQuZ2VuZGVyCmRlZmluZSAiR2VuZGVyIENvZGluZyI6IENvZGUgeyBzeXN0ZW06ICdodHRwOi8vaGw3Lm9yZy9maGlyL2FkbWluaXN0cmF0aXZlLWdlbmRlcicsIGNvZGU6ICdmZW1hbGUnIH0KZGVmaW5lICJIYXMgRGlhYmV0ZXMiOiBleGlzdHMgW0NvbmRpdGlvbl0KZGVmaW5lICJDb25kaXRpb25zIjogW0NvbmRpdGlvbl0KZGVmaW5lICJUaHJvd3MiOiBzaW5nbGV0b24gZnJvbSB7IDEsIDIgfQpkZWZpbmUgIk51bGwgVmFsdWUiOiBudWxsIGFzIFN0cmluZwpkZWZpbmUgIlBhdGllbnQgUmVzb3VyY2UiOiBQYXRpZW50Cg=="
+    }
+  ]
+}

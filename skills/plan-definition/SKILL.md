@@ -13,7 +13,7 @@ specification, the CPG 2.0.0 IG, and clinical-reasoning, the reference implement
 
 Related skills: `cpg` (CPG profiles and extensions), `crmi` (artifact profiles, packaging and
 `$data-requirements`), `cql-ig` (packaging CQL as a Library), `cql` (the language), `fhir` (base R4
-element tables), `vscode-cql` (running the CQL against test data).
+element tables), `vscode-cql` (running the CQL against test data), `questionnaire` (Questionnaires, `$populate` and `$extract`).
 
 ## Versions
 

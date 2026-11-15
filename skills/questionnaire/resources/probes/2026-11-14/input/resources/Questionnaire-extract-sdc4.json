@@ -1,0 +1,54 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "extract-sdc4",
+  "url": "http://example.org/fhir/Questionnaire/extract-sdc4",
+  "version": "1.0.0",
+  "name": "ExtractSdc4",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "symptoms",
+      "text": "Symptoms (repeats)",
+      "type": "choice",
+      "repeats": true,
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "75325-1",
+          "display": "Symptom"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract",
+          "valueBoolean": true
+        }
+      ]
+    },
+    {
+      "linkId": "allergy",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+          "extension": [
+            {
+              "url": "definition",
+              "valueCanonical": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance"
+            }
+          ]
+        }
+      ],
+      "item": [
+        {
+          "linkId": "allergy.code",
+          "type": "choice",
+          "definition": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance#AllergyIntolerance.code"
+        }
+      ]
+    }
+  ]
+}

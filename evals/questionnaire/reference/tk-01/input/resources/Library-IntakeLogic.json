@@ -1,0 +1,22 @@
+{
+  "resourceType": "Library",
+  "id": "IntakeLogic",
+  "url": "http://example.org/fhir/Library/IntakeLogic",
+  "version": "1.0.0",
+  "name": "IntakeLogic",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "content": [
+    {
+      "contentType": "text/cql",
+      "data": "bGlicmFyeSBJbnRha2VMb2dpYyB2ZXJzaW9uICcxLjAuMCcKCnVzaW5nIEZISVIgdmVyc2lvbiAnNC4wLjEnCgppbmNsdWRlIEZISVJIZWxwZXJzIHZlcnNpb24gJzQuMC4xJyBjYWxsZWQgRkhJUkhlbHBlcnMKCmNvZGVzeXN0ZW0gIkxPSU5DIjogJ2h0dHA6Ly9sb2luYy5vcmcnCmNvZGUgIkJvZHkgd2VpZ2h0IjogJzI5NDYzLTcnIGZyb20gIkxPSU5DIgpjb2Rlc3lzdGVtICJDb25kaXRpb24gQ2xpbmljYWwiOiAnaHR0cDovL3Rlcm1pbm9sb2d5LmhsNy5vcmcvQ29kZVN5c3RlbS9jb25kaXRpb24tY2xpbmljYWwnCmNvZGUgIkFjdGl2ZSI6ICdhY3RpdmUnIGZyb20gIkNvbmRpdGlvbiBDbGluaWNhbCIKCmNvbnRleHQgUGF0aWVudAoKZGVmaW5lICJHaXZlbiBOYW1lIjoKICBGaXJzdChQYXRpZW50Lm5hbWUuZ2l2ZW4pCgpkZWZpbmUgIkxhc3QgV2VpZ2h0IjoKICBMYXN0KAogICAgW09ic2VydmF0aW9uOiAiQm9keSB3ZWlnaHQiXSBPCiAgICAgIHdoZXJlIE8uc3RhdHVzIGluIHsgJ2ZpbmFsJywgJ2FtZW5kZWQnLCAnY29ycmVjdGVkJyB9CiAgICAgIHNvcnQgYnkgRkhJUkhlbHBlcnMuVG9EYXRlVGltZShlZmZlY3RpdmUgYXMgRkhJUi5kYXRlVGltZSkKICApLnZhbHVlIGFzIFF1YW50aXR5CgpkZWZpbmUgIkFjdGl2ZSBDb25kaXRpb25zIjoKICBbQ29uZGl0aW9uXSBDCiAgICB3aGVyZSBDLmNsaW5pY2FsU3RhdHVzIH4gIkFjdGl2ZSIK"
+    }
+  ]
+}

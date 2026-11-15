@@ -1,0 +1,427 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "pop",
+  "url": "http://example.org/fhir/Questionnaire/pop",
+  "version": "1.0.0",
+  "name": "Pop",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+      "valueCanonical": "http://example.org/fhir/Library/PopRules"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "patient"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Patient"
+        }
+      ]
+    }
+  ],
+  "item": [
+    {
+      "linkId": "given",
+      "text": "Given name (cql-identifier)",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "given-qualified",
+      "text": "Given name (Library-qualified)",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "OtherRules.\"Given Name\""
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "birth-fhirpath",
+      "text": "Birth date (FHIRPath %patient)",
+      "type": "date",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%patient.birthDate"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "birth-subject",
+      "text": "Birth date (FHIRPath %subject)",
+      "type": "date",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%subject.birthDate"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "age",
+      "text": "Age (cql-expression)",
+      "type": "integer",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-expression",
+            "expression": "AgeInYears()"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "weights-repeats",
+      "text": "All weights (repeats)",
+      "type": "decimal",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Weights"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "weights-single",
+      "text": "All weights (not repeating)",
+      "type": "decimal",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Weights"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "weight-quantity",
+      "text": "Last weight",
+      "type": "quantity",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Last Weight Quantity"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "gender-code",
+      "text": "Gender (FHIR code)",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "female"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "male"
+          }
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Gender Code"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "gender-coding",
+      "text": "Gender (System Code)",
+      "type": "choice",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "female"
+          }
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Gender Coding"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "has-diabetes",
+      "text": "Has diabetes (calculatedExpression)",
+      "type": "boolean",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Has Diabetes"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "old-calculated",
+      "text": "Has diabetes (cqf-calculatedValue)",
+      "type": "boolean",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+          "valueString": "Has Diabetes"
+        }
+      ]
+    },
+    {
+      "linkId": "static",
+      "text": "Static initial",
+      "type": "string",
+      "initial": [
+        {
+          "valueString": "fixed"
+        }
+      ]
+    },
+    {
+      "linkId": "throws",
+      "text": "Throws",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Throws"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "null",
+      "text": "Null",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Null Value"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "missing",
+      "text": "Undefined expression",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "No Such Definition"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "type-mismatch",
+      "text": "Integer item, string result",
+      "type": "integer",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "hidden",
+      "text": "Hidden",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+          "valueBoolean": true
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "enabled-when",
+      "text": "Only when has-diabetes",
+      "type": "string",
+      "enableWhen": [
+        {
+          "question": "has-diabetes",
+          "operator": "=",
+          "answerBoolean": true
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "obs-weight",
+      "text": "Body weight (observation-based)",
+      "type": "quantity",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "29463-7",
+          "display": "Body weight"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationLinkPeriod",
+          "valueDuration": {
+            "value": 100,
+            "unit": "years",
+            "system": "http://unitsofmeasure.org",
+            "code": "a"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "conditions",
+      "text": "Conditions (itemPopulationContext)",
+      "type": "group",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Conditions",
+            "name": "condition"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "conditions.code",
+          "text": "Code",
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%condition.code.coding.first()"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "conditions.onset",
+          "text": "Onset",
+          "type": "dateTime",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%condition.onset"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "nested-parent",
+      "text": "Question with a child question",
+      "type": "boolean",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Has Diabetes"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "nested-child",
+          "text": "Child",
+          "type": "string",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/cql-identifier",
+                "expression": "Given Name"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

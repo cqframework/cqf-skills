@@ -1,0 +1,76 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "two-libs",
+  "url": "http://example.org/fhir/Questionnaire/two-libs",
+  "version": "1.0.0",
+  "name": "TwoLibs",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+      "valueCanonical": "http://example.org/fhir/Library/PopRules"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+      "valueCanonical": "http://example.org/fhir/Library/OtherRules"
+    }
+  ],
+  "item": [
+    {
+      "linkId": "noref",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "ref-other",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name",
+            "reference": "http://example.org/fhir/Library/OtherRules"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "qualified-expr",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-expression",
+            "expression": "OtherRules.\"Given Name\""
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "qualified-expr-pop",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-expression",
+            "expression": "PopRules.\"Given Name\""
+          }
+        }
+      ]
+    }
+  ]
+}

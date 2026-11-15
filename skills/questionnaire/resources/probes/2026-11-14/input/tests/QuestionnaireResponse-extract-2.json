@@ -1,0 +1,71 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "extract-2",
+  "questionnaire": "http://example.org/fhir/Questionnaire/extract|1.0.0",
+  "status": "completed",
+  "subject": {
+    "reference": "Patient/adult-1"
+  },
+  "authored": "2026-11-14T10:00:00Z",
+  "item": [
+    {
+      "linkId": "weight",
+      "answer": [
+        {
+          "valueQuantity": {
+            "value": 70,
+            "unit": "kg",
+            "system": "http://unitsofmeasure.org",
+            "code": "kg"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "smoker",
+      "item": [
+        {
+          "linkId": "smoker.status",
+          "answer": [
+            {
+              "valueBoolean": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "free",
+      "answer": [
+        {
+          "valueString": "hello"
+        }
+      ]
+    },
+    {
+      "linkId": "allergy",
+      "item": [
+        {
+          "linkId": "allergy.code",
+          "answer": [
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "91936005",
+                "display": "Allergy to penicillin"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "allergy.note",
+          "answer": [
+            {
+              "valueString": "Rash"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

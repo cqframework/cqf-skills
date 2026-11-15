@@ -1,0 +1,95 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "extract",
+  "url": "http://example.org/fhir/Questionnaire/extract",
+  "version": "1.0.0",
+  "name": "Extract",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "weight",
+      "text": "Body weight",
+      "type": "quantity",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "29463-7",
+          "display": "Body weight"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract",
+          "valueBoolean": true
+        }
+      ]
+    },
+    {
+      "linkId": "height",
+      "text": "Body height, coded, no observationExtract",
+      "type": "decimal",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "8302-2",
+          "display": "Body height"
+        }
+      ]
+    },
+    {
+      "linkId": "smoker",
+      "text": "Smoker (group-level observationExtract)",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract",
+          "valueBoolean": true
+        }
+      ],
+      "item": [
+        {
+          "linkId": "smoker.status",
+          "type": "boolean",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "72166-2",
+              "display": "Tobacco smoking status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "free",
+      "text": "Uncoded",
+      "type": "string"
+    },
+    {
+      "linkId": "allergy",
+      "text": "Allergy (definition-based)",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueCode": "AllergyIntolerance"
+        }
+      ],
+      "item": [
+        {
+          "linkId": "allergy.code",
+          "type": "choice",
+          "definition": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance#AllergyIntolerance.code"
+        },
+        {
+          "linkId": "allergy.note",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance#AllergyIntolerance.note.text"
+        }
+      ]
+    }
+  ]
+}

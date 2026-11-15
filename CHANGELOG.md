@@ -35,6 +35,32 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `questionnaire` skill, in the `clinical-reasoning` plugin, for Questionnaire, QuestionnaireResponse and
+  SDC's `$populate` and `$extract`, from raleigh-claude-skills at `8224e28`, originally written by
+  raleigh-g-thompson. Changes on import:
+  - Grounded in three layers, each cited: FHIR R4 (with R5 where Questionnaire changed), SDC 4.0.0 (the
+    source cited an unversioned SDC), and clinical-reasoning 4.13.0, the reference implementation in
+    HAPI FHIR, cited to its code and checked by running it (`resources/probes/2026-11-14/`).
+  - Corrections: questions, not only groups, can have child items (under `answer.item` in the
+    response); `$populate`'s `context.name` is a string matching a launchContext code, not a Coding;
+    `$populate` fills `answer`, never `initial`; calculated answers use `calculatedExpression`, not
+    `cqf-calculatedValue` (unused in SDC 4.0.0), and a user may override them; SDC 4.0.0 adds the
+    `clinical` launch context; R4's que-12 only fires for three or more enableWhens.
+  - New: SDC 4.0.0's `$populate` parameters and what changed from 3.0.0, the expression languages and
+    library qualification rules, extraction methods and `$extract`, and Questionnaire generation.
+  - What clinical-reasoning 4.13.0 does differently, each probed: every expression runs as CQL;
+    `%patient` needs a `patient` context and `%subject` is never bound; the first context becomes the
+    subject; a qualified `text/cql-identifier` fails; list results give several answers on
+    non-repeating items and results aren't converted to the item type; `calculatedExpression`,
+    `variable`, `enableWhen` and observation-based population aren't implemented; `$extract` ignores
+    `observationExtract`, emits an invalid `valueDecimal` without a unit, reuses Observation ids for
+    repeated answers, uses the old observation-category system, and throws on SDC 4.0.0's complex
+    `definitionExtract`.
+  - Dropped: the Da Vinci DTR and prior-authorization framing.
+  - `scripts/sdc/run.sh` runs `$populate`, `$extract` and generation locally; `scripts/check_release.py`
+    joins the weekly release check.
+  - Evals in `evals/questionnaire/`: questions, an answer key, a graded intake-form task with a reference
+    answer, and trigger prompts.
 - `plan-definition` skill, in the `clinical-reasoning` plugin, for PlanDefinition, ActivityDefinition and
   `$apply`, from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on
   import:
