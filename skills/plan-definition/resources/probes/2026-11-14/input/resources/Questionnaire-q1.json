@@ -1,0 +1,13 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "q1",
+  "url": "http://example.org/fhir/Questionnaire/q1",
+  "status": "active",
+  "item": [
+    {
+      "linkId": "1",
+      "text": "Any symptoms?",
+      "type": "boolean"
+    }
+  ]
+}

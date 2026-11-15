@@ -55,7 +55,7 @@
       "description": "Author and evaluate FHIR Clinical Reasoning artifacts against the CPG, CRMI and FHIR Extensions IGs",
       "source": "./",
       "strict": false,
-      "skills": ["./skills/crmi", "./skills/cpg"]
+      "skills": ["./skills/crmi", "./skills/cpg", "./skills/plan-definition"]
     },
     {
       "name": "fhir-ig",

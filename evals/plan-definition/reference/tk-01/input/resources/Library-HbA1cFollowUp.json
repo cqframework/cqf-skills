@@ -1,0 +1,22 @@
+{
+  "resourceType": "Library",
+  "id": "HbA1cFollowUp",
+  "url": "http://example.org/fhir/Library/HbA1cFollowUp",
+  "version": "1.0.0",
+  "name": "HbA1cFollowUp",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "content": [
+    {
+      "contentType": "text/cql",
+      "data": "bGlicmFyeSBIYkExY0ZvbGxvd1VwIHZlcnNpb24gJzEuMC4wJwoKdXNpbmcgRkhJUiB2ZXJzaW9uICc0LjAuMScKCmluY2x1ZGUgRkhJUkhlbHBlcnMgdmVyc2lvbiAnNC4wLjEnIGNhbGxlZCBGSElSSGVscGVycwoKY29kZXN5c3RlbSAiTE9JTkMiOiAnaHR0cDovL2xvaW5jLm9yZycKCmNvZGUgIkhlbW9nbG9iaW4gQTFjIjogJzQ1NDgtNCcgZnJvbSAiTE9JTkMiIGRpc3BsYXkgJ0hlbW9nbG9iaW4gQTFjL0hlbW9nbG9iaW4udG90YWwgaW4gQmxvb2QnCgpjb250ZXh0IFBhdGllbnQKCmRlZmluZSAiUmVjZW50IEhiQTFjIjoKICBbT2JzZXJ2YXRpb246ICJIZW1vZ2xvYmluIEExYyJdIE8KICAgIHdoZXJlIE8uc3RhdHVzIGluIHsgJ2ZpbmFsJywgJ2FtZW5kZWQnLCAnY29ycmVjdGVkJyB9CiAgICAgIGFuZCAoTy5lZmZlY3RpdmUgYXMgRkhJUi5kYXRlVGltZSkgb24gb3IgYWZ0ZXIgVG9kYXkoKSAtIDYgbW9udGhzCgpkZWZpbmUgIk5lZWRzIEhiQTFjIjoKICBBZ2VJblllYXJzKCkgPj0gMTggYW5kIG5vdCBleGlzdHMgIlJlY2VudCBIYkExYyIKCmRlZmluZSAiT3JkZXIgUmVhc29uIjoKICAnTm8gaGVtb2dsb2JpbiBBMWMgcmVzdWx0IGluIHRoZSBsYXN0IDYgbW9udGhzJwo="
+    }
+  ]
+}

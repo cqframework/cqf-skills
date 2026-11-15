@@ -1,0 +1,232 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "probe",
+  "url": "http://example.org/fhir/PlanDefinition/probe",
+  "version": "1.0.0",
+  "name": "Probe",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/plan-definition-type",
+        "code": "eca-rule"
+      }
+    ]
+  },
+  "library": [
+    "http://example.org/fhir/Library/ExampleRules"
+  ],
+  "goal": [
+    {
+      "description": {
+        "text": "Probe goal"
+      }
+    }
+  ],
+  "action": [
+    {
+      "id": "adult",
+      "title": "True condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Adult"
+          }
+        }
+      ],
+      "definitionCanonical": "http://example.org/fhir/ActivityDefinition/send-message",
+      "dynamicValue": [
+        {
+          "path": "action.description",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Message"
+          }
+        },
+        {
+          "path": "priority",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Priority"
+          }
+        }
+      ]
+    },
+    {
+      "id": "child",
+      "title": "False condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Child"
+          }
+        }
+      ]
+    },
+    {
+      "id": "null",
+      "title": "Null condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Null Result"
+          }
+        }
+      ],
+      "action": [
+        {
+          "id": "null-child",
+          "title": "Child of a null condition"
+        }
+      ],
+      "definitionCanonical": "http://example.org/fhir/ActivityDefinition/send-message"
+    },
+    {
+      "id": "notbool",
+      "title": "Non-boolean condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Not Boolean"
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-false",
+      "title": "False start condition",
+      "condition": [
+        {
+          "kind": "start",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Child"
+          }
+        }
+      ]
+    },
+    {
+      "id": "two",
+      "title": "True and null conditions",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Adult"
+          }
+        },
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Null Result"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fhirpath",
+      "title": "text/fhirpath condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "today() > @2000-01-01"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cqlexpr",
+      "title": "text/cql-expression condition",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-expression",
+            "expression": "AgeInYears() >= 18"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fhirpath-matches",
+      "title": "FHIRPath matches (partial in FHIRPath)",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/fhirpath",
+            "expression": "'abc'.matches('b')"
+          }
+        }
+      ]
+    },
+    {
+      "id": "throws",
+      "title": "Condition that throws",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Throws"
+          }
+        }
+      ]
+    },
+    {
+      "id": "badlang",
+      "title": "Unknown language",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/x-made-up",
+            "expression": "Is Adult"
+          }
+        }
+      ]
+    },
+    {
+      "id": "group",
+      "title": "Group with behaviors",
+      "selectionBehavior": "exactly-one",
+      "requiredBehavior": "must",
+      "groupingBehavior": "logical-group",
+      "cardinalityBehavior": "single",
+      "precheckBehavior": "yes",
+      "trigger": [
+        {
+          "type": "named-event",
+          "name": "order-sign"
+        }
+      ],
+      "action": [
+        {
+          "id": "g1",
+          "title": "Option 1"
+        },
+        {
+          "id": "g2",
+          "title": "Option 2"
+        }
+      ]
+    },
+    {
+      "id": "questionnaire",
+      "title": "Questionnaire definition",
+      "definitionCanonical": "http://example.org/fhir/Questionnaire/q1"
+    }
+  ]
+}
