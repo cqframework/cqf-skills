@@ -1,9 +1,10 @@
 name: Release check
 
-# Weekly: for every skill with a scripts/check_release.py, compare the versions the skill is pinned
-# to with the latest upstream releases. If any is newer, open (or update) one issue per skill,
-# labelled "<skill>-release", listing the citations a re-pin must re-read. Re-pinning itself stays
-# a reviewed pull request.
+# Weekly: for every skill with a scripts/check_release.py, compare the sources the skill is pinned
+# to with upstream: the latest releases, or for sources without releases (MADiE), the cited code on
+# the current branch. If a re-pin is needed (exit 3), open (or update) one issue per skill, labelled
+# "<skill>-release", listing the citations a re-pin must re-read. Re-pinning itself stays a reviewed
+# pull request.
 
 on:
   schedule:
@@ -38,7 +39,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compare pins with latest releases
+      - name: Compare pins with upstream
         id: check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,7 +57,7 @@ jobs:
           SKILL: ${{ matrix.skill }}
         run: |
           label="$SKILL-release"
-          gh label create "$label" --color FBCA04 --description "A source the $SKILL skill is pinned to has a newer release" --force
+          gh label create "$label" --color FBCA04 --description "A source the $SKILL skill is pinned to has changed upstream" --force
           {
             cat "$RUNNER_TEMP/report.md"
             echo
@@ -66,5 +67,5 @@ jobs:
           if [ -n "$number" ]; then
             gh issue edit "$number" --body-file "$RUNNER_TEMP/body.md"
           else
-            gh issue create --title "$SKILL: newer upstream release to re-pin" --label "$label" --body-file "$RUNNER_TEMP/body.md"
+            gh issue create --title "$SKILL: upstream changes to re-pin" --label "$label" --body-file "$RUNNER_TEMP/body.md"
           fi
