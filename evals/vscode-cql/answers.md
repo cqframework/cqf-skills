@@ -80,6 +80,27 @@ without the skill will usually repeat the wiki. "Skill" says where the skill cov
 - **Fail if:** individual is the default (the old summary), or a VS Code setting.
 - **Skill:** `resources/test-config.md` (Result formats).
 
+### CF-03. Only an error
+
+- **Expected:** one definition threw a run-time error (here building an invalid interval) for that
+  test case. Each case is evaluated as a whole, so an error in any definition replaces all of that
+  case's results with the single `Error=` line; other cases are unaffected. Find the definition from
+  the message (the language server log has the cause chain), by commenting definitions out or
+  debugging the test case, and fix it (for intervals, guard computed bounds).
+- **Pass if:** one definition's run-time error hides the whole case.
+- **Fail if:** it says the other thirty-nine definitions returned nothing because they're wrong.
+- **Skill:** `resources/test-config.md` (When a definition fails at run time).
+
+### CF-04. Expected values
+
+- **Expected:** it doesn't. Extension 1.0.0 reads a MeasureReport's expected populations (and its
+  description, from the CQFM extension only) but never compares them with the results. Compare them
+  yourself, for example with the `madie` skill's `check_results.py`, which also applies the measure's
+  population rules.
+- **Pass if:** no comparison at 1.0.0.
+- **Fail if:** it describes a pass/fail view in the extension.
+- **Skill:** `resources/user-guide.md` (Test cases and test data).
+
 ### PA-01. An unquoted string
 
 - **Expected:** values are CQL literals; `HMO` is parsed as an identifier and fails. When any value
