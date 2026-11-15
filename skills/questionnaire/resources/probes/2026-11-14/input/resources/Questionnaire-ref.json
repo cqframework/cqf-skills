@@ -1,0 +1,45 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "ref",
+  "url": "http://example.org/fhir/Questionnaire/ref",
+  "version": "1.0.0",
+  "name": "Ref",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+      "valueCanonical": "http://example.org/fhir/Library/PopRules"
+    }
+  ],
+  "item": [
+    {
+      "linkId": "patient-ref",
+      "type": "reference",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Patient Resource"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "given",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "intake",
+  "url": "http://example.org/fhir/Questionnaire/intake",
+  "version": "1.0.0",
+  "name": "Intake",
+  "title": "Pre-visit intake",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-library",
+      "valueCanonical": "http://example.org/fhir/Library/IntakeLogic|1.0.0"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext",
+      "extension": [
+        {
+          "url": "name",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code": "patient"
+          }
+        },
+        {
+          "url": "type",
+          "valueCode": "Patient"
+        }
+      ]
+    }
+  ],
+  "item": [
+    {
+      "linkId": "given-name",
+      "text": "Given name",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Given Name"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "weight",
+      "text": "Most recent body weight",
+      "type": "quantity",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "29463-7",
+          "display": "Body weight"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression": {
+            "language": "text/cql-identifier",
+            "expression": "Last Weight"
+          }
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract",
+          "valueBoolean": true
+        }
+      ]
+    },
+    {
+      "linkId": "smoker",
+      "text": "Do you smoke?",
+      "type": "boolean"
+    },
+    {
+      "linkId": "packs",
+      "text": "Packs per day",
+      "type": "integer",
+      "enableWhen": [
+        {
+          "question": "smoker",
+          "operator": "=",
+          "answerBoolean": true
+        }
+      ]
+    },
+    {
+      "linkId": "conditions",
+      "text": "Active conditions",
+      "type": "group",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext",
+          "valueExpression": {
+            "name": "condition",
+            "language": "text/cql-identifier",
+            "expression": "Active Conditions"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "conditions.code",
+          "text": "Condition",
+          "type": "open-choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%condition.code.coding.first()"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

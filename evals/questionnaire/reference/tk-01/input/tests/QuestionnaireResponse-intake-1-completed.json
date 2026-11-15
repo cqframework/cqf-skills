@@ -1,0 +1,83 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "intake-1-completed",
+  "questionnaire": "http://example.org/fhir/Questionnaire/intake|1.0.0",
+  "status": "completed",
+  "subject": {
+    "reference": "Patient/intake-1"
+  },
+  "authored": "2026-11-14T09:30:00Z",
+  "item": [
+    {
+      "linkId": "given-name",
+      "answer": [
+        {
+          "valueString": "Rae"
+        }
+      ]
+    },
+    {
+      "linkId": "weight",
+      "answer": [
+        {
+          "valueQuantity": {
+            "value": 79.4,
+            "unit": "kg",
+            "system": "http://unitsofmeasure.org",
+            "code": "kg"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "smoker",
+      "answer": [
+        {
+          "valueBoolean": true
+        }
+      ]
+    },
+    {
+      "linkId": "packs",
+      "answer": [
+        {
+          "valueInteger": 1
+        }
+      ]
+    },
+    {
+      "linkId": "conditions",
+      "item": [
+        {
+          "linkId": "conditions.code",
+          "answer": [
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "195967001",
+                "display": "Asthma"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "conditions",
+      "item": [
+        {
+          "linkId": "conditions.code",
+          "answer": [
+            {
+              "valueCoding": {
+                "system": "http://snomed.info/sct",
+                "code": "37796009",
+                "display": "Migraine"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

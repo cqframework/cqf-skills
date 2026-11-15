@@ -1,0 +1,31 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "extract-4",
+  "questionnaire": "http://example.org/fhir/Questionnaire/extract-sdc4|1.0.0",
+  "status": "completed",
+  "subject": {
+    "reference": "Patient/adult-1"
+  },
+  "authored": "2026-11-14T10:00:00Z",
+  "item": [
+    {
+      "linkId": "symptoms",
+      "answer": [
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "49727002",
+            "display": "Cough"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "386661006",
+            "display": "Fever"
+          }
+        }
+      ]
+    }
+  ]
+}
