@@ -1,0 +1,19 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "order-hba1c",
+  "url": "http://example.org/fhir/ActivityDefinition/order-hba1c",
+  "version": "1.0.0",
+  "name": "OrderHbA1c",
+  "status": "active",
+  "kind": "ServiceRequest",
+  "intent": "proposal",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "4548-4",
+        "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "resourceType": "Observation",
+  "id": "recent-hba1c",
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "4548-4"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/recent"
+  },
+  "effectiveDateTime": "2026-11-01",
+  "valueQuantity": {
+    "value": 6.4,
+    "unit": "%",
+    "system": "http://unitsofmeasure.org",
+    "code": "%"
+  }
+}

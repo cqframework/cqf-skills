@@ -1,0 +1,22 @@
+{
+  "resourceType": "Library",
+  "id": "OtherRules",
+  "url": "http://example.org/fhir/Library/OtherRules",
+  "version": "1.0.0",
+  "name": "OtherRules",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "content": [
+    {
+      "contentType": "text/cql",
+      "data": "bGlicmFyeSBPdGhlclJ1bGVzIHZlcnNpb24gJzEuMC4wJwoKdXNpbmcgRkhJUiB2ZXJzaW9uICc0LjAuMScKCmNvbnRleHQgUGF0aWVudAoKZGVmaW5lICJJcyBBZHVsdCI6IGZhbHNlCg=="
+    }
+  ]
+}

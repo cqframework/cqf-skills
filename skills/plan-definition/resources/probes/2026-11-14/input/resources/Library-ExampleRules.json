@@ -1,0 +1,22 @@
+{
+  "resourceType": "Library",
+  "id": "ExampleRules",
+  "url": "http://example.org/fhir/Library/ExampleRules",
+  "version": "1.0.0",
+  "name": "ExampleRules",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library"
+      }
+    ]
+  },
+  "content": [
+    {
+      "contentType": "text/cql",
+      "data": "bGlicmFyeSBFeGFtcGxlUnVsZXMgdmVyc2lvbiAnMS4wLjAnCgp1c2luZyBGSElSIHZlcnNpb24gJzQuMC4xJwoKaW5jbHVkZSBGSElSSGVscGVycyB2ZXJzaW9uICc0LjAuMScgY2FsbGVkIEZISVJIZWxwZXJzCgpjb250ZXh0IFBhdGllbnQKCmRlZmluZSAiSXMgQWR1bHQiOiBBZ2VJblllYXJzKCkgPj0gMTgKZGVmaW5lICJJcyBDaGlsZCI6IEFnZUluWWVhcnMoKSA8IDE4CmRlZmluZSAiTnVsbCBSZXN1bHQiOiBudWxsIGFzIEJvb2xlYW4KZGVmaW5lICJOb3QgQm9vbGVhbiI6ICd5ZXMnCmRlZmluZSAiTWVzc2FnZSI6ICdIZWxsbyAnICsgUGF0aWVudC5uYW1lWzBdLmdpdmVuWzBdCmRlZmluZSAiUHJpb3JpdHkiOiAndXJnZW50JwpkZWZpbmUgIlRocm93cyI6IHNpbmdsZXRvbiBmcm9tIHsgMSwgMiB9Cg=="
+    }
+  ]
+}

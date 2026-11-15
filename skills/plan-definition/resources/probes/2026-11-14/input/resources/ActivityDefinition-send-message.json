@@ -1,0 +1,24 @@
+{
+  "resourceType": "ActivityDefinition",
+  "id": "send-message",
+  "url": "http://example.org/fhir/ActivityDefinition/send-message",
+  "version": "1.0.0",
+  "name": "SendMessage",
+  "status": "active",
+  "kind": "CommunicationRequest",
+  "library": [
+    "http://example.org/fhir/Library/ExampleRules"
+  ],
+  "code": {
+    "text": "Please schedule a follow-up visit"
+  },
+  "dynamicValue": [
+    {
+      "path": "priority",
+      "expression": {
+        "language": "text/cql-identifier",
+        "expression": "Priority"
+      }
+    }
+  ]
+}

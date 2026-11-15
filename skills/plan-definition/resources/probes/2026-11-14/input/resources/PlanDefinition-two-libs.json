@@ -1,0 +1,41 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "two-libs",
+  "url": "http://example.org/fhir/PlanDefinition/two-libs",
+  "version": "1.0.0",
+  "name": "TwoLibs",
+  "status": "active",
+  "library": [
+    "http://example.org/fhir/Library/ExampleRules",
+    "http://example.org/fhir/Library/OtherRules"
+  ],
+  "action": [
+    {
+      "id": "noref",
+      "title": "No reference",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Adult"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ref-other",
+      "title": "Reference OtherRules",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Is Adult",
+            "reference": "http://example.org/fhir/Library/OtherRules"
+          }
+        }
+      ]
+    }
+  ]
+}

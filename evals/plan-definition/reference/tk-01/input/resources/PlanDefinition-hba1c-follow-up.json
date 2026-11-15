@@ -1,0 +1,47 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "hba1c-follow-up",
+  "url": "http://example.org/fhir/PlanDefinition/hba1c-follow-up",
+  "version": "1.0.0",
+  "name": "HbA1cFollowUp",
+  "title": "HbA1c follow-up",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/plan-definition-type",
+        "code": "eca-rule"
+      }
+    ]
+  },
+  "library": [
+    "http://example.org/fhir/Library/HbA1cFollowUp"
+  ],
+  "action": [
+    {
+      "id": "order-hba1c",
+      "title": "Order a hemoglobin A1c test",
+      "condition": [
+        {
+          "kind": "applicability",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Needs HbA1c",
+            "reference": "http://example.org/fhir/Library/HbA1cFollowUp"
+          }
+        }
+      ],
+      "definitionCanonical": "http://example.org/fhir/ActivityDefinition/order-hba1c|1.0.0",
+      "dynamicValue": [
+        {
+          "path": "action.description",
+          "expression": {
+            "language": "text/cql-identifier",
+            "expression": "Order Reason",
+            "reference": "http://example.org/fhir/Library/HbA1cFollowUp"
+          }
+        }
+      ]
+    }
+  ]
+}

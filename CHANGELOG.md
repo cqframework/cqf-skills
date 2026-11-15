@@ -35,6 +35,30 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `plan-definition` skill, in the `clinical-reasoning` plugin, for PlanDefinition, ActivityDefinition and
+  `$apply`, from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on
+  import:
+  - Grounded in three layers, each cited: the FHIR R4 specification (with R4B and R5 where they differ),
+    CPG 2.0.0, and clinical-reasoning 4.13.0, the reference implementation in HAPI FHIR, cited to its
+    code and checked by running it (`resources/probes/2026-11-14/`).
+  - Corrections: R4's expression languages are `text/cql`, `text/fhirpath` and
+    `application/x-fhir-query` (`text/cql-identifier` is R4B/R5, usable on R4); `$apply` returns a
+    CarePlan in R4 and a Bundle per subject in CPG 2.0.0 and R5, never a GuidanceResponse; `userType` and
+    the other context parameters are CodeableConcepts, and `parameters` is a CPG addition; dynamicValue
+    paths are relative; the grouping behaviors' meanings; trigger types (no `data-requested`); action
+    `goalId`; ActivityDefinition `$apply` sets status `draft` and requests within a RequestGroup are
+    options.
+  - What the implementation does differently: a null or failing condition keeps the action without its
+    definition or children; `text/fhirpath` is evaluated by the CQL engine; unknown languages are
+    treated as named expressions; with several libraries and no `reference` the library isn't
+    defined; behaviors aren't enforced and most aren't copied; a Questionnaire definition is contained
+    as is; requests default to status `active` (ServiceRequest intent `order`); several context
+    parameters are ignored; errors go to `cqf-messages`.
+  - Removed the Da Vinci prior-authorization, CDS Hooks and DTR material (to be done separately if
+    wanted) and the Library packaging section (covered by `cql-ig` and `crmi`).
+  - New `scripts/apply/` runs `$apply` with clinical-reasoning 4.13.0 on a folder in IG layout;
+    `scripts/check_release.py` follows clinical-reasoning releases in the weekly release check.
+
 - `madie` skill, in the `cql` plugin, for US Quality Core 0.5.0 test cases and measure CQL in MADiE,
   from raleigh-claude-skills at `8224e28`, originally written by raleigh-g-thompson. Changes on import:
   - Retargeted from QI-Core to US Quality Core 0.5.0 (MADiE's "US Quality Core v0.5.0" model). MADiE
