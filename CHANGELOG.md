@@ -35,6 +35,20 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `trusted-ig-template` skill, in the `fhir-ig` plugin, for authors and reviewers of IG Publisher
+  templates on the trusted list, built on the publisher's `trusted-template-rules.md` (added in
+  HL7/fhir-ig-publisher 4e7325f):
+  - Each of the twelve rules with its threat model, the safe form and the mistakes that break it; how
+    the publisher loads a template chain, decides what is active content and what is trusted, and what
+    it gives a template's Ant scripts and pre-process transforms, cited to the publisher's code.
+  - Ant and XSLT behaviour the rules depend on, checked with probes (`resources/probes/2026-11-17/`):
+    a line break in an IG value adds a property to a `<loadproperties>` file and wins over the
+    template's own; `unless="ig.networkprohibited"` never runs; relative paths resolve in the IG's
+    folder; pre-process stylesheets can't include, import or read files.
+  - `scripts/audit_template.py`, a static audit of a template folder against the rules (A01 to A11),
+    with tests; a review checklist for rule 12; a weekly check of the rules file and the cited code.
+  - Evals: 15 questions, trigger prompts, and a task to fix a template with ten planted problems, with
+    a grader, its tests and a reference answer.
 - `questionnaire` skill, in the `clinical-reasoning` plugin, for Questionnaire, QuestionnaireResponse and
   SDC's `$populate` and `$extract`, from raleigh-claude-skills at `8224e28`, originally written by
   raleigh-g-thompson. Changes on import:

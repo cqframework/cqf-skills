@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common">
+  <target name="common.summary">
+    <xslt in="${onGenerate.ig.source}xml" out="${ig.temp}/_data/summary.json" style="${ig.scripts}/summary.xslt"/>
+  </target>
+</project>

@@ -1,0 +1,13 @@
+{
+  "script": "scripts/ant.xml",
+  "otherScripts": ["scripts/common.xml"],
+  "targets": {
+    "onLoad": "onLoad",
+    "onGenerate": "onGenerate",
+    "onCheck": "onCheck"
+  },
+  "pre-process": [
+    { "folder": "input/includes", "relativePath": "_includes" },
+    { "folder": "input/pagecontent", "relativePath": "_includes", "transform": "template/scripts/processPages.xslt" }
+  ]
+}

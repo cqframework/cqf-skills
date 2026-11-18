@@ -1,0 +1,6 @@
+<project name="probe2" default="all" basedir=".">
+  <!-- The publisher always sets ig.networkprohibited, to "true" or "false" (Template.java). -->
+  <target name="byName" unless="ig.networkprohibited"><echo message="byName RAN"/></target>
+  <target name="byValue" unless="${ig.networkprohibited}"><echo message="byValue RAN"/></target>
+  <target name="all" depends="byName,byValue"/>
+</project>

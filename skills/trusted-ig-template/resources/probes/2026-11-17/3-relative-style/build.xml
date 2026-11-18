@@ -1,0 +1,13 @@
+<project name="probe3" default="all" basedir=".">
+  <!-- basedir stands for the IG root: the publisher sets the ant project's basedir to it (Template.java). -->
+  <property name="ig.template" value="${basedir}/template"/>
+  <property name="ig.scripts" value="${ig.template}/scripts"/>
+  <target name="all">
+    <xslt in="input/menu.xml" out="out-relative.txt" style="scripts/check.xslt"/>
+    <xslt in="input/menu.xml" out="out-fixed.txt" style="${ig.scripts}/check.xslt"/>
+    <loadfile property="r" srcfile="out-relative.txt"/>
+    <echo message="style=scripts/check.xslt: ${r}"/>
+    <loadfile property="f" srcfile="out-fixed.txt"/>
+    <echo message="style=$${ig.scripts}/check.xslt: ${f}"/>
+  </target>
+</project>

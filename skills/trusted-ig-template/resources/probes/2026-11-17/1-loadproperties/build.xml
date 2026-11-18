@@ -1,0 +1,17 @@
+<project name="probe1" default="both" basedir=".">
+  <property name="ig.template" value="${basedir}/template"/>
+  <property name="ig.scripts" value="${ig.template}/scripts"/>
+  <target name="run">
+    <xslt in="ig.xml" out="${ig.template}/out-${which}.txt" style="${ig.scripts}/${which}.xslt"/>
+    <loadproperties srcfile="${ig.template}/out-${which}.txt"/>
+    <!-- set after loading, as a template would set a <get> destination -->
+    <condition property="dir.schemas" value="${basedir}/../schemas" else="${basedir}/input-cache/schemas">
+      <available file="${basedir}/../schemas" type="dir"/>
+    </condition>
+    <echo message="${which}: igVersion=[${igVersion}] dir.schemas=[${dir.schemas}]"/>
+  </target>
+  <target name="both">
+    <antcall target="run" inheritall="false"><param name="which" value="versions"/></antcall>
+    <antcall target="run" inheritall="false"><param name="which" value="versions-fixed"/></antcall>
+  </target>
+</project>
