@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="example.fhir.template" default="onGenerate" basedir=".">
+  <import file="${ig.scripts}/common.xml"/>
+
+  <target name="onLoad">
+    <xslt in="${onLoad.ig.source}xml" out="${onLoad.ig.dest}xml" style="scripts/onLoad.xslt"/>
+  </target>
+
+  <target name="onGenerate.versions">
+    <property name="dir.temp.includes" value="${ig.temp}/_includes"/>
+    <xslt in="${onGenerate.ig.source}xml" out="${ig.template}/versions.txt" style="${ig.scripts}/getVersions.xslt"/>
+    <loadproperties srcfile="${ig.template}/versions.txt"/>
+    <loadfile property="groupings" srcFile="${ig.template}/data/groupings.txt" encoding="UTF-8"/>
+  </target>
+
+  <target name="onGenerate.schemas" unless="ig.networkprohibited">
+    <get src="http://hl7.org/fhir/R4/fhir-single.xsd" dest="${ig.template}/schemas/fhir-single.xsd" ignoreerrors="true"/>
+  </target>
+
+  <target name="onGenerate.menuQa">
+    <xslt in="${ig.root}/input/includes/menu.xml" out="${ig.template}/ongenerate-validation-menuqa.json"
+          style="${ig.scripts}/checkMenu.xml" failonerror="false"/>
+  </target>
+
+  <!-- Writes the IG's version into a stamp file for the page footer. -->
+  <target name="onGenerate.stamp">
+    <exec executable="${ig.scripts}/stamp.sh" failonerror="false">
+      <arg value="${igVersion}"/>
+      <arg value="${dir.temp.includes}/stamp.html"/>
+    </exec>
+  </target>
+
+  <target name="onGenerate" depends="onGenerate.versions,onGenerate.schemas,onGenerate.menuQa,onGenerate.stamp,common.summary"/>
+
+  <target name="onCheck">
+    <echo file="${ig.template}/onCheck-validation.json" message="{&quot;resourceType&quot;:&quot;OperationOutcome&quot;,&quot;issue&quot;:[]}"/>
+  </target>
+
+  <scriptdef name="appendArtifacts" language="javascript">
+    <attribute name="files"/>
+    eval("self.project.setProperty('onGenerate.files', self.project.getProperty('onGenerate.files') + ';" + attributes.get("files") + "')");
+  </scriptdef>
+</project>

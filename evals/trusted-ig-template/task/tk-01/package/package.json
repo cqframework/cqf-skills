@@ -1,0 +1,9 @@
+{
+  "name": "example.fhir.template",
+  "type": "fhir.template",
+  "license": "CC0-1.0",
+  "description": "An example template for the trusted-ig-template evals (synthetic)",
+  "author": "Example",
+  "canonical": "http://example.org/fhir/templates/example.fhir.template",
+  "version": "0.1.0"
+}
