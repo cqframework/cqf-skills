@@ -37,7 +37,7 @@ DEFAULT_CQL_LINT = SCRIPTS / "lint_skill.py"
 # --repo ID=GITDIR.
 CACHE_DIR = Path(os.environ.get("TRUSTED_IG_TEMPLATE_SKILL_CACHE", HOME / ".cache" / "trusted-ig-template-skill"))
 DEFAULT_REPOS = {
-    "PUB-4e7325f": CACHE_DIR / "fhir-ig-publisher.git",
+    "PUB-3.0.5": CACHE_DIR / "fhir-ig-publisher.git",
     "CORE-7.0.6": CACHE_DIR / "org.hl7.fhir.core.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")

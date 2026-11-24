@@ -68,9 +68,9 @@ def test_gate_by_name(tmp_path):
 
 def test_exec_with_ig_value(tmp_path):
     root = copy(tmp_path)
-    replace(root, ANT, '<echo file="${dir.temp.includes}/stamp.html"',
+    replace(root, ANT, '<xslt in="${onGenerate.ig.source}xml" out="${dir.temp.includes}/stamp.html"',
             '<exec executable="${ig.scripts}/stamp.sh"><arg value="${igVersion}"/></exec>'
-            '<echo file="${dir.temp.includes}/stamp.html"')
+            '<xslt in="${onGenerate.ig.source}xml" out="${dir.temp.includes}/stamp.html"')
     assert failed(root) == {"G09"}
 
 

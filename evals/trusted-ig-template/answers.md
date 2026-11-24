@@ -2,8 +2,8 @@
 
 Expected answers for [questions.md](questions.md). Don't give this file to an agent under test.
 
-Facts are as the `trusted-ig-template` skill records them, for the rules added to the IG Publisher in
-commit 4e7325f (2026-11-18), with Ant 1.10.18. Those marked *probe* were confirmed by the skill's probes.
+Facts are as the `trusted-ig-template` skill records them, for the 14 rules and the publisher's checks
+in IG Publisher 3.0.5, with Ant 1.10.18. Those marked *probe* were confirmed by the skill's probes.
 
 ## Who can change what
 
@@ -27,11 +27,13 @@ commit 4e7325f (2026-11-18), with Ant 1.10.18. Those marked *probe* were confirm
 
 ### TH-03. Works locally
 
-- **Expected:** locally every template is trusted; only the ci-build checks. The child ships a `.js`
-  file, which isn't a harmless extension, so it has active content and isn't on the trusted list.
-  Options: drop the `.js` (or have the trusted parent ship it), or get the template onto the trusted
-  list, which is agreed with the FHIR Product Director first.
-- **Pass if:** local builds always trust; `.js` is active; remove it or get it trusted.
+- **Expected:** locally `-trust-template` recorded the author's trust in `fhir-settings.json`, so the
+  laptop runs it; the ci-build trusts only the publisher's list. The child ships a `.js` file, which
+  isn't a harmless extension, so it has active content and isn't on the list. Options: drop the `.js`
+  (or have the trusted parent ship it), or get the template onto the trusted list, which is agreed with
+  the FHIR Product Director first.
+- **Pass if:** local trust is the author's own (`-trust-template`); `.js` is active; remove it or get
+  it trusted.
 - **Skill:** `resources/publisher-trust.md` (Local builds and the ci-build).
 
 ## Where code lives
@@ -75,8 +77,9 @@ commit 4e7325f (2026-11-18), with Ant 1.10.18. Those marked *probe* were confirm
 ### IG-02. A program argument
 
 - **Expected:** no: nothing derived from IG content may reach an `<exec>` or `<java>` argument (rule
-  6), and executables run with fixed arguments (rule 4). Write the stamp as text instead, for example
-  with `<echo file=…>`, or have a stylesheet produce it.
+  6), and executables run with fixed arguments (rule 4). Have a stylesheet write the stamp: it escapes
+  the version for HTML (rules 9, 12). An `<echo file=…>` writes the value unescaped, so the audit warns
+  (A12).
 - **Pass if:** no, and an alternative that doesn't run a program with it.
 - **Skill:** `resources/rules.md` (rules 4, 6).
 
@@ -87,23 +90,44 @@ commit 4e7325f (2026-11-18), with Ant 1.10.18. Those marked *probe* were confirm
 - **Pass if:** no eval.
 - **Skill:** `resources/rules.md` (rule 8).
 
+### IG-04. A language folder
+
+- **Expected:** variable injection (rule 9): the language codes come from the IG, so `../` in one
+  writes outside `_includes`, wherever the IG chooses. Check each code against a strict pattern (letters
+  and `-`, say) and stop with an error if it doesn't match; don't clean it up; and check the resolved
+  path stays inside the temp folder.
+- **Pass if:** `../` (path traversal) and a strict-pattern check that stops the build.
+- **Partial if:** sanitising (stripping characters) instead of rejecting.
+- **Skill:** `resources/rules.md` (rule 9).
+
 ## Transforms, Jekyll and network
 
 ### PP-01. A pre-process stylesheet
 
-- **Expected:** the publisher runs pre-process transforms itself, from bytes, with external stylesheet
-  access off, so `xsl:include`, `xsl:import` and `document()` fail (*probe*). Merge the two into one
+- **Expected:** the publisher runs pre-process transforms itself, on Saxon, from bytes, with external
+  stylesheet access off, so `xsl:include`, `xsl:import` and `document()` fail (*probe*); from 3.0.5
+  `xsl:result-document` is refused too. Merge the two into one
   self-contained `.xslt` in `scripts/`.
 - **Pass if:** includes fail there; make it one file.
 - **Skill:** `resources/publisher-trust.md` (Pre-process transforms).
 
 ### JK-01. A sitemap
 
-- **Expected:** you can't: no Jekyll plugins (rule 10); `plugins` in `_config.yml`, `_plugins/` and a
+- **Expected:** you can't: no Jekyll plugins (rule 11); `plugins` in `_config.yml`, `_plugins/` and a
   Gemfile are ignored or refused. Generate the sitemap another way: a Liquid page, or a stylesheet in
   `onGenerate` writing it into the Jekyll source.
 - **Pass if:** no plugins, and a Liquid or generated alternative.
-- **Skill:** `resources/rules.md` (rule 10).
+- **Skill:** `resources/rules.md` (rule 11).
+
+### LQ-01. A page title
+
+- **Expected:** no (rule 12). The titles come from the IG, so HTML in one becomes part of every page:
+  write `{{ page.title | escape }}` and `{{ site.data.ig.title | escape }}`. The script is worse:
+  `jsonify` doesn't stop a value ending the `<script>` block early. Put the value in an escaped `data-`
+  attribute (`data-name="{{ site.data.ig.name | escape }}"`) and read it from the script.
+- **Pass if:** `escape` for the title, and a `data-` attribute instead of `jsonify` in the script.
+- **Partial if:** `escape` without the script problem.
+- **Skill:** `resources/rules.md` (rule 12).
 
 ### NW-01. The network gate
 
@@ -111,13 +135,13 @@ commit 4e7325f (2026-11-18), with Ant 1.10.18. Those marked *probe* were confirm
   always sets it (`true` or `false`), so the target never runs (*probe*). Use
   `unless="${ig.networkprohibited}"`.
 - **Pass if:** the `${…}` form.
-- **Skill:** `resources/rules.md` (rule 11).
+- **Skill:** `resources/rules.md` (rule 13).
 
 ## Process
 
 ### RV-01. Releasing
 
-- **Expected:** a change to `scripts/` (or `config.json`) is reviewed before release (rule 12). A change
+- **Expected:** a change to `scripts/` (or `config.json`) is reviewed before release (rule 14). A change
   to `includes/footer.html` doesn't need that review: it's page content. Run the audit and the review
   checklist.
 - **Pass if:** `scripts/` needs review; `includes/` doesn't.
@@ -143,11 +167,11 @@ Run `python grade_trusted_ig_template.py <answer>/tk-01`. The ten planted proble
 | 3 | `checkMenu.xml` is a stylesheet named `.xml` | 3 | rename to `.xslt` |
 | 4 | `getVersions.xslt` copies `version` and `title` with their line breaks | 7 | `normalize-space()` |
 | 5 | `groupings.txt` is read from `data/` | 1 | move to `scripts/` |
-| 6 | `unless="ig.networkprohibited"` | 11 | `unless="${ig.networkprohibited}"` |
-| 7 | `stamp.sh` is given `${igVersion}` | 4, 6 | write the stamp as text (`<echo file>`) |
+| 6 | `unless="ig.networkprohibited"` | 13 | `unless="${ig.networkprohibited}"` |
+| 7 | `stamp.sh` is given `${igVersion}` | 4, 6, 9 | write the stamp with a stylesheet, which escapes it (an unescaped `<echo file>` passes the grader, but the audit warns) |
 | 8 | `appendArtifacts` uses `eval` | 8 | `concat` and `setProperty` |
-| 9 | the pre-process transform is in `includes/` and includes another file | 9 | one `scripts/processPages.xslt` |
-| 10 | a `Gemfile` and `plugins` in `_config.yml` | 10 | remove both |
+| 9 | the pre-process transform is in `includes/` and includes another file | 10 | one `scripts/processPages.xslt` |
+| 10 | a `Gemfile` and `plugins` in `_config.yml` | 11 | remove both |
 
 - **Pass if:** 18/18 checks (G01 to G18) and the list of problems names all ten with their rules.
   **Partial if:** one problem missed, or a fix that drops a feature (G14 to G18).

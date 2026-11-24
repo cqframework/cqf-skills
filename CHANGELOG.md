@@ -8,6 +8,33 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `trusted-ig-template` skill: re-pinned from IG Publisher commit 4e7325f to 3.0.5 (2026-11-20). Fixes #22.
+  - The rules file now has 14 rules:
+    - new rule 9, variable injection;
+    - new rule 12, escaping IG values in Liquid pages;
+    - old rules 9 to 12 are now 10, 11, 13 and 14.
+    `rules.md` covers the two new rules; the rest of the skill, the review checklist and the evals are
+    renumbered.
+  - `publisher-trust.md` is rewritten for what 3.0.5 enforces:
+    - any file in `scripts/`, and pre-process transforms, are active content;
+    - the trusted list moved to `TrustedTemplates`, with each template's repository;
+    - only released versions of a trusted template are trusted;
+    - local builds need `-trust-template` for an untrusted template;
+    - an untrusted template's ant file isn't parsed;
+    - an in-place `#template` is checked too;
+    - external DTDs are off;
+    - pre-process transforms run on Saxon and refuse `xsl:result-document`;
+    - Jekyll runs with `--safe` and refuses a `Gemfile`.
+  - Correction: `onJekyll` was said never to be called. It is called before Jekyll, at 4e7325f too.
+  - New probe record `resources/probes/2026-11-24/`: pre-process XSLT on Saxon-HE 13.0, as 3.0.5 runs it.
+  - `scripts/audit_template.py` has two new checks:
+    - A12 (rule 9): a property the publisher didn't set, used in a path or written into a file.
+    - A13 (rule 12): Liquid in layouts and includes. Values in `<script>` and includes chosen by a value
+      are errors; unescaped output is one warning per file. The publisher's `{{[id]}}` placeholders are
+      skipped.
+  - Evals: new questions IG-04 (variable injection) and LQ-01 (escaping in Liquid); TH-03 is updated for
+    local trust. The TK-01 reference now writes the version stamp with a stylesheet, which escapes it,
+    rather than `<echo>`.
 - `ig-publisher` skill: re-pinned IG Publisher from 3.0.4 to 3.0.5 (2026-11-20; core library 7.0.6
   and CQL translator 4.9.0 unchanged). Fixes #23.
   - Of 258 line citations, 243 had the same text at 3.0.5 and were moved to the new line numbers; the

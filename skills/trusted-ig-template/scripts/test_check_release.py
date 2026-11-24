@@ -15,10 +15,10 @@ SOURCES = (SKILL / "resources" / "SOURCES.md").read_text(encoding="utf-8")
 def test_read_pins():
     pins = C.read_pins(SOURCES)
     assert [(p.sid, p.repo, p.branch) for p in pins] == [
-        ("PUB-4e7325f", "HL7/fhir-ig-publisher", "master"),
+        ("PUB-3.0.5", "HL7/fhir-ig-publisher", "master"),
         ("CORE-7.0.6", "hapifhir/org.hl7.fhir.core", "release")]
     assert all(re.fullmatch(r"[0-9a-f]{40}", p.sha) for p in pins)
-    assert pins[0].sha.startswith("4e7325f")
+    assert pins[0].sha.startswith("cb04275")
 
 
 def test_pins_agree_across_the_skill():
@@ -63,5 +63,5 @@ def test_whole_rules_file():
 def test_compare_flags_a_moved_file():
     old = {"a/X.java": ["1", "2"]}
     new = {"a/X.kt": ["1", "2"]}
-    rows = C.compare([C.Citation("r.md", 1, "PUB-4e7325f", "a/X.java:1-2")], list(old), list(new), old.get, new.get)
+    rows = C.compare([C.Citation("r.md", 1, "PUB-3.0.5", "a/X.java:1-2")], list(old), list(new), old.get, new.get)
     assert rows[0][0] == "missing"
