@@ -1,7 +1,7 @@
 # Templates and Liquid
 
-Baseline: IG Publisher 3.0.4 (org.hl7.fhir.core 7.0.6), cqf.fhir.template 1.0.0, fhir.base.template 1.0.0. Untagged statements hold at these versions only.
-Sources: IGPUB-3.0.4, CORE-7.0.6, TPL-CQF-1.0.0, TPL-BASE-1.0.0, TOOLS-1.3.0, EX-DQM-CMS-2025, PROBES-2026-10-22, PROBES-2026-11-14
+Baseline: IG Publisher 3.0.5 (org.hl7.fhir.core 7.0.6), cqf.fhir.template 1.0.0, fhir.base.template 1.0.0. Untagged statements hold at these versions only.
+Sources: IGPUB-3.0.5, CORE-7.0.6, TPL-CQF-1.0.0, TPL-BASE-1.0.0, TOOLS-1.3.0, EX-DQM-CMS-2025, PROBES-2026-10-22, PROBES-2026-11-14
 
 A template supplies an IG's page layouts, includes, styles and build scripts, and many of its default
 parameters. Liquid templates are per-resource-type narrative templates. Since fhir.base.template 1.0.0,
@@ -10,28 +10,44 @@ and how versions are resolved, is in [ig-ini-and-ig-resource.md](ig-ini-and-ig-r
 
 ## How a template chain is assembled
 
-1. The publisher clears `<root>/template/` [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:126-132].
+1. The publisher clears `<root>/template/` [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:137-142].
 2. It installs the named template. If that package's `package.json` names a `base`, it installs the base
    **first**, at the version listed in `dependencies`, recursively
-   [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:189-200].
+   [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:260-271].
 3. Each package is unpacked into `template/` after its base
-   [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:204]. A file with the same name
+   [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:275]. A file with the same name
    replaces the base's file. A file named `_append.<name>` is **appended** to the base's `<name>` instead
    [src: CORE-7.0.6 org.hl7.fhir.utilities/…/npm/NpmPackage.java:1545-1583].
 
 **Scripts.** A template's `config.json` names an Ant script and its `onLoad`, `onGenerate` and, from
 fhir.base.template 1.0.0, `onCheck` targets [src: TPL-BASE-1.0.0 config.json#L2-L8]. `onCheck` runs
 after generation, and its Ant target writes `onCheck-validation.json`, whose messages are added to QA
-[src: TPL-BASE-1.0.0 scripts/ant.xml#L174-L185] [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/templates/Template.java:751-758]
-[src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherGenerator.java:4856]. A local build runs a
-template's scripts for any template [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:143-145]. Only the CI
-auto-build restricts scripts to a fixed list of trusted template ids, which includes
-`fhir.base.template` and `cqf.fhir.template` [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:403-439].
+[src: TPL-BASE-1.0.0 scripts/ant.xml#L174-L185] [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/templates/Template.java:772-779]
+[src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherGenerator.java:5073].
+
+**Which templates may run scripts** (changed in 3.0.5; the rules for template authors are in the
+`trusted-ig-template` skill):
+
+- **The trusted list** is in `TrustedTemplates.java`, with the GitHub repository each template is built
+  from. It includes `fhir.base.template` (whose entry carries the comment "no longer trusted: GG decision,
+  19-11-2026", though the entry is still there) and `cqf.fhir.template`, built from
+  `cqframework/cqf-ig-template` [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/templates/TrustedTemplates.java:24-50].
+- **Only a released version is trusted**: `n.n.n`, `#current`, or no version. `#dev`, a branch build
+  (`current$branch`) or a labelled version such as `-cibuild` isn't, and on the ci-build its scripts don't
+  run [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:566-594].
+- **On the ci-build**, a template that claims a trusted id must be built from that repository, and an IG
+  can't use a trusted template's package id [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:1547-1580].
+- **Locally, an untrusted template that runs scripts stops the build** (before 3.0.5 it just ran). That
+  includes a template loaded from a folder or GitHub URL while you work on it. Run once with
+  `-trust-template <id>` (the id as the IG names it, without a version) or `-trust-template all`; it is
+  recorded in `trustedTemplates` in `fhir-settings.json`, so later runs don't ask
+  [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:155-159]
+  [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:196-221].
 
 **Accessibility routines** (new in IG Publisher 3.0.x after 3.0.1). Each template can list JavaScript
 routine names under `accessibility-routines` in its `config.json`. The publisher writes calls to them
 into `content/assets/js/accessible.js` in place of a marker line, and rejects a name that isn't a valid
-JavaScript function name [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/TemplateManager.java:318-355].
+JavaScript function name [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/TemplateManager.java:454-491].
 fhir.base.template 1.0.0 lists none.
 
 ## What each template in the cqf chain contributes
@@ -49,7 +65,7 @@ doesn't pin a version has been getting 1.0.0 since then; 0.7.1 and 0.8.1 date fr
 
 | Key | What it controls | Evidence |
 | --- | --- | --- |
-| `template-parameters` | Parameter codes passed to the template instead of being reported as unknown: `copyrightyear`, `excludelogbinaryformat`, `excludejson`, `excludemap`, `excludettl`, `excludexml`, `fmm-definition`, `globals-in-artifacts`, `releaselabel`, `shownav`. If a template lists none, a short built-in list applies | [src: TPL-BASE-1.0.0 config.json#L9] [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/templates/Template.java:765-767] |
+| `template-parameters` | Parameter codes passed to the template instead of being reported as unknown: `copyrightyear`, `excludelogbinaryformat`, `excludejson`, `excludemap`, `excludettl`, `excludexml`, `fmm-definition`, `globals-in-artifacts`, `releaselabel`, `shownav`. If a template lists none, a short built-in list applies | [src: TPL-BASE-1.0.0 config.json#L9] [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/templates/Template.java:786-788] |
 | `extraTemplates` | Extra pages per artifact: mappings, testing, examples, format, profile history and change history | [src: TPL-BASE-1.0.0 config.json#L11-L39] |
 | `formats` | Order of the format pages (`xml`, `json`, `ttl`) | [src: TPL-BASE-1.0.0 config.json#L40-L45] |
 | `pre-process` | Folders copied into Jekyll's `_includes` and `_data` (see [layout.md](layout.md)) | [src: TPL-BASE-1.0.0 config.json#L47-L78] |
@@ -69,20 +85,20 @@ exists for the type, the renderer factory returns a Liquid renderer instead
 
 **Naming.** In each Liquid folder, `<Type>.liquid` is stored under the resource type, lowercased: the file
 name up to its first `.`. Files ending `.html` are stored under their full name, as include fragments.
-Sub-folders are not read [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/IGPublisherLiquidTemplateServices.java:43-57].
+Sub-folders are not read [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/IGPublisherLiquidTemplateServices.java:43-57].
 The template for a resource is looked up by `fhirType()`, lowercased
-[src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/IGPublisherLiquidTemplateServices.java:59-63].
+[src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/IGPublisherLiquidTemplateServices.java:59-63].
 
 **Three parameters, loaded in a fixed order.** A later load of the same name **replaces** an earlier one
 (a map `put`), so the last folder loaded wins:
 
 | Order | Parameter | Defined in the tools CodeSystem? | Evidence |
 | --- | --- | --- | --- |
-| 1 | `path-liquid-template` | yes: "provided by the template" | [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:518-520] [src: TOOLS-1.3.0 CodeSystem-ig-parameters.json#path-liquid-template] |
-| 2 | `path-liquid` | yes | [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:515-517] [src: TOOLS-1.3.0 CodeSystem-ig-parameters.json#path-liquid] |
-| 3 | `path-liquid-ig` | **no** | [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:521-523] |
+| 1 | `path-liquid-template` | yes: "provided by the template" | [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:533-535] [src: TOOLS-1.3.0 CodeSystem-ig-parameters.json#path-liquid-template] |
+| 2 | `path-liquid` | yes | [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:530-532] [src: TOOLS-1.3.0 CodeSystem-ig-parameters.json#path-liquid] |
+| 3 | `path-liquid-ig` | **no** | [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:536-538] |
 
-Within one parameter, folders load in parameter order [src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:1021-1029].
+Within one parameter, folders load in parameter order [src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:1048-1056].
 fhir.base.template adds `template/liquid` and then `input/liquid` as `path-liquid`, both *added alongside*
 the IG's own values [src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L224-L237]. The template's defaults are
 written after the IG's parameters [src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L93-L106]. So, by the code:

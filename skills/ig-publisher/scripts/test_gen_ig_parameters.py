@@ -103,11 +103,11 @@ def test_render_layers_and_findings():
                       {"code": "path-qa", "display": "q", "definition": "QA."}]}
     cases, a, b = G.loader_cases(LOADER)
     out = G.render(cs, cases, (a, b), G.template_parameters(CONFIG), G.template_defaults(XSLT))
-    assert "| `logging` | a\\|b | yes [src: IGPUB-3.0.4 " in out
+    assert "| `logging` | a\\|b | yes [src: IGPUB-3.0.5 " in out
     assert "| `releaselabel` | r | no | yes [src: TPL-BASE-1.0.0 config.json#L3] | none |" in out
     assert "`temp/qa` (only if unset) [src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L9]" in out
     # findings: read but undefined; template-only codes and defaults not in the CodeSystem
-    assert "| `path-binary` | [src: IGPUB-3.0.4 " in out
+    assert "| `path-binary` | [src: IGPUB-3.0.5 " in out
     assert "| `made-up` | template parameter" in out
     assert "| `path-resource` | default `input/resources`" in out
     # definitions are verbatim, inside a fence

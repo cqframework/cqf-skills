@@ -28,11 +28,11 @@ PKGS=(
 
 # id | owner/repo | ref | cache name
 REPOS=(
-  "IGPUB-3.0.4|HL7/fhir-ig-publisher|3.0.4|fhir-ig-publisher"
+  "IGPUB-3.0.5|HL7/fhir-ig-publisher|3.0.5|fhir-ig-publisher"
   "CORE-7.0.6|hapifhir/org.hl7.fhir.core|7.0.6|org.hl7.fhir.core"
 )
 
-IGPUB_REF="3.0.4"
+IGPUB_REF="3.0.5"
 IGPUB_DOCS=(README.md documentation.md multi-version-IGs.md multi-lingual-IGs.md hta-copyright-rules.md)
 
 # The tools IG's narrative pages; the package holds only the resources. No release tag exists:

@@ -103,15 +103,15 @@ def test_citations_found_in_this_skill():
 def test_render_report():
     cur = C.SourceResult("TOOLS", "1.3.0", "1.3.0")
     new = C.SourceResult("IGPUB", "3.0.4", "3.0.5", notes=["3.0.5 builds against CQL translator 4.9.0"])
-    new.rows = [("same", C.Citation("a.md", 1, "IGPUB-3.0.4", "x:1"), ""),
-                ("CHANGED", C.Citation("b.md", 7, "IGPUB-3.0.4", "y:2-3"), "")]
+    new.rows = [("same", C.Citation("a.md", 1, "IGPUB-3.0.5", "x:1"), ""),
+                ("CHANGED", C.Citation("b.md", 7, "IGPUB-3.0.5", "y:2-3"), "")]
     err = C.SourceResult("CORE", "7.0.6", None, error="URLError: offline")
     text = C.render_report([new, cur, err])
     assert "| IGPUB | 3.0.4 | 3.0.5 | **newer release** |" in text
     assert "| TOOLS | 1.3.0 | 1.3.0 | current |" in text
     assert "error: URLError: offline" in text
     assert "1 same, 1 CHANGED" in text
-    assert "| CHANGED | `b.md:7` | `IGPUB-3.0.4 y:2-3` |" in text
+    assert "| CHANGED | `b.md:7` | `IGPUB-3.0.5 y:2-3` |" in text
 
 
 def test_cited_files_table_covers_every_git_citation():
