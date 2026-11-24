@@ -8,6 +8,21 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `plan-definition` and `questionnaire` skills: re-pinned clinical-reasoning from 4.13.0 to 4.16.0
+  (2026-11-21, with CQL 5.7.0 and HAPI FHIR 9.0.0). Fixes #18 and #19.
+  - The adapters the skills cite are now Kotlin; the citations point at the `.kt` files, whose logic
+    is unchanged.
+  - Every 2026-11-14 probe was re-run on 4.16.0 and compared with 4.13.0 (new probe records
+    `resources/probes/2026-11-24/`). One result changed: with several libraries and no
+    `Expression.reference`, 4.16.0 uses the first library declared, where 4.13.0 picked one
+    arbitrarily (the questionnaire probe got the second).
+  - New in 4.16.0, and probed: `$r5.apply` wraps an action's generated Questionnaire items in a group
+    titled from the action when the action adds more than one.
+  - Both skills note what 4.13.0, which the VS Code CQL extension 1.0.0 still uses, does differently.
+  - `scripts/apply/run.sh` and `scripts/sdc/run.sh` download the dependencies again when `pom.xml`
+    names another clinical-reasoning version; before, an existing `lib/` kept the old version.
+  - Eval answers updated for the server's new version; EX-02 now expects the first declared library.
+
 - `vscode-cql` skill: re-pinned the vscode-cql wiki from `c9e1023` to `030e98c` (2026-11-20). The
   Developer Guide no longer has `hotfix/` branches, so the branching summary drops them; the other
   Developer Guide citations moved down two lines. Fixes #21.

@@ -1,7 +1,7 @@
 # plan-definition Skill Evals
 
 Evaluation cases for the [`plan-definition`](../../skills/plan-definition/SKILL.md) skill, written
-against FHIR R4, CPG 2.0.0 and clinical-reasoning 4.13.0. When the skill is re-pinned, check every answer
+against FHIR R4, CPG 2.0.0 and clinical-reasoning 4.16.0. When the skill is re-pinned, check every answer
 in the key against the new version.
 
 | File | Contents |

@@ -37,7 +37,7 @@ DEFAULT_CQL_LINT = SCRIPTS / "lint_skill.py"
 # --repo ID=GITDIR.
 CACHE_DIR = Path(os.environ.get("QUESTIONNAIRE_SKILL_CACHE", HOME / ".cache" / "questionnaire-skill"))
 DEFAULT_REPOS = {
-    "CR-4.13.0": CACHE_DIR / "clinical-reasoning.git",
+    "CR-4.16.0": CACHE_DIR / "clinical-reasoning.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")
 LINE_LOC_RE = re.compile(r"^(.+?):(\d+)(?:-(\d+))?$")

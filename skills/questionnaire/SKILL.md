@@ -23,12 +23,15 @@ authorization (Da Vinci DTR) build on SDC, but DTR's rules are not covered here.
 | --- | --- |
 | FHIR | R4 4.0.1 (with R5 where Questionnaire changed) |
 | SDC | 4.0.0 (STU4, for R4), with what changed from 3.0.0 |
-| clinical-reasoning (`cqf-fhir-cr`) | 4.13.0, the release cql-language-server 5.0.0 uses |
+| clinical-reasoning (`cqf-fhir-cr`) | 4.16.0 (2026-11-21); cql-language-server 5.0.0, in the VS Code CQL extension, still uses 4.13.0 (see below) |
 
 ## When the Implementation Version Differs
 
-Behavior of the reference implementation is cited to its code at 4.13.0 (the `CR-4.13.0` citations) and
-checked by running it (`resources/probes/2026-11-14/`). For another release:
+Behavior of the reference implementation is cited to its code at 4.16.0 (the `CR-4.16.0` citations) and
+checked by running it (`resources/probes/2026-11-14/` on 4.13.0, re-run on 4.16.0 in
+`resources/probes/2026-11-24/`). Every 2026-11-14 probe gave the same result on 4.16.0 but one: with
+several `cqf-library` libraries and no `Expression.reference`, 4.16.0 uses the first declared, where
+4.13.0 (and so the VS Code CQL extension 1.0.0) picks one arbitrarily. For another release:
 
 1. Find the server's `cqf-fhir-cr` version (for HAPI FHIR, its release notes or dependencies).
 2. Read the cited code at that tag on GitHub ([SOURCES.md](resources/SOURCES.md)), finding it by content
@@ -86,7 +89,7 @@ checked by running it (`resources/probes/2026-11-14/`). For another release:
 
 ## Known Gotchas
 
-In clinical-reasoning 4.13.0 (each verified by running it):
+In clinical-reasoning 4.16.0 (each verified by running it):
 
 - **Every expression runs as CQL**, `text/fhirpath` included: FHIRPath that is also CQL works, but
   FHIRPath semantics (such as partial `matches`) don't hold.
@@ -95,7 +98,8 @@ In clinical-reasoning 4.13.0 (each verified by running it):
 - **The first `context` becomes the subject** when none is named `patient`, overriding `subject`: an
   `encounter` context alone yields an empty response with no error.
 - **A qualified `text/cql-identifier` (`Lib."Def"`) fails**, and with several libraries an unqualified
-  one picks an arbitrary library. Use `text/cql-expression` `Lib."Def"`, or `Expression.reference`.
+  one uses the first library declared (an arbitrary one in 4.13.0). Use `text/cql-expression`
+  `Lib."Def"`, or `Expression.reference`.
 - **A list result gives several answers even on a non-repeating item**; results aren't converted to the
   item's type (a FHIR `code` gives `valueString` on a choice item); a Resource result drops the whole item.
 - **Not implemented in `$populate`:** `calculatedExpression`, `variable`, `enableWhen` (disabled items are
@@ -120,7 +124,7 @@ In the specifications:
 
 ## Running $populate and $extract Locally
 
-`scripts/sdc/run.sh` runs clinical-reasoning 4.13.0 on a folder in IG layout (`input/resources/` for the
+`scripts/sdc/run.sh` runs clinical-reasoning 4.16.0 on a folder in IG layout (`input/resources/` for the
 Questionnaire, Libraries with CQL in `Library.content` and profiles; `input/tests/` for patient data and
 QuestionnaireResponses) and prints the result. It needs Java 17+ and Maven; the first run downloads the
 dependencies.
@@ -143,8 +147,9 @@ produced a resource HAPI can't serialize.
 | [resources/population.md](resources/population.md) | SDC extensions, expression languages, libraries, launch context, `$populate`, and what clinical-reasoning does |
 | [resources/extraction.md](resources/extraction.md) | Extraction methods, `$extract`, what clinical-reasoning does, Questionnaire generation |
 | [resources/SOURCES.md](resources/SOURCES.md) | The pinned sources and how to read a citation |
-| [resources/probes/2026-11-14/](resources/probes/2026-11-14/RESULTS.md) | The probe project and what the operations returned for it |
-| [scripts/sdc/](scripts/sdc/run.sh) | Runs `$populate`, `$extract` and generation with clinical-reasoning 4.13.0 (Java 17+, Maven) |
+| [resources/probes/2026-11-14/](resources/probes/2026-11-14/RESULTS.md) | The probe project and what the operations returned for it (4.13.0) |
+| [resources/probes/2026-11-24/](resources/probes/2026-11-24/RESULTS.md) | The same probes on 4.16.0, compared with 4.13.0 |
+| [scripts/sdc/](scripts/sdc/run.sh) | Runs `$populate`, `$extract` and generation with clinical-reasoning 4.16.0 (Java 17+, Maven) |
 
 For maintainers: `scripts/fetch-sources.sh` caches the clinical-reasoning clone,
 `scripts/lint_skill_questionnaire.py` checks citations, and `scripts/check_release.py` reports which

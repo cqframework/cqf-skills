@@ -3,7 +3,7 @@
 Questions for an agent working with FHIR Questionnaires and SDC. Answer each in a few sentences, as you
 would to a forms developer. Then do task TK-01. The answer key is in `answers.md`; don't read it.
 
-Our content is FHIR R4 and follows SDC 4.0.0. "Our server" is HAPI FHIR with clinical-reasoning 4.13.0.
+Our content is FHIR R4 and follows SDC 4.0.0. "Our server" is HAPI FHIR with clinical-reasoning 4.16.0.
 
 ## Structure
 
@@ -71,7 +71,7 @@ server expect?
 
 ## Versions
 
-**VR-01. A newer server.** A server runs clinical-reasoning 4.15.0. How do we find out whether what the
+**VR-01. A newer server.** A server runs clinical-reasoning 4.17.0. How do we find out whether what the
 skill says about `$populate` still holds?
 
 ## Task

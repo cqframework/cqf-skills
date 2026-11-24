@@ -1,7 +1,7 @@
 # Expressions, Behavior Extensions and $populate
 
-Baseline: SDC 4.0.0 on FHIR R4 (4.0.1); clinical-reasoning 4.13.0 for the reference implementation.
-Sources: FHIR-R4, FHIR-R5, SDC-4.0.0, SDC-3.0.0, EXT-5.3.0, CR-4.13.0, PROBES-2026-11-14
+Baseline: SDC 4.0.0 on FHIR R4 (4.0.1); clinical-reasoning 4.16.0 for the reference implementation.
+Sources: FHIR-R4, FHIR-R5, SDC-4.0.0, SDC-3.0.0, EXT-5.3.0, CR-4.16.0, PROBES-2026-11-14, PROBES-2026-11-24
 
 How SDC adds computable behavior to a Questionnaire, how `$populate` pre-fills a QuestionnaireResponse
 as SDC defines it, and what clinical-reasoning (HAPI FHIR's implementation) actually does.
@@ -144,31 +144,32 @@ StructureMap, if present, takes precedence and the others are ignored [src: SDC-
 
 ## clinical-reasoning ($populate on HAPI FHIR)
 
-What clinical-reasoning 4.13.0 does, from its code and the probes in `resources/probes/2026-11-14/`. Where
-it differs from SDC, content written for SDC can behave differently on a HAPI FHIR server.
+What clinical-reasoning 4.16.0 does, from its code and the probes in `resources/probes/2026-11-14/` (run
+on 4.13.0, and re-run on 4.16.0 in `resources/probes/2026-11-24/` with the same results except where
+noted). Where it differs from SDC, content written for SDC can behave differently on a HAPI FHIR server.
 
 **Operation.** The R4 provider accepts `subject` (string or Reference), `context`, `local`,
 `useServerData`, `data` (or `bundle`) and `dataEndpoint`, `contentEndpoint` and `terminologyEndpoint`, and
 returns the QuestionnaireResponse itself, not Parameters
-[src: CR-4.13.0 cqf-fhir-cr-hapi/…/r4/questionnaire/QuestionnairePopulateProvider.java:64-89].
+[src: CR-4.16.0 cqf-fhir-cr-hapi/…/r4/questionnaire/QuestionnairePopulateProvider.java:64-89].
 
 **The response** has id `<questionnaire id>-<subject id>`, `questionnaire` = `url|version`, status
 `in-progress` and `authored` now. The Questionnaire is not contained
-[src: CR-4.13.0 cqf-fhir-cr/…/populate/PopulateRequest.java:179-190]. Errors are issues in a contained
+[src: CR-4.16.0 cqf-fhir-cr/…/populate/PopulateRequest.java:179-190]. Errors are issues in a contained
 OperationOutcome referenced by a `cqf-messages` extension, not an `issues` parameter. Each item answered
 from an expression gets the extension `questionnaireresponse-author`, a Reference to
 `http://cqframework.org/fhir/Device/clinical-quality-language` [src: PROBES-2026-11-14 RESULTS.md §1].
 
 **What it reads and ignores.**
 
-| SDC feature | clinical-reasoning 4.13.0 |
+| SDC feature | clinical-reasoning 4.16.0 |
 | --- | --- |
-| `initialExpression` | Yes. A `cqf-expression` on the item takes precedence over it [src: CR-4.13.0 cqf-fhir-cr/…/common/ExpressionProcessor.java:155-163] |
-| static `initial` | Copied as answers [src: CR-4.13.0 cqf-fhir-cr/…/populate/ItemProcessor.java:213-239] |
+| `initialExpression` | Yes. A `cqf-expression` on the item takes precedence over it [src: CR-4.16.0 cqf-fhir-cr/…/common/ExpressionProcessor.java:155-163] |
+| static `initial` | Copied as answers [src: CR-4.16.0 cqf-fhir-cr/…/populate/ItemProcessor.java:213-239] |
 | `itemPopulationContext` on a group | Yes: one group repetition per result, with `%<name>` bound in child expressions [src: PROBES-2026-11-14 RESULTS.md §1] |
 | `launchContext` | Yes, matched to `context` by its `name` code (below) |
 | `calculatedExpression`, `cqf-calculatedValue` | **No**: no answer [src: PROBES-2026-11-14 RESULTS.md §1] |
-| `variable` | **No**: root variables aren't evaluated [src: CR-4.13.0 cqf-fhir-cr/…/populate/PopulateProcessor.java:30-45] |
+| `variable` | **No**: root variables aren't evaluated [src: CR-4.16.0 cqf-fhir-cr/…/populate/PopulateProcessor.java:30-45] |
 | `enableWhen`, `enableWhenExpression` | **No**: disabled items are populated [src: PROBES-2026-11-14 RESULTS.md §1] |
 | `candidateExpression`, `answerExpression` | Not read by the population code |
 | Observation-based (`observationLinkPeriod`) | **No** [src: PROBES-2026-11-14 RESULTS.md §1] |
@@ -176,16 +177,18 @@ from an expression gets the extension `questionnaireresponse-author`, a Referenc
 
 **Expressions all run as CQL.** `text/cql-expression` and `text/fhirpath` expressions are wrapped in a
 generated CQL library as `define "return": <expression>`, with the Questionnaire's libraries included and
-the parameters declared as `"%name"` [src: CR-4.13.0 cqf-fhir-utility/…/utility/CqfExpression.kt:64-82]
-[src: CR-4.13.0 cqf-fhir-cql/…/cql/LibraryConstructor.kt:17-32]
-[src: CR-4.13.0 cqf-fhir-cql/…/cql/LibraryConstructor.kt:63-99]. FHIRPath that is also valid CQL, such as
+the parameters declared as `"%name"` [src: CR-4.16.0 cqf-fhir-utility/…/utility/CqfExpression.kt:64-82]
+[src: CR-4.16.0 cqf-fhir-cql/…/cql/LibraryConstructor.kt:17-32]
+[src: CR-4.16.0 cqf-fhir-cql/…/cql/LibraryConstructor.kt:63-99]. FHIRPath that is also valid CQL, such as
 `%patient.name.given.first()`, works; where the two differ, CQL wins: `'abc'.matches('b')` gives false (a
 partial match, true, in FHIRPath) [src: PROBES-2026-11-14 RESULTS.md §3].
 
 **Which library.** A `text/cql-identifier` uses `Expression.reference` if present; otherwise the first
-library in an unordered map of the `cqf-library` libraries [src: CR-4.13.0 cqf-fhir-utility/…/utility/CqfExpression.kt:64-82]
-[src: CR-4.13.0 cqf-fhir-utility/…/adapter/IKnowledgeArtifactAdapter.java:366-377]. With two libraries
-the probe used the second one declared [src: PROBES-2026-11-14 RESULTS.md §4]. A qualified identifier
+`cqf-library` library, in declaration order [src: CR-4.16.0 cqf-fhir-utility/…/utility/CqfExpression.kt:64-82]
+[src: CR-4.16.0 cqf-fhir-utility/…/adapter/IKnowledgeArtifactAdapter.kt:264-273]. With PopRules then
+OtherRules, both defining `"Given Name"`, 4.16.0 answered from PopRules [src: PROBES-2026-11-24 RESULTS.md §2].
+4.13.0 (the VS Code CQL extension's version) held the libraries in an unordered map, so the choice was
+arbitrary; its probe used the second one declared [src: PROBES-2026-11-14 RESULTS.md §4]. A qualified identifier
 (`OtherRules."Given Name"`), as SDC requires with several libraries, fails: it is looked up as one name in
 the chosen library [src: PROBES-2026-11-14 RESULTS.md §1]. With several libraries, write
 `text/cql-expression` `OtherRules."Given Name"` (which works and conforms), or set `reference`.
@@ -194,12 +197,12 @@ the chosen library [src: PROBES-2026-11-14 RESULTS.md §1]. With several librari
 
 - The subject is the `content` of the `context` named `patient`; failing that, of the **first** `context`
   whatever its name; only then the `subject` parameter
-  [src: CR-4.13.0 cqf-fhir-cr/…/populate/PopulateRequest.java:77-106]. Passing only an `encounter`
+  [src: CR-4.16.0 cqf-fhir-cr/…/populate/PopulateRequest.java:77-106]. Passing only an `encounter`
   context makes the Encounter the subject, and nothing is populated, with no error
   [src: PROBES-2026-11-14 RESULTS.md §2].
 - A launchContext binds `%<code>` and the capitalised CQL parameter name (`Patient`) to the matching
   `context` content. Its `name` must be a Coding, and a launchContext without `name` or `type` is an error
-  [src: CR-4.13.0 cqf-fhir-cr/…/common/InputParameterResolver.java:130-166].
+  [src: CR-4.16.0 cqf-fhir-cr/…/common/InputParameterResolver.java:130-166].
 - `%patient` resolves only when the request has a `context` named `patient`; with only `subject`, an
   expression using it fails to compile. `%subject` is never bound [src: PROBES-2026-11-14 RESULTS.md §2].
   In CQL, use the library's `Patient` context instead: it is always the subject.
@@ -207,11 +210,11 @@ the chosen library [src: PROBES-2026-11-14 RESULTS.md §1]. With several librari
 **Answers.**
 
 - Every result becomes an answer, even on a **non-repeating** item: a list of two values gives two answers
-  [src: CR-4.13.0 cqf-fhir-cr/…/populate/ItemProcessor.java:201-211]. Return a single value for a
+  [src: CR-4.16.0 cqf-fhir-cr/…/populate/ItemProcessor.java:201-211]. Return a single value for a
   non-repeating item (`First(…)`, `Last(…)`).
 - Results are not converted to the item's type, except that a CodeableConcept becomes its first Coding,
   and an enumerated `code`, id or Identifier becomes a string
-  [src: CR-4.13.0 cqf-fhir-cr/…/common/ItemValueTransformer.java:35-49]. So a FHIR `code` (such as
+  [src: CR-4.16.0 cqf-fhir-cr/…/common/ItemValueTransformer.java:35-49]. So a FHIR `code` (such as
   `Patient.gender`) on a choice item gives `valueString`, and a String result on an integer item gives
   `valueString` [src: PROBES-2026-11-14 RESULTS.md §1]. Return a Coding or a System Code for choice items.
 - A Resource result throws, and the whole top-level item is dropped from the response

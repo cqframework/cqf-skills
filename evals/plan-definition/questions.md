@@ -10,7 +10,7 @@ language, and what's the difference from `text/cql`?
 
 **EX-02. Two libraries.** A PlanDefinition lists two libraries in `library`, and a condition uses
 `"expression": "Is Eligible"` with no `reference`. Both libraries define `"Is Eligible"`. Which one does
-a HAPI FHIR server (clinical-reasoning 4.13.0) use?
+a HAPI FHIR server (clinical-reasoning 4.16.0) use?
 
 **EX-03. FHIRPath.** I wrote a condition with `"language": "text/fhirpath"` that uses `matches()`. It
 behaves differently on a HAPI FHIR server than in a FHIRPath evaluator. Why?
@@ -67,8 +67,8 @@ is `data-requested` a valid type?
 
 ## Versions
 
-**VR-01. A newer server.** Our HAPI FHIR server runs clinical-reasoning 4.15.0. Does what the skill says
-about unqualified expressions with several libraries still hold?
+**VR-01. An older version.** The VS Code CQL extension 1.0.0 runs clinical-reasoning 4.13.0. Does what
+the skill says about unqualified expressions with several libraries hold there?
 
 ## Task
 

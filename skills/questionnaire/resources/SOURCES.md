@@ -6,7 +6,7 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 - a specification page, with its section number or anchor: `[src: SDC-4.0.0 populate.html#exp-pop]`;
 - a file in a FHIR package: `[src: FHIR-R4 package/StructureDefinition-Questionnaire.json]`;
 - clinical-reasoning code, by path and lines at the pinned commit:
-  `[src: CR-4.13.0 cqf-fhir-cr/…/populate/ItemProcessor.java:201-211]` (a `…` elides the middle of a path;
+  `[src: CR-4.16.0 cqf-fhir-cr/…/populate/ItemProcessor.java:201-211]` (a `…` elides the middle of a path;
   full paths are listed below);
 - the probe runs: `[src: PROBES-2026-11-14 RESULTS.md §1]`.
 
@@ -17,8 +17,9 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 | SDC-4.0.0 | spec | trial-use | Structured Data Capture 4.0.0 (STU4), for FHIR R4 | hl7.fhir.uv.sdc#4.0.0 | <https://hl7.org/fhir/uv/sdc/STU4/> | none | 2026-11-14 |
 | SDC-3.0.0 | spec | trial-use | Structured Data Capture 3.0.0 (STU3), for what changed in 4.0.0 | hl7.fhir.uv.sdc#3.0.0 | <https://hl7.org/fhir/uv/sdc/STU3/> | none | 2026-11-14 |
 | EXT-5.3.0 | spec | trial-use | FHIR Extensions Pack for R4, 5.3.0-ballot-tc1, the version SDC 4.0.0 depends on | hl7.fhir.uv.extensions.r4#5.3.0-ballot-tc1 | <https://hl7.org/fhir/extensions/> | none | 2026-11-14 |
-| CR-4.13.0 | implementation-source | n/a | clinical-reasoning (cqf-fhir-cr) 4.13.0, released 2026-10-01, the version cql-language-server 5.0.0 uses | cqframework/clinical-reasoning@ccba474a2fba73329353b41d270f9d0001d6cb52 | <https://github.com/cqframework/clinical-reasoning/tree/v4.13.0> | none (the fetch script caches a clone) | 2026-11-14 |
+| CR-4.16.0 | implementation-source | n/a | clinical-reasoning (cqf-fhir-cr) 4.16.0, released 2026-11-21, with the CQL translator and engine 5.7.0 and HAPI FHIR 9.0.0 (cql-language-server 5.0.0 still uses 4.13.0) | cqframework/clinical-reasoning@472ae350d14831e340136d41e9dd7183deab5e78 | <https://github.com/cqframework/clinical-reasoning/tree/v4.16.0> | none (the fetch script caches a clone) | 2026-11-14 |
 | PROBES-2026-11-14 | observed-behavior | n/a | clinical-reasoning 4.13.0 (CQL translator and engine 5.4.0), run with `scripts/sdc/` | `resources/probes/2026-11-14/` | none | `resources/probes/2026-11-14/` | 2026-11-14 |
+| PROBES-2026-11-24 | observed-behavior | n/a | clinical-reasoning 4.16.0 (CQL translator and engine 5.7.0, HAPI FHIR 9.0.0), run with `scripts/sdc/`: the 2026-11-14 probes again, compared with 4.13.0, and new ones | `resources/probes/2026-11-24/` | none | `resources/probes/2026-11-24/` | 2026-11-24 |
 
 ## Reading a citation
 
@@ -27,7 +28,7 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 | FHIR-R4, FHIR-R5 | `https://hl7.org/fhir/<R4|R5>/<page>`; package files at `https://packages.fhir.org/hl7.fhir.<r4|r5>.core/<version>` |
 | SDC-4.0.0, SDC-3.0.0 | `https://hl7.org/fhir/uv/sdc/<STU4|STU3>/<page>` (for STU4, the pages are under `en/`: `https://hl7.org/fhir/uv/sdc/STU4/en/<page>`); package at `https://packages.fhir.org/hl7.fhir.uv.sdc/<version>` |
 | EXT-5.3.0 | package at `https://packages.fhir.org/hl7.fhir.uv.extensions.r4/5.3.0-ballot-tc1` |
-| CR-4.13.0 | `https://github.com/cqframework/clinical-reasoning/blob/v<version>/<path>#L<a>-L<b>` |
+| CR-4.16.0 | `https://github.com/cqframework/clinical-reasoning/blob/v<version>/<path>#L<a>-L<b>` |
 
 For another clinical-reasoning release, read the same file at its tag and find the code by its content
 near the cited lines. The release a HAPI FHIR server uses is in its dependencies (`cqf-fhir-cr`).
@@ -54,4 +55,4 @@ near the cited lines. The release a HAPI FHIR server uses is in its dependencies
 | CR | `cqf-fhir-cql/src/main/java/org/opencds/cqf/fhir/cql/LibraryConstructor.kt` |
 | CR | `cqf-fhir-utility/src/main/java/org/opencds/cqf/fhir/utility/Constants.kt` |
 | CR | `cqf-fhir-utility/src/main/java/org/opencds/cqf/fhir/utility/CqfExpression.kt` |
-| CR | `cqf-fhir-utility/src/main/java/org/opencds/cqf/fhir/utility/adapter/IKnowledgeArtifactAdapter.java` |
+| CR | `cqf-fhir-utility/src/main/java/org/opencds/cqf/fhir/utility/adapter/IKnowledgeArtifactAdapter.kt` |

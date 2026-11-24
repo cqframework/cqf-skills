@@ -3,7 +3,7 @@
 Expected answers for [questions.md](questions.md). Don't give this file to an agent under test.
 
 Facts are as the `questionnaire` skill records them for FHIR R4, SDC 4.0.0 and clinical-reasoning
-4.13.0 (checked by running it). Several contradict the skill's original source; those are marked.
+4.16.0 (checked by running it). Several contradict the skill's original source; those are marked.
 
 ## Structure
 
@@ -53,7 +53,8 @@ Facts are as the `questionnaire` skill records them for FHIR R4, SDC 4.0.0 and c
 
 - **Expected:** SDC: with more than one library in scope, qualify CQL identifiers with the library name:
   `OtherLib."Given Name"`. On the server, a qualified `text/cql-identifier` fails (looked up as one name
-  in one library), and an unqualified one picks an arbitrary library. What works there and conforms:
+  in one library), and an unqualified one uses the first library declared (an arbitrary one in 4.13.0).
+  What works there and conforms:
   `text/cql-expression` `OtherLib."Given Name"`, or `Expression.reference` to the library.
 - **Pass if:** qualify per SDC, and on the server use cql-expression or `reference`.
 - **Skill:** `resources/population.md` (Expression languages; clinical-reasoning).
@@ -167,9 +168,10 @@ Facts are as the `questionnaire` skill records them for FHIR R4, SDC 4.0.0 and c
 
 ### VR-01. A newer server
 
-- **Expected:** the skill's behavior is cited to 4.13.0 code; read the same files at the v4.15.0 tag on
+- **Expected:** the skill's behavior is cited to 4.16.0 code; read the same files at the v4.17.0 tag on
   GitHub (finding the code by content), or change the version in `scripts/sdc/pom.xml` and re-run the
-  probe or the content. (On 2026-11-14, 26 of 27 cited ranges were unchanged at the release branch head.)
+  probes or the content (`run.sh` downloads the new version). The 2026-11-24 probes show how: every
+  2026-11-14 probe re-run on the new version and compared.
 - **Pass if:** check the cited code at that version or run it.
 - **Skill:** `SKILL.md` (When the Implementation Version Differs).
 
@@ -197,6 +199,7 @@ filled in, with no `cqf-messages`; then `extract <QuestionnaireResponse id>`: on
 nothing else.
 
 - **Pass if:** every check passes and both runs behave. **Partial if:** one check fails.
-- **Reference:** [reference/tk-01/](reference/tk-01/), run with clinical-reasoning 4.13.0 on 2026-11-14:
+- **Reference:** [reference/tk-01/](reference/tk-01/), run with clinical-reasoning 4.13.0 on 2026-11-14, and
+  with 4.16.0 on 2026-11-24 with the same results:
   `$populate` gives `Rae`, 79.4 kg (the later weight) and two condition groups (Migraine, Asthma; the
   resolved fracture is left out); `$extract` gives one Observation, `extract-intake-1-completed.weight`.
