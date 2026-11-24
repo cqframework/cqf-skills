@@ -14,7 +14,7 @@ CACHE_DIR="${PD_SKILL_CACHE:-$HOME/.cache/plan-definition-skill}"
 
 # id | owner/repo | commit | cache name
 REPOS=(
-  "CR-4.13.0|cqframework/clinical-reasoning|ccba474a2fba73329353b41d270f9d0001d6cb52|clinical-reasoning"
+  "CR-4.16.0|cqframework/clinical-reasoning|472ae350d14831e340136d41e9dd7183deab5e78|clinical-reasoning"
 )
 
 mkdir -p "$CACHE_DIR"

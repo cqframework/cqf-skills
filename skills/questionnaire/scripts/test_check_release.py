@@ -15,7 +15,7 @@ SOURCES = (SKILL / "resources" / "SOURCES.md").read_text(encoding="utf-8")
 def test_read_pins():
     pins = C.read_pins(SOURCES)
     assert [(p.sid, p.repo, p.branch) for p in pins] == [
-        ("CR-4.13.0", "cqframework/clinical-reasoning", "release")]
+        ("CR-4.16.0", "cqframework/clinical-reasoning", "release")]
     assert re.fullmatch(r"[0-9a-f]{40}", pins[0].sha)
 
 
@@ -27,7 +27,7 @@ def test_pins_agree_across_the_skill():
         assert f'"{p.sid}|{p.repo}|{p.sha}|' in fetch
         assert f'"{p.sid}":' in lint
     # the harness runs the pinned release
-    assert "<artifactId>cqf-fhir-cr</artifactId><version>4.13.0</version>" in pom
+    assert "<artifactId>cqf-fhir-cr</artifactId><version>4.16.0</version>" in pom
 
 
 def test_every_citation_names_a_registered_source():
@@ -57,5 +57,5 @@ def test_probe_sections_exist():
 def test_compare_flags_a_moved_file():
     old = {"a/X.java": ["1", "2"]}
     new = {"a/X.kt": ["1", "2"]}
-    rows = C.compare([C.Citation("r.md", 1, "CR-4.13.0", "a/X.java:1-2")], list(old), list(new), old.get, new.get)
+    rows = C.compare([C.Citation("r.md", 1, "CR-4.16.0", "a/X.java:1-2")], list(old), list(new), old.get, new.get)
     assert rows[0][0] == "missing"

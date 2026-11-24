@@ -3,7 +3,7 @@
 Expected answers for [questions.md](questions.md). Don't give this file to an agent under test.
 
 Facts are as the `plan-definition` skill records them for FHIR R4, CPG 2.0.0 and clinical-reasoning
-4.13.0 (checked by running it). Several contradict the skill's original source; those are marked.
+4.16.0 (checked by running it). Several contradict the skill's original source; those are marked.
 
 ## Expressions and libraries
 
@@ -19,10 +19,12 @@ Facts are as the `plan-definition` skill records them for FHIR R4, CPG 2.0.0 and
 
 ### EX-02. Two libraries
 
-- **Expected:** not defined: with no `reference`, it uses the first library in an unordered map. Set
-  `expression.reference` to the intended library's canonical (or keep one library, as CPG requires). The
-  spec says to qualify (`"Lib".Expr`) with several libraries and to reference at most one.
-- **Pass if:** undefined, and use `reference` or one library.
+- **Expected:** the first library declared in `library`: with no `reference`, the server uses the first
+  library in declaration order (4.13.0 picked one arbitrarily). Still set `expression.reference` to the
+  intended library's canonical (or keep one library, as CPG requires). The spec says to qualify
+  (`"Lib".Expr`) with several libraries and to reference at most one.
+- **Pass if:** the first declared, and use `reference` or one library. **Partial if:** "undefined" (the
+  4.13.0 behaviour) with the same advice.
 - **Skill:** `resources/apply.md` (Expressions and libraries).
 
 ### EX-03. FHIRPath
@@ -105,7 +107,7 @@ Facts are as the `plan-definition` skill records them for FHIR R4, CPG 2.0.0 and
 
 ### AP-04. Context parameters
 
-- **Expected:** clinical-reasoning 4.13.0 accepts them but doesn't use them; they never reach the CQL.
+- **Expected:** clinical-reasoning 4.16.0 accepts them but doesn't use them; they never reach the CQL.
   (They're CodeableConcepts.) Pass what the CQL needs in `parameters`, a CPG addition the server supports.
 - **Pass if:** ignored, and use `parameters`.
 - **Skill:** `resources/apply.md`.
@@ -136,12 +138,12 @@ Facts are as the `plan-definition` skill records them for FHIR R4, CPG 2.0.0 and
 
 ## Versions
 
-### VR-01. A newer server
+### VR-01. An older version
 
-- **Expected:** in 4.15.0 the library map keeps declaration order, so an unqualified expression uses the
-  first-declared library; in 4.13.0 it was unordered. Check the cited code at the 4.15.0 tag (the adapters
-  moved to Kotlin) and say the answer is read from source. Setting `reference` avoids the question.
-- **Pass if:** it checks 4.15.0 rather than asserting the 4.13.0 behaviour.
+- **Expected:** no: in 4.13.0 the libraries are held in an unordered map, so which library an
+  unqualified expression uses isn't defined (the 2026-11-14 probe happened to get the first); from
+  4.16.0 it is the first declared. Set `reference` so the content behaves the same in both.
+- **Pass if:** not guaranteed in 4.13.0, and set `reference`.
 - **Skill:** SKILL.md (When the Implementation Version Differs).
 
 ## Task
@@ -165,6 +167,7 @@ Patient/<id>` for each patient: the patient who needs the test gets a ServiceReq
 action; the other gets an empty RequestGroup; neither has `cqf-messages`.
 
 - **Pass if:** every check passes. **Partial if:** one fails.
-- **Reference:** [reference/tk-01/](reference/tk-01/), run with clinical-reasoning 4.13.0 on 2026-11-14:
+- **Reference:** [reference/tk-01/](reference/tk-01/), run with clinical-reasoning 4.13.0 on 2026-11-14, and
+  with 4.16.0 on 2026-11-24 with the same results:
   `Patient/due` gets the ServiceRequest (intent `proposal`); `Patient/recent` (HbA1c on 2026-11-01) gets
   none. The recent result stays within 6 months until 2027-05-01.

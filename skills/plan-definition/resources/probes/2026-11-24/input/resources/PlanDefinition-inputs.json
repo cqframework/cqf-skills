@@ -1,0 +1,59 @@
+{
+  "resourceType": "PlanDefinition",
+  "id": "inputs",
+  "url": "http://example.org/fhir/PlanDefinition/inputs",
+  "version": "1.0.0",
+  "name": "Inputs",
+  "title": "Action inputs",
+  "status": "active",
+  "action": [
+    {
+      "id": "one-input",
+      "title": "One input",
+      "input": [
+        {
+          "type": "Observation",
+          "profile": [
+            "http://example.org/fhir/StructureDefinition/probe-observation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "two-inputs",
+      "title": "Two inputs",
+      "input": [
+        {
+          "type": "Observation",
+          "profile": [
+            "http://example.org/fhir/StructureDefinition/probe-observation-2"
+          ]
+        },
+        {
+          "type": "Observation",
+          "profile": [
+            "http://example.org/fhir/StructureDefinition/probe-observation-3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repeat-and-new",
+      "title": "A repeated input and a new one",
+      "input": [
+        {
+          "type": "Observation",
+          "profile": [
+            "http://example.org/fhir/StructureDefinition/probe-observation"
+          ]
+        },
+        {
+          "type": "Observation",
+          "profile": [
+            "http://example.org/fhir/StructureDefinition/probe-observation-4"
+          ]
+        }
+      ]
+    }
+  ]
+}

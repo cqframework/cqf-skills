@@ -21,14 +21,21 @@ element tables), `vscode-cql` (running the CQL against test data), `questionnair
 | --- | --- |
 | FHIR | R4 4.0.1 (with R4B and R5 where they differ) |
 | CPG | 2.0.0 (STU2) |
-| clinical-reasoning (`cqf-fhir-cr`) | 4.13.0, the release cql-language-server 5.0.0 uses; 4.15.0 is out (see below) |
+| clinical-reasoning (`cqf-fhir-cr`) | 4.16.0 (2026-11-21); cql-language-server 5.0.0, in the VS Code CQL extension, still uses 4.13.0 (see below) |
 
 ## When the Implementation Version Differs
 
-Behaviour of the reference implementation is cited to its code at 4.13.0 (the `CR-4.13.0` citations) and
-checked by running it (`resources/probes/2026-11-14/`). Between 4.13.0 and 4.15.0 the apply path
-changed only in Questionnaire generation for `$r5.apply` and in which library an unqualified expression
-uses (4.15.0 keeps declaration order). For another release:
+Behaviour of the reference implementation is cited to its code at 4.16.0 (the `CR-4.16.0` citations) and
+checked by running it (`resources/probes/2026-11-14/` on 4.13.0, re-run on 4.16.0 in
+`resources/probes/2026-11-24/`). Every 2026-11-14 probe gave the same result on 4.16.0. What 4.13.0
+(and so the VS Code CQL extension 1.0.0) does differently:
+
+- With several libraries and no `expression.reference`, 4.13.0 picks one arbitrarily (it holds them in
+  an unordered map); 4.16.0 uses the first declared.
+- `$r5.apply` adds each input profile's Questionnaire item at the top level; 4.16.0 groups an action's
+  items when there is more than one ([apply.md](resources/apply.md#operations-and-result)).
+
+For another release:
 
 1. Find the server's `cqf-fhir-cr` version (for HAPI FHIR, its release notes or dependencies).
 2. Read the cited code at that tag on GitHub ([SOURCES.md](resources/SOURCES.md)), finding it by content
@@ -75,7 +82,7 @@ uses (4.15.0 keeps declaration order). For another release:
 
 ## Known Gotchas
 
-In clinical-reasoning 4.13.0 (each verified by running it):
+In clinical-reasoning 4.16.0 (each verified by running it):
 
 - **A null or failing condition keeps the action, but drops its definition and children**; only a
   false condition removes it. Check the RequestGroup for actions with no `resource`, and for a
@@ -83,8 +90,11 @@ In clinical-reasoning 4.13.0 (each verified by running it):
 - **`text/fhirpath` is evaluated by the CQL engine**, so FHIRPath-only semantics (such as partial
   `matches`) don't hold.
 - **Any unknown expression language is treated as a named expression**, not rejected.
-- **With several libraries and no `expression.reference`, which library is used isn't defined** (the
-  first in an unordered map).
+- **With several libraries and no `expression.reference`, the first library declared is used**, even
+  if a later one defines the name; 4.13.0 picked one arbitrarily. Set `expression.reference` whenever
+  there is more than one library.
+- **`$r5.apply` turns each action `input` profile into a Questionnaire group item**, and wraps an
+  action's items in a group titled from the action when it adds more than one (new in 4.16.0).
 - **Behaviors aren't enforced**: every applicable child of an `exactly-one` group is returned; only
   `selectionBehavior` is copied to the RequestGroup.
 - **A Questionnaire definition is contained as is**, not wrapped in a Task.
@@ -113,8 +123,9 @@ In the specifications:
 | [resources/activitydefinition.md](resources/activitydefinition.md) | Elements, and applying one in the specification and in clinical-reasoning |
 | [resources/apply.md](resources/apply.md) | `$apply` parameters and results (R4, CPG, R5), the specification's processing, what clinical-reasoning does, and running it locally |
 | [resources/SOURCES.md](resources/SOURCES.md) | The pinned sources and how to read a citation |
-| [resources/probes/2026-11-14/](resources/probes/2026-11-14/RESULTS.md) | The probe project and what `$apply` returned for it |
-| [scripts/apply/](scripts/apply/run.sh) | Runs `$apply` with clinical-reasoning 4.13.0 (Java 17+, Maven) |
+| [resources/probes/2026-11-14/](resources/probes/2026-11-14/RESULTS.md) | The probe project and what `$apply` returned for it (4.13.0) |
+| [resources/probes/2026-11-24/](resources/probes/2026-11-24/RESULTS.md) | The same probes on 4.16.0, and Questionnaire items for action inputs |
+| [scripts/apply/](scripts/apply/run.sh) | Runs `$apply` with clinical-reasoning 4.16.0 (Java 17+, Maven) |
 
 For maintainers: `scripts/fetch-sources.sh` caches the clinical-reasoning clone,
 `scripts/lint_skill_pd.py` checks citations, and `scripts/check_release.py` reports which citations a new

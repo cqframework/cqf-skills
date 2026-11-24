@@ -1,7 +1,7 @@
 # ActivityDefinition
 
-Baseline: FHIR R4 (4.0.1), CPG 2.0.0 and clinical-reasoning 4.13.0. Untagged statements hold in R4.
-Sources: FHIR-R4, CPG-2.0.0, CR-4.13.0, PROBES-2026-11-14
+Baseline: FHIR R4 (4.0.1), CPG 2.0.0 and clinical-reasoning 4.16.0. Untagged statements hold in R4.
+Sources: FHIR-R4, CPG-2.0.0, CR-4.16.0, PROBES-2026-11-14
 
 An ActivityDefinition is a template for one request (a ServiceRequest, MedicationRequest, Task…). A
 PlanDefinition action points to it with `definitionCanonical`; applying it creates the request for a
@@ -44,15 +44,15 @@ request is an option the RequestGroup proposes: CPG says the referenced requests
 CPG 2.0.0 added its own `ActivityDefinition/$apply`, with the same extra parameters as its PlanDefinition
 one, returning a transient resource [src: CPG-2.0.0 changes.html#stu2-release-version-200].
 
-## Applying it: clinical-reasoning 4.13.0
+## Applying it: clinical-reasoning 4.16.0
 
 The reference implementation creates each kind with a resolver
-[src: CR-4.13.0 cqf-fhir-cr/…/activitydefinition/apply/resolvers/R4ResolverFactory.java:36-95]:
+[src: CR-4.16.0 cqf-fhir-cr/…/activitydefinition/apply/resolvers/R4ResolverFactory.java:36-95]:
 
 - **The kind** comes from a `cpg-activity-kind` extension if there is one, otherwise `kind`.
 - **ServiceRequest** gets status `active` and intent `order` unless `intent` is set, and `code` is
   required unless the definition has dynamicValues
-  [src: CR-4.13.0 cqf-fhir-cr/…/resolvers/r4/ServiceRequestResolver.java:22-68]. So the result isn't
+  [src: CR-4.16.0 cqf-fhir-cr/…/resolvers/r4/ServiceRequestResolver.java:22-68]. So the result isn't
   `draft`, and isn't `option` when applied from a PlanDefinition, unlike the specification
   [src: PROBES-2026-11-14 RESULTS.md §5]. MedicationRequest and ImmunizationRecommendation likewise need
   their product unless there are dynamicValues.
@@ -63,7 +63,7 @@ The reference implementation creates each kind with a resolver
   them.
 - A missing `kind` fails, and an unsupported one throws "Unsupported activity type".
 - An ActivityDefinition's dynamicValues use its own `library`, not the PlanDefinition's
-  [src: CR-4.13.0 cqf-fhir-cr/…/activitydefinition/apply/ApplyRequest.java:66-71]. Give the
+  [src: CR-4.16.0 cqf-fhir-cr/…/activitydefinition/apply/ApplyRequest.java:66-71]. Give the
   ActivityDefinition a `library` when its dynamicValues name expressions.
 - `transform` isn't applied.
 

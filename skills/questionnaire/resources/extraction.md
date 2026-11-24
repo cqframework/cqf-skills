@@ -1,7 +1,7 @@
 # $extract and Questionnaire Generation
 
-Baseline: SDC 4.0.0 on FHIR R4 (4.0.1); clinical-reasoning 4.13.0 for the reference implementation.
-Sources: SDC-4.0.0, CR-4.13.0, PROBES-2026-11-14
+Baseline: SDC 4.0.0 on FHIR R4 (4.0.1); clinical-reasoning 4.16.0 for the reference implementation.
+Sources: SDC-4.0.0, CR-4.16.0, PROBES-2026-11-14
 
 How SDC turns a completed QuestionnaireResponse into other resources, what clinical-reasoning (HAPI FHIR)
 does with `$extract`, and how it generates a Questionnaire from a profile.
@@ -47,52 +47,52 @@ operation doesn't store anything: the caller posts the Bundle
 
 **Operation.** `QuestionnaireResponse/[id]/$extract` takes `questionnaire` (a resource), `parameters`,
 `useServerData` and `data`; the type-level form adds `questionnaire-response`
-[src: CR-4.13.0 cqf-fhir-cr-hapi/…/r4/questionnaireresponse/QuestionnaireResponseExtractProvider.java:41-50].
+[src: CR-4.16.0 cqf-fhir-cr-hapi/…/r4/questionnaireresponse/QuestionnaireResponseExtractProvider.java:41-50].
 Without `questionnaire`, it looks for a contained one, then the canonical in `QuestionnaireResponse.questionnaire`
-[src: CR-4.13.0 cqf-fhir-cr/…/questionnaireresponse/QuestionnaireResponseProcessor.java:73-100].
+[src: CR-4.16.0 cqf-fhir-cr/…/questionnaireresponse/QuestionnaireResponseProcessor.java:73-100].
 
 **Result.** A transaction Bundle `extract-<response id>`; every entry is a POST, with no `fullUrl`
-[src: CR-4.13.0 cqf-fhir-cr/…/extract/ExtractProcessor.java:38-70]. Errors aren't reported as `issues`: the
+[src: CR-4.16.0 cqf-fhir-cr/…/extract/ExtractProcessor.java:38-70]. Errors aren't reported as `issues`: the
 operation throws [src: PROBES-2026-11-14 RESULTS.md §6].
 
 **Method choice.** If the Questionnaire or response root has `definitionExtract` or
 `itemExtractionContext`, the whole response becomes one definition-based resource; otherwise each item is
 extracted on its own: definition-based if it has those extensions or a `definition`, observation-based
-otherwise [src: CR-4.13.0 cqf-fhir-cr/…/extract/ExtractProcessor.java:38-70]. Template- and
+otherwise [src: CR-4.16.0 cqf-fhir-cr/…/extract/ExtractProcessor.java:38-70]. Template- and
 StructureMap-based extraction aren't implemented.
 
 **Observation-based**, and how it differs from SDC:
 
 - `observationExtract` is **not checked**: every answered item with a `code` becomes an Observation
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58] [src: PROBES-2026-11-14 RESULTS.md §6].
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58] [src: PROBES-2026-11-14 RESULTS.md §6].
   To keep an item out, leave out its `code`.
 - The default category has the system **`http://hl7.org/fhir/observation-category`**, not R4's
   `http://terminology.hl7.org/CodeSystem/observation-category`
-  [src: CR-4.13.0 cqf-fhir-utility/…/utility/Constants.kt:182-185]; an
+  [src: CR-4.16.0 cqf-fhir-utility/…/utility/Constants.kt:182-185]; an
   `observation-extract-category` extension is read from the response item, not the Questionnaire item
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58].
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58].
 - The other fields follow SDC: status `final`, subject, encounter, basedOn, partOf, effective and issued
   from `authored`, performer from `author`, derivedFrom the response. Each Observation has id
   `extract-<response id>.<linkId>` and an extension
   `http://hl7.org/fhir/uv/sdc/StructureDefinition/derivedFromLinkId` (not defined in SDC 4.0.0)
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ObservationResolver.java:44-81].
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ObservationResolver.java:44-81].
 - A repeating item's answers become Observations with the **same id**
   [src: PROBES-2026-11-14 RESULTS.md §6].
 - The answer is copied as the value, apart from Coding (to CodeableConcept), date (to dateTime), and a
   decimal or integer on an item with `questionnaire-unit` (to Quantity)
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ObservationResolver.java:83-116]. A **decimal** answer without a
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ObservationResolver.java:83-116]. A **decimal** answer without a
   unit gives `valueDecimal`, which R4 Observation doesn't allow: HAPI then can't serialize the Bundle
   [src: PROBES-2026-11-14 RESULTS.md §6]. Give extracted decimal items a `questionnaire-unit`, or make
   them `quantity` items.
 - An answer with nested items isn't extracted itself; its children are
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58].
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ProcessItem.java:20-58].
 - Without the Questionnaire, extraction throws ("Unable to retrieve Questionnaire code map")
   [src: PROBES-2026-11-14 RESULTS.md §6].
 
 **Definition-based**, and how it differs from SDC:
 
 - `definitionExtract` and `itemExtractionContext` are read only as **primitive** values: a profile URL
-  (containing `/`) or a resource type [src: CR-4.13.0 cqf-fhir-cr/…/extract/ProcessDefinitionItem.java:142-159].
+  (containing `/`) or a resource type [src: CR-4.16.0 cqf-fhir-cr/…/extract/ProcessDefinitionItem.java:142-159].
   The SDC 4.0.0 complex form throws "Unable to retrieve definition for item"
   [src: PROBES-2026-11-14 RESULTS.md §6]. For this server, write SDC 3.0.0's
   `itemExtractionContext` with `valueCode` (a resource type) or a canonical.
@@ -102,7 +102,7 @@ StructureMap-based extraction aren't implemented.
 - The profile is looked up in the server; for a base resource, the base StructureDefinition must be there
   [src: PROBES-2026-11-14 RESULTS.md §6].
 - `$extract` doesn't use the Questionnaire's `cqf-library`
-  [src: CR-4.13.0 cqf-fhir-cr/…/extract/ExtractRequest.java:56-61], so a CQL `definitionExtractValue`
+  [src: CR-4.16.0 cqf-fhir-cr/…/extract/ExtractRequest.java:56-61], so a CQL `definitionExtractValue`
   needs `Expression.reference`. `text/fhirpath` runs on HAPI's FHIRPath engine against the response.
 
 ## Questionnaire generation
@@ -110,7 +110,7 @@ StructureMap-based extraction aren't implemented.
 clinical-reasoning's `StructureDefinition/$questionnaire` (type level only) takes `resource` (a
 StructureDefinition), `url` (profile urls), `supportedOnly`, `minimalOnly`, `contentEndpoint` and
 `terminologyEndpoint`, and returns a Questionnaire
-[src: CR-4.13.0 cqf-fhir-cr-hapi/…/r4/structuredefinition/StructureDefinitionQuestionnaireProvider.java:45-56].
+[src: CR-4.16.0 cqf-fhir-cr-hapi/…/r4/structuredefinition/StructureDefinitionQuestionnaireProvider.java:45-56].
 For a profile it makes one group item (`definition` the profile url) with a child per element:
 
 - `definition` `<profile url>#<element id>`, `required` from `min > 0`, `repeats` from `max`, `text` the
@@ -122,4 +122,5 @@ For a profile it makes one group item (`definition` the profile url) with a chil
 
 In the probe, with both flags false, only the required elements of a differential-only profile became
 items; a mustSupport `note` didn't [src: PROBES-2026-11-14 RESULTS.md §7]. PlanDefinition `$r5.apply`
-uses the same generator for action `input` profiles (see the `plan-definition` skill).
+uses the same generator for action `input` profiles, and from 4.16.0 groups an action's items when it
+has more than one (see the `plan-definition` skill).
