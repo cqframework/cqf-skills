@@ -4,7 +4,7 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 `[src: ID locator]`. The locator form depends on how the source is held:
 
 - **Git-backed** (no local copy): `path:line[-line]` at the pinned ref, for example
-  `[src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:199]`. A `…` elides the
+  `[src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/PublisherIGLoader.java:205]`. A `…` elides the
   middle of a path; the rest must match one file.
 - **Local copy** (maintainers' copy of a published file): a file under the local copy folder, with an optional `#Lnn[-Lmm]` line anchor, for
   example `[src: TPL-BASE-1.0.0 scripts/onLoad.xslt#L265]`.
@@ -15,9 +15,9 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | TOOLS-1.3.0 | package | informative | hl7.fhir.uv.tools 1.3.0, FHIR Tooling IG Release 1.3 (Informative), generated 2026-10-06; still the latest on 2026-11-14 | hl7.fhir.uv.tools#1.3.0 | <https://hl7.org/fhir/tools/en/> | `resources/sources/tools-1.3.0/` | 2026-11-14 |
 | TOOLS-PAGES-1.3.0 | guide | informative | The tools IG's narrative pages (`input/pagecontent/`) at the inferred 1.3.0 build commit | FHIR/fhir-tools-ig@360be1883136300beee3ec3aca190c1bac54e8ad | <https://hl7.org/fhir/tools/en/> | `resources/sources/tools-pages-1.3.0/` | 2026-11-14 |
-| IGPUB-3.0.4 | implementation-source | n/a | IG Publisher 3.0.4, released 2026-11-14, commit 7b7ccec6ce503cbb10e81469d8356532c939bb9f | HL7/fhir-ig-publisher@3.0.4 | <https://github.com/HL7/fhir-ig-publisher/tree/3.0.4> | none (git show 3.0.4:PATH; the fetch script caches a clone) | 2026-11-14 |
-| IGPUB-DOCS-3.0.4 | guide | informative | the repository's markdown documentation at 3.0.4 | HL7/fhir-ig-publisher@3.0.4 | <https://github.com/HL7/fhir-ig-publisher/blob/3.0.4/documentation.md> | `resources/sources/igpub-docs-3.0.4/` | 2026-11-14 |
-| CORE-7.0.6 | implementation-source | n/a | org.hl7.fhir.core 7.0.6, the core library IG Publisher 3.0.4 builds against | hapifhir/org.hl7.fhir.core@7.0.6 | <https://github.com/hapifhir/org.hl7.fhir.core/tree/7.0.6> | none (git show 7.0.6:PATH; the fetch script caches a clone) | 2026-11-14 |
+| IGPUB-3.0.5 | implementation-source | n/a | IG Publisher 3.0.5, released 2026-11-20, commit cb04275ab57c27309d4e9821c77c63162076e5b7 | HL7/fhir-ig-publisher@3.0.5 | <https://github.com/HL7/fhir-ig-publisher/tree/3.0.5> | none (git show 3.0.5:PATH; the fetch script caches a clone) | 2026-11-24 |
+| IGPUB-DOCS-3.0.5 | guide | informative | the repository's markdown documentation at 3.0.5 | HL7/fhir-ig-publisher@3.0.5 | <https://github.com/HL7/fhir-ig-publisher/blob/3.0.5/documentation.md> | `resources/sources/igpub-docs-3.0.5/` | 2026-11-24 |
+| CORE-7.0.6 | implementation-source | n/a | org.hl7.fhir.core 7.0.6, the core library IG Publisher 3.0.4 and 3.0.5 build against | hapifhir/org.hl7.fhir.core@7.0.6 | <https://github.com/hapifhir/org.hl7.fhir.core/tree/7.0.6> | none (git show 7.0.6:PATH; the fetch script caches a clone) | 2026-11-14 |
 | TPL-CQF-1.0.0 | package | n/a | cqf.fhir.template 1.0.0 (2025-09-30), base fhir.base.template 1.0.0 | cqf.fhir.template#1.0.0 | <https://packages.fhir.org/cqf.fhir.template/1.0.0> | `resources/sources/tpl-cqf-1.0.0/` | 2026-11-14 |
 | TPL-BASE-1.0.0 | package | n/a | fhir.base.template 1.0.0 (2025-09-30) | fhir.base.template#1.0.0 | <https://packages.fhir.org/fhir.base.template/1.0.0> | `resources/sources/tpl-base-1.0.0/` | 2026-11-14 |
 | SAMPLE-IG | convention | n/a | FHIR/sample-ig commit 74c54cd (2026-11-01) | FHIR/sample-ig@74c54cd5ffdf02b4ac96b32fb45ef1929bfc4963 | <https://github.com/FHIR/sample-ig> | `resources/sources/sample-ig/` | 2026-11-14 |
@@ -68,6 +68,9 @@ URLs need:
 | IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/R4ToR4BAnalyser.java` |
 | IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/SuppressedMessageInformation.java` |
 | IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/templates/TemplateManager.java` |
+| IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/templates/TrustedTemplates.java` |
+| IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/PublisherUtils.java` |
+| IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/ExternalLinkPermission.java` |
 | IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/comparators/PreviousVersionComparator.java` |
 | IGPUB | `org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/loaders/AdjunctFileLoader.java` |
 | IGPUB | `org.hl7.fhir.publisher.core/pom.xml` |
@@ -81,15 +84,15 @@ URLs need:
 - **Local copies are for maintenance.** The skill doesn't need them to answer a question (see above).
   The linter and the generator for `ig-parameters.md` do.
 - **Rebuild.** `scripts/fetch-sources.sh` rebuilds every local copy from these locators, unmodified,
-  and caches shallow clones of IGPUB-3.0.4 and CORE-7.0.6 under `~/.cache/ig-publisher-skill/` (or `$IGPUB_SKILL_CACHE`). Nothing under `resources/sources/` except its README is committed.
+  and caches shallow clones of IGPUB-3.0.5 and CORE-7.0.6 under `~/.cache/ig-publisher-skill/` (or `$IGPUB_SKILL_CACHE`). Nothing under `resources/sources/` except its README is committed.
   Binary assets (images, jars, package indexes) are not copied. See
   [sources/README.md](sources/README.md).
 - **What each kind is evidence of.** TOOLS-1.3.0 says what a parameter or extension is *meant* to do.
-  IGPUB-3.0.4 and CORE-7.0.6 show what the publisher *does* at that version: evidence of behaviour, not
+  IGPUB-3.0.5 and CORE-7.0.6 show what the publisher *does* at that version: evidence of behaviour, not
   of intent. TPL-CQF-1.0.0 and TPL-BASE-1.0.0 show what a template *adds or removes*. SAMPLE-IG and
   EX-DQM-CMS-2025 show what one IG *configures*, never what is required.
-- **IGPUB-DOCS-3.0.4 is stale.** Its `documentation.md` lists command-line parameters that don't
-  match `Publisher.java` at the same tag. Prefer IGPUB-3.0.4 for behaviour.
+- **IGPUB-DOCS-3.0.5 is stale.** Its `documentation.md` lists command-line parameters that don't
+  match `Publisher.java` at the same tag. Prefer IGPUB-3.0.5 for behaviour.
 - **EX-DQM-CMS-2025's publisher version can't be determined.** The checkout has no `out/qa.*` and no
   `input-cache/publisher.jar`, and its `_updatePublisher.sh` downloads `releases/latest`, so each
   build uses whichever release was current when the script last ran.
@@ -107,3 +110,7 @@ URLs need:
   finding the cited text again; 423 of 455 were unchanged, and the rest were checked by hand. The
   3.0.1 to 3.0.4 and 0.8.1 to 1.0.0 differences that change a claim are noted where they apply.
   PROBES-2026-10-22 records 3.0.1 behaviour and is cited only as that.
+- **Re-pinned 2026-11-24** to IG Publisher 3.0.5 (core library and CQL translator unchanged). Of 258
+  line citations, 243 had the same text at 3.0.5 (157 at new line numbers); the other 15 were re-read and
+  rewritten where 3.0.5 changed the behaviour (template trust, folder and cache checks, the Jekyll timeout
+  on the ci-build, new flags). No probe build was run on 3.0.5: what it changed is read from source.

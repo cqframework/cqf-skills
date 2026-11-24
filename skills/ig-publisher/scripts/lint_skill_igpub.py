@@ -37,7 +37,7 @@ DEFAULT_CQL_LINT = SCRIPTS / "lint_skill.py"
 # (VSCQL, EX-DQM-CMS-2025) are checked only when passed with --repo ID=GITDIR.
 CACHE_DIR = Path(os.environ.get("IGPUB_SKILL_CACHE", HOME / ".cache" / "ig-publisher-skill"))
 DEFAULT_REPOS = {
-    "IGPUB-3.0.4": CACHE_DIR / "fhir-ig-publisher.git",
+    "IGPUB-3.0.5": CACHE_DIR / "fhir-ig-publisher.git",
     "CORE-7.0.6": CACHE_DIR / "org.hl7.fhir.core.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")

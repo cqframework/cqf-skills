@@ -101,6 +101,13 @@ An IG has its own `Measure.liquid` in `input/my-liquid`, set as `path-liquid`. A
 `cqf.fhir.template#0.7.1` to `#1.0.0`, the Measure pages no longer use it. Why, and what are the
 options?
 
+### TP-02. Working on the template
+
+A template maintainer points an IG at a local copy of the template they're changing
+(`template = ../my-template` in `ig.ini`) and builds with IG Publisher 3.0.5. The build stops at once,
+saying the template "runs scripts, and it is not a trusted template". It built with 3.0.4. Why, and what
+do they do? Would `template = cqf.fhir.template#dev` run its scripts on the ci-build?
+
 ## Versions
 
 ### VR-01. A newer publisher

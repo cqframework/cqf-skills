@@ -2,7 +2,8 @@
 
 Expected answers for [questions.md](questions.md). Don't give this file to an agent under test.
 
-Facts are as the `ig-publisher` skill records them for IG Publisher 3.0.4, org.hl7.fhir.core 7.0.6,
+Facts are as the `ig-publisher` skill records them for IG Publisher 3.0.4 (checked unchanged at 3.0.5,
+except TP-02, which is about 3.0.5), org.hl7.fhir.core 7.0.6,
 cqf.fhir.template 1.0.0 and fhir.base.template 1.0.0, from the publisher source at those tags and the
 probe builds in `resources/probes/`. Each answer gives the expected facts, what a passing answer must
 and must not say, and where the skill covers it ("Skill").
@@ -189,19 +190,32 @@ and must not say, and where the skill covers it ("Skill").
 - **Partial if:** it gives a working fix without the cause, or `path-liquid-ig` without its cost.
 - **Skill:** `resources/templates.md` (Liquid narrative templates).
 
+### TP-02. Working on the template
+
+- **Expected:** from 3.0.5, a local build stops when a template that runs scripts isn't on the trusted
+  list; a folder isn't a trusted template (before 3.0.5 a local build ran any template). Run once with
+  `-trust-template ../my-template` (the id as `ig.ini` names it, without a version) or
+  `-trust-template all`; it's recorded in `trustedTemplates` in `fhir-settings.json`, so later builds
+  don't stop. On the ci-build, `#dev` isn't a released version, so `cqf.fhir.template#dev` is treated as
+  untrusted and its scripts don't run; only `n.n.n`, `#current` or no version are trusted.
+- **Pass if:** the 3.0.5 local trust check, `-trust-template`, and no for `#dev`.
+- **Partial if:** `-trust-template` without the `#dev` answer, or the reverse.
+- **Fail if:** it blames the template's content or suggests copying the template into `template/`.
+- **Skill:** `resources/templates.md` (How a template chain is assembled); `resources/running.md` (Build flags).
+
 ## Versions
 
 ### VR-01. A newer publisher
 
 - **Expected:** the skill's claim (yes, `contentType` is kept and anything else makes the publisher
-  leave the attachment alone) is for 3.0.4. For 3.0.7, read the cited code, `AdjunctFileLoader.java`
+  leave the attachment alone) is for 3.0.5. For 3.0.7, read the cited code, `AdjunctFileLoader.java`
   around the cited lines, at tag `3.0.7` on GitHub
   (`https://github.com/HL7/fhir-ig-publisher/blob/3.0.7/org.hl7.fhir.publisher.core/src/main/java/org/hl7/fhir/igtools/publisher/loaders/AdjunctFileLoader.java`),
   finding it by content because line numbers drift. If it's unchanged, the answer holds; if it
   changed, answer from the 3.0.7 code and say it is read from source, not observed.
-- **Pass if:** it gives the 3.0.4 answer as the starting point, says it is version-specific, and
+- **Pass if:** it gives the 3.0.5 answer as the starting point, says it is version-specific, and
   checks (or says to check) the same code at 3.0.7.
-- **Fail if:** it states the 3.0.4 behaviour as fact for 3.0.7 without qualification, or answers
+- **Fail if:** it states the 3.0.5 behaviour as fact for 3.0.7 without qualification, or answers
   from the publisher's main branch.
 - **Skill:** SKILL.md (When the IG Was Built With Another Version); `resources/SOURCES.md`.
 

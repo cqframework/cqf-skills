@@ -8,6 +8,25 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `ig-publisher` skill: re-pinned IG Publisher from 3.0.4 to 3.0.5 (2026-11-20; core library 7.0.6
+  and CQL translator 4.9.0 unchanged). Fixes #23.
+  - Of 258 line citations, 243 had the same text at 3.0.5 and were moved to the new line numbers; the
+    other 15 were re-read.
+  - What 3.0.5 changed, read from source:
+    - A local build now stops for an untrusted template that runs scripts, until you pass
+      `-trust-template`. On the ci-build only a released version of a trusted template runs scripts.
+      The trusted list moved to `TrustedTemplates.java`, with each template's repository.
+    - Symbolic links out of the IG's folder stop the build, unless you pass `-allow-external-links`.
+    - `path-tx-cache` outside the IG's folder is ignored.
+    - `path-temp` and `path-output` are checked through links.
+    - `jekyll-timeout` is capped at an hour on the ci-build.
+    - Template and dependency downloads have timeouts and size limits.
+    - `fsh.ini`'s `sushi-version` must be a version number.
+    - SSRF protection is always on in ci-builds.
+    - `r5-bundle-relative-reference-policy` is no longer read, and `instance-hyperlinks` is new.
+  - New eval question TP-02 covers the local trust check.
+  - `gen_ig_parameters.py` now writes LF line endings on Windows too.
+  - Two citations of the example IG's scripts no longer start with `./`, which the linter didn't resolve.
 - `plan-definition` and `questionnaire` skills: re-pinned clinical-reasoning from 4.13.0 to 4.16.0
   (2026-11-21, with CQL 5.7.0 and HAPI FHIR 9.0.0). Fixes #18 and #19.
   - The adapters the skills cite are now Kotlin; the citations point at the `.kt` files, whose logic

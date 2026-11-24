@@ -1,9 +1,10 @@
 # IG Publisher Skill Evals
 
 Evaluation cases for the [`ig-publisher`](../../skills/ig-publisher/SKILL.md) skill, written against
-IG Publisher 3.0.4 with cqf.fhir.template 1.0.0. When the skill is re-pinned, check every answer in
-the key against the new versions; several answers (CQ-01, CQ-04, RN-03, TX-01, TP-01, VR-01) are about
-version differences.
+IG Publisher 3.0.4 with cqf.fhir.template 1.0.0, and checked against 3.0.5 when the skill was re-pinned
+(2026-11-24): the behaviour these answers depend on is unchanged, and TP-02 covers what 3.0.5 changed.
+When the skill is re-pinned, check every answer in the key against the new versions; several answers
+(CQ-01, CQ-04, RN-03, TX-01, TP-01, TP-02, VR-01) are about version differences.
 
 | File | Contents |
 | --- | --- |

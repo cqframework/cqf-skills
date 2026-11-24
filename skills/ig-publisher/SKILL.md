@@ -1,6 +1,6 @@
 ---
 name: ig-publisher
-description: Configures, runs and debugs the HL7 FHIR IG Publisher for an Implementation Guide, including ig.ini, IG parameters (path-binary, path-resource, path-liquid…), which input folders come from the template and which from the IG, the CQL loader and ig-loader Libraries, command-line flags, terminology servers and pinning, qa.html and ignoreWarnings.txt. Use when someone builds a FHIR IG, asks why the publisher did something, or reads a QA report. Pinned to IG Publisher 3.0.4, hl7.fhir.uv.tools 1.3.0 and cqf.fhir.template 1.0.0.
+description: Configures, runs and debugs the HL7 FHIR IG Publisher for an Implementation Guide, including ig.ini, IG parameters (path-binary, path-resource, path-liquid…), which input folders come from the template and which from the IG, the CQL loader and ig-loader Libraries, command-line flags, terminology servers and pinning, qa.html and ignoreWarnings.txt. Use when someone builds a FHIR IG, asks why the publisher did something, or reads a QA report. Pinned to IG Publisher 3.0.5, hl7.fhir.uv.tools 1.3.0 and cqf.fhir.template 1.0.0.
 license: Apache-2.0
 ---
 
@@ -15,15 +15,16 @@ semantics use `cql`. For the FHIR model info, FHIRHelpers and CQL Library conven
 
 | Layer | Pinned at | Why it matters |
 | --- | --- | --- |
-| IG Publisher | 3.0.4 (2026-11-14), tag `3.0.4` | Released often; 3.0.0 was a new major version |
+| IG Publisher | 3.0.5 (2026-11-20), tag `3.0.5` | Released often; 3.0.0 was a new major version, and 3.0.5 tightened template trust and folder checks |
 | Its core library | org.hl7.fhir.core 7.0.6 | Path handling, R4-to-R5 conversion, terminology settings |
 | Its CQL translator | cqframework 4.9.0 | Not the version the `cql` skill's probes use; 3.0.1 had 3.29.0 |
 | FHIR Tooling IG | hl7.fhir.uv.tools 1.3.0 (Informative) | Defines the IG parameters and control extensions |
 | Templates | cqf.fhir.template 1.0.0, base fhir.base.template 1.0.0 (2025-09-30) | Supply most of the `input/...` layout, and now Liquid narratives |
 
 Every statement in `resources/` says which versions it holds for. The skill was first written against
-3.0.1 and the 0.7.1/0.8.1 templates and re-pinned on 2026-11-14; differences that change a claim are
-noted where they apply.
+3.0.1 and the 0.7.1/0.8.1 templates, re-pinned to 3.0.4 on 2026-11-14 and to 3.0.5 on 2026-11-24;
+differences that change a claim are noted where they apply. The probe builds were run on 3.0.1 and 3.0.4;
+what 3.0.5 changed is read from source.
 
 ## When the IG Was Built With Another Version
 
@@ -32,11 +33,11 @@ So **first find out which publisher version built the IG**: the "IG Publisher Ve
 of `output/qa.txt`, or `java -jar publisher.jar -v`. Not `qa.json`'s `tool`, which holds a FHIR version.
 Likewise, the template version is the `#version` in `ig.ini`.
 
-If it isn't 3.0.4 (or the template isn't 1.0.0), the findings here are a strong starting point but not
+If it isn't 3.0.5 (or the template isn't 1.0.0), the findings here are a strong starting point but not
 proof. Before relying on one for that IG:
 
 1. Take the claim's `[src: …]` citation, for example
-   `[src: IGPUB-3.0.4 org.hl7.fhir.publisher.core/…/CqlSubSystem.java:1110-1155]`.
+   `[src: IGPUB-3.0.5 org.hl7.fhir.publisher.core/…/CqlSubSystem.java:1110-1155]`.
 2. Read the same file at the IG's version on GitHub. [SOURCES.md](resources/SOURCES.md#looking-up-a-citation-at-another-version)
    gives the URL for each kind of source and the full path behind each `…`. Line numbers drift, so find
    the code by content near the cited lines.
@@ -44,7 +45,7 @@ proof. Before relying on one for that IG:
    code at the IG's version, marked *read from source, not observed*.
 4. Observed results (the probes) hold only for the version they record. Re-observing needs a build.
 
-Version differences already known (3.0.1 versus 3.0.4) are noted in each resource file. A weekly
+Version differences already known (3.0.1, 3.0.4 and 3.0.5) are noted in each resource file. A weekly
 check in this repository reports when a newer publisher, core, template or tools release is out.
 
 ## Which Source Answers Which Question
@@ -55,7 +56,7 @@ don't settle it by ranking one above the other.
 | Question | Source | Where |
 | --- | --- | --- |
 | What is parameter X *meant* to do? | The tools IG's `ig-parameters` CodeSystem (Informative) | [ig-parameters.md](resources/ig-parameters.md) (generated from it); TOOLS-1.3.0 in [SOURCES.md](resources/SOURCES.md) |
-| What will the publisher *do*? | The publisher's source at the IG's version, plus a probe run if it matters | IGPUB-3.0.4 in [SOURCES.md](resources/SOURCES.md), on GitHub by tag |
+| What will the publisher *do*? | The publisher's source at the IG's version, plus a probe run if it matters | IGPUB-3.0.5 in [SOURCES.md](resources/SOURCES.md), on GitHub by tag |
 | What does *my IG* get? | The template chain, plus the IG's own `ig.ini` and parameters | [layout.md](resources/layout.md), [templates.md](resources/templates.md); TPL-* in SOURCES.md |
 | How do people usually set it up? | The FHIR sample IG and the example measure IG (convention only) | SAMPLE-IG, EX-DQM-CMS-2025 |
 
@@ -151,6 +152,14 @@ Each link leads to the evidence and the versions it holds for.
   (possible defect, by code read): [publication.md](resources/publication.md#possible-defects-by-code-read)
 - **`<root>/template/` is wiped on every run**:
   [ig-ini-and-ig-resource.md](resources/ig-ini-and-ig-resource.md#the-template-value)
+- **From 3.0.5 a local build stops for an untrusted template that runs scripts**, such as a template
+  you're working on from a folder: run once with `-trust-template <id>`. On the ci-build, only a
+  released version (or `#current`) of a trusted template runs scripts, so `#dev` doesn't:
+  [templates.md](resources/templates.md#how-a-template-chain-is-assembled)
+- **From 3.0.5 symbolic links out of the IG's folder stop the build** (locally, until you pass
+  `-allow-external-links`; on the ci-build, always), and `path-tx-cache` outside the IG's folder is
+  ignored: [running.md](resources/running.md#build-flags-verified-in-publishermain-at-305),
+  [layout.md](resources/layout.md#path-values-on-each-platform)
 - **The VS Code CQL extension reads `input/cql` and `input/tests` whatever `path-binary` says**
   (the `vscode-cql` skill covers the extension):
   [layout.md](resources/layout.md#tools-that-assume-the-default-layout)
