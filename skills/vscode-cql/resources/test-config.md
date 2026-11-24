@@ -1,7 +1,7 @@
 # Test Configuration, Parameters and Results
 
 Baseline: vscode-cql 1.0.0 with cql-language-server 5.0.0. Untagged statements hold at these versions only.
-Sources: VSCQL-1.0.0, CQLLS-5.0.0, WIKI-c9e1023
+Sources: VSCQL-1.0.0, CQLLS-5.0.0, WIKI-030e98c
 
 Everything about `input/tests/config.jsonc`: which file is read, which keys exist and who reads them,
 test case exclusions, result formats, and parameters. For where test cases themselves live, see
@@ -18,7 +18,7 @@ test case exclusions, result formats, and parameters. For where test cases thems
   **VS Code workspace folder's** `input/tests`, so with several IG projects in subfolders of one
   workspace folder, the server's library-resolution keys come from the workspace folder, not the
   project [src: CQLLS-5.0.0 ls/server/…/service/FileContentService.kt:270-296]
-  [src: WIKI-c9e1023 User-Guide.md:1041].
+  [src: WIKI-030e98c User-Guide.md:1041].
 - **Comments** are allowed: the extension parses it as JSONC
   [src: VSCQL-1.0.0 src/helpers/cqlHelpers.ts:125], and the server's Jackson parser allows comments
   [src: CQLLS-5.0.0 ls/server/…/manager/JsonLibraryResolutionConfigProvider.kt:20].
@@ -49,7 +49,7 @@ described in [library-resolution.md](library-resolution.md).
 **The bundled schema knows only `testCasesToExclude` and `parameters`**, and forbids anything else
 (`additionalProperties: false`) [src: VSCQL-1.0.0 schemas/cql-config.schema.json:6-32]. So VS Code
 marks the other six keys "not allowed" in `config.jsonc`, though they work. The wiki lists this as a
-known issue in 1.0.0 [src: WIKI-c9e1023 User-Guide.md:1125]. The schema is attached only to files
+known issue in 1.0.0 [src: WIKI-030e98c User-Guide.md:1125]. The schema is attached only to files
 named `config.jsonc` [src: VSCQL-1.0.0 package.json:842-847], so `config.json` gets no checking at all.
 
 ## Excluding test cases
@@ -74,16 +74,16 @@ Each entry needs `library`, `testCase` (the test case folder name) and `reason`
 | `individual` | `input/tests/results/<Lib>/TestCaseResult-<testCase>.json` (`TestCaseResult-no-context.json` when there is no test case) | One JSON file per test case; shown under the test case in the CQL Explorer |
 
 [src: VSCQL-1.0.0 src/helpers/cqlHelpers.ts:30] [src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:247-251]
-[src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:412-418] [src: WIKI-c9e1023 User-Guide.md:452-541].
+[src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:412-418] [src: WIKI-030e98c User-Guide.md:452-541].
 `<Lib>` is the `.cql` **file name**, not the name in the `library` declaration
 [src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:94]; the wiki says the two must match
-[src: WIKI-c9e1023 User-Guide.md:391].
+[src: WIKI-030e98c User-Guide.md:391].
 
 In the flat log, not every message is an error: look for `ERROR:` at the start of a message
-[src: WIKI-c9e1023 User-Guide.md:472]. An individual result file holds `executedAt`, `libraryName`,
+[src: WIKI-030e98c User-Guide.md:472]. An individual result file holds `executedAt`, `libraryName`,
 `testCaseName`, `testCaseDescription` (from a MeasureReport's `cqfm-testCaseDescription`, if any),
 `parameters`, `results` (one per top-level `define`) and `errors`
-[src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:367-418] [src: WIKI-c9e1023 User-Guide.md:487-519].
+[src: VSCQL-1.0.0 src/commands/execute-cql-file.ts:367-418] [src: WIKI-030e98c User-Guide.md:487-519].
 
 Results are text, formatted by the server: `true`, `false`, `null`, a FHIR resource as
 `Encounter(id=enc-1)`, a list in brackets, an interval with its brackets and bounds
@@ -129,17 +129,17 @@ wins [src: VSCQL-1.0.0 src/helpers/parametersHelper.ts:12-22]:
   version in the file's `library` declaration exactly; test case keys are folder names
   [src: VSCQL-1.0.0 src/helpers/parametersHelper.ts:31-64] [src: VSCQL-1.0.0 src/helpers/fileHelper.ts:47-49].
 - **`name`** is the parameter name exactly as declared, case-sensitive, without CQL's double quotes:
-  `Measurement Period`, not `"Measurement Period"` [src: WIKI-c9e1023 User-Guide.md:1133].
+  `Measurement Period`, not `"Measurement Period"` [src: WIKI-030e98c User-Guide.md:1133].
 - **`type`** is one of `String`, `Integer`, `Decimal`, `Boolean`, `DateTime`, `Date`, `Time`,
   `Quantity`, `Interval<DateTime>`, `Interval<Date>` [src: VSCQL-1.0.0 schemas/cql-config.schema.json:44-57].
 - **`value` is CQL, not JSON.** The server compiles each value as a CQL literal in a throw-away
   library and evaluates it [src: CQLLS-5.0.0 ls/server/…/command/CqlEvaluator.kt:181-233]. So
   strings need CQL single quotes (`"'HMO'"`), numbers and booleans none, and FHIR types such as
-  `FHIR.Period` don't work [src: WIKI-c9e1023 User-Guide.md:1133-1180].
+  `FHIR.Period` don't work [src: WIKI-030e98c User-Guide.md:1133-1180].
 - **Dates.** When `type` contains `DateTime`, a bare date such as `@2024-01-01` is turned into
   `@2024-01-01T`; with `Date` types nothing is converted. The value must still match the parameter's
   declared CQL type [src: CQLLS-5.0.0 ls/server/…/command/CqlEvaluator.kt:181-233]
-  [src: WIKI-c9e1023 User-Guide.md:1135].
+  [src: WIKI-030e98c User-Guide.md:1135].
 - **One bad value drops them all.** If any value fails to compile or evaluate, the server logs
   `Failed to evaluate parameter values for [...]` and passes **no** configured parameters for that
   library, so every parameter falls back to its CQL default

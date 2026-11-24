@@ -8,7 +8,7 @@ elides the middle of a path; the rest must match one file (full paths are listed
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | VSCQL-1.0.0 | implementation-source | n/a | vscode-cql 1.0.0, released 2026-11-09, commit 855eac7b5f21c788d0e0e856d741cadc35e6bda9 | cqframework/vscode-cql@v1.0.0 | <https://github.com/cqframework/vscode-cql/tree/v1.0.0> | none (git show v1.0.0:PATH; the fetch script caches a clone) | 2026-11-14 |
 | CQLLS-5.0.0 | implementation-source | n/a | cql-language-server 5.0.0, released 2026-11-05, commit 68e601fa6b8ef7df99f8ef29b86d4464d94bd400; the version vscode-cql 1.0.0 downloads | cqframework/cql-language-server@v5.0.0 | <https://github.com/cqframework/cql-language-server/tree/v5.0.0> | none (git show v5.0.0:PATH; the fetch script caches a clone) | 2026-11-14 |
-| WIKI-c9e1023 | guide | informative | The vscode-cql wiki at commit c9e1023 (2026-11-09, "updates wiki" for 1.0.0); its developer notes were last changed at de7bd96 (2026-07-08) and are headed with 4.6.0-SNAPSHOT versions | cqframework/vscode-cql.wiki@c9e1023710ba39d65b3750d8e79e19814bdf30d7 | <https://github.com/cqframework/vscode-cql/wiki> | none (git show c9e1023:PATH; the fetch script caches a clone) | 2026-11-14 |
+| WIKI-030e98c | guide | informative | The vscode-cql wiki at commit 030e98c (2026-11-20, "update links"; the Developer Guide last changed in 03238e1, 2026-11-17, which dropped `hotfix/` branches); its developer notes were last changed at de7bd96 (2026-07-08) and are headed with 4.6.0-SNAPSHOT versions | cqframework/vscode-cql.wiki@030e98c76e8452e67f99d9507768fb2eb4814e2e | <https://github.com/cqframework/vscode-cql/wiki> | none (git show 030e98c:PATH; the fetch script caches a clone) | 2026-11-24 |
 
 ## Looking up a citation at another version
 
@@ -49,7 +49,7 @@ server's, translator's and engine's versions are in the tooltip of the CQL statu
 ## Notes
 
 - **What each source is evidence of.** VSCQL-1.0.0 and CQLLS-5.0.0 show what the extension and the
-  language server *do* at those versions. WIKI-c9e1023 says what the maintainers *describe*; where it
+  language server *do* at those versions. WIKI-030e98c says what the maintainers *describe*; where it
   and the code disagree, the code is cited and the disagreement noted.
 - **The wiki's developer notes are older than its user guide.** `developer-notes/` was last changed
   on 2026-07-08 and its headers name language server 4.6.0-SNAPSHOT, so every claim taken from it was

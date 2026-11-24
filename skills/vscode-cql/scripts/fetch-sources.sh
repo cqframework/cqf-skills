@@ -16,7 +16,7 @@ CACHE_DIR="${VSCQL_SKILL_CACHE:-$HOME/.cache/vscode-cql-skill}"
 REPOS=(
   "VSCQL-1.0.0|cqframework/vscode-cql|v1.0.0|vscode-cql"
   "CQLLS-5.0.0|cqframework/cql-language-server|v5.0.0|cql-language-server"
-  "WIKI-c9e1023|cqframework/vscode-cql.wiki|c9e1023710ba39d65b3750d8e79e19814bdf30d7|vscode-cql.wiki"
+  "WIKI-030e98c|cqframework/vscode-cql.wiki|030e98c76e8452e67f99d9507768fb2eb4814e2e|vscode-cql.wiki"
 )
 
 mkdir -p "$CACHE_DIR"

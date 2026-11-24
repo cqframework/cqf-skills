@@ -39,7 +39,7 @@ CACHE_DIR = Path(os.environ.get("VSCQL_SKILL_CACHE", HOME / ".cache" / "vscode-c
 DEFAULT_REPOS = {
     "VSCQL-1.0.0": CACHE_DIR / "vscode-cql.git",
     "CQLLS-5.0.0": CACHE_DIR / "cql-language-server.git",
-    "WIKI-c9e1023": CACHE_DIR / "vscode-cql.wiki.git",
+    "WIKI-030e98c": CACHE_DIR / "vscode-cql.wiki.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")
 LINE_LOC_RE = re.compile(r"^(.+?):(\d+)(?:-(\d+))?$")
