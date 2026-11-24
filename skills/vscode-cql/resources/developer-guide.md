@@ -1,7 +1,7 @@
 # Developer Guide: Architecture, Building and Releasing
 
 Baseline: vscode-cql 1.0.0 with cql-language-server 5.0.0. Untagged statements hold at these versions only.
-Sources: VSCQL-1.0.0, CQLLS-5.0.0, WIKI-c9e1023
+Sources: VSCQL-1.0.0, CQLLS-5.0.0, WIKI-030e98c
 
 For contributors to the extension or the language server. For using the extension, see
 [user-guide.md](user-guide.md).
@@ -36,12 +36,12 @@ The server version is `javaDependencies.cql-language-server` in `package.json`
 | `model/` | Project and IG layout detection, test cases, test configuration |
 | `views/` | Webviews, such as the configuration editor |
 
-[src: WIKI-c9e1023 Developer-Guide.md:17-31], checked against the tree at VSCQL-1.0.0.
+[src: WIKI-030e98c Developer-Guide.md:19-33], checked against the tree at VSCQL-1.0.0.
 
 ### The language server (`ls/server/src/main/kotlin/org/opencds/cqf/cql/`)
 
 No dependency injection framework: `ls/service/Main.kt` builds the object graph by hand and starts
-the LSP listener on stdio [src: WIKI-c9e1023 Developer-Guide.md:33-46]. The shaded JAR's main class
+the LSP listener on stdio [src: WIKI-030e98c Developer-Guide.md:35-48]. The shaded JAR's main class
 is `org.opencds.cqf.cql.ls.service.MainKt` [src: CQLLS-5.0.0 ls/server/pom.xml:150].
 
 | Area | Classes |
@@ -54,7 +54,7 @@ is `org.opencds.cqf.cql.ls.service.MainKt` [src: CQLLS-5.0.0 ls/server/pom.xml:1
 | Content | `FederatedContentService` (open editors first, then disk), `ActiveContentService`, `FileContentService` |
 | Execution | `CqlEvaluator` |
 
-[src: WIKI-c9e1023 Developer-Guide.md:48-99]. Every class listed exists at CQLLS-5.0.0 (searched by
+[src: WIKI-030e98c Developer-Guide.md:50-101]. Every class listed exists at CQLLS-5.0.0 (searched by
 file name). The extension starts a debug session through the server command
 `org.opencds.cqf.cql.debug.startDebugSession` and connects to the port it returns
 [src: VSCQL-1.0.0 src/debug/cqlDebugAdapterDescriptorFactory.ts:15-19].
@@ -67,7 +67,7 @@ file name). The extension starts a debug session through the server command
 | Build | `mvn package -DskipTests` (fat JAR in `ls/server/target/`) | `npm install`, `npm run compile` |
 | Test | `mvn test` | `npm test` |
 
-[src: WIKI-c9e1023 Developer-Guide.md:105-135]. The server compiles for Java 17
+[src: WIKI-030e98c Developer-Guide.md:107-137]. The server compiles for Java 17
 [src: CQLLS-5.0.0 pom.xml:15-17].
 
 The extension's npm scripts [src: VSCQL-1.0.0 package.json:856-862]:
@@ -81,7 +81,7 @@ The extension's npm scripts [src: VSCQL-1.0.0 package.json:856-862]:
 | `test` | `vscode-test` (after `pretest` cleans and compiles) |
 
 The build is plain `tsc`. esbuild bundling is on a feature branch and not in 1.0.0
-[src: WIKI-c9e1023 Developer-Guide.md:196].
+[src: WIKI-030e98c Developer-Guide.md:198].
 
 ## Running a locally built server
 
@@ -96,22 +96,22 @@ The extension loads `dist/java-support/jars/cql-ls-server-<version>.jar`
    `-SNAPSHOT` version can't be downloaded, so the copied file must be there.
 4. Press F5 in `vscode-cql/` to start the Extension Development Host, or restart it.
 
-[src: WIKI-c9e1023 Developer-Guide.md:145-170]. `mvn test` and `mvn package` don't change a running
+[src: WIKI-030e98c Developer-Guide.md:147-172]. `mvn test` and `mvn package` don't change a running
 extension host; restart it.
 
 **End-to-end check** after starting the host: diagnostics and hover in a `.cql` file; Execute CQL
 and the View ELM commands; F12, Shift+F12 and Ctrl+Shift+O; a debug session from the CQL Explorer;
 and a clean start in "Show CQL Extension and Language Server Logs"
-[src: WIKI-c9e1023 Developer-Guide.md:171-179].
+[src: WIKI-030e98c Developer-Guide.md:173-181].
 
 ## Versions and branches
 
 - **Extension:** an even minor (`1.0.x`, `1.2.x`) is a Marketplace release; an odd minor (`1.1.x`,
   `1.3.x`) is a pre-release, published with `--pre-release`. The Marketplace doesn't accept suffixes
-  such as `-alpha` [src: WIKI-c9e1023 Developer-Guide.md:202-209].
+  such as `-alpha` [src: WIKI-030e98c Developer-Guide.md:204-211].
 - **Language server:** `master` always carries a `-SNAPSHOT` version; releases are cut from `master`,
   with no release branches, and `master` then moves to the next SNAPSHOT
-  [src: WIKI-c9e1023 Developer-Guide.md:211-215].
-- **Branching:** trunk-based on `master`. Short-lived `feature/`, `bugfix/`, `hotfix/` or `task/`
+  [src: WIKI-030e98c Developer-Guide.md:213-217].
+- **Branching:** trunk-based on `master`. Short-lived `feature/`, `bugfix/` or `task/`
   branches, merged by pull request; never commit to `master` directly
-  [src: WIKI-c9e1023 Developer-Guide.md:217-233].
+  [src: WIKI-030e98c Developer-Guide.md:219-235].

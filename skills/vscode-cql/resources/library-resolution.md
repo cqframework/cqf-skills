@@ -1,14 +1,14 @@
 # Library Resolution, Packages and Compiler Options
 
 Baseline: cql-language-server 5.0.0 (with vscode-cql 1.0.0). Untagged statements hold at these versions only.
-Sources: CQLLS-5.0.0, VSCQL-1.0.0, WIKI-c9e1023
+Sources: CQLLS-5.0.0, VSCQL-1.0.0, WIKI-030e98c
 
 How the language server finds the library an `include` names, what it does with FHIR packages, which
 compiler options it uses, and when it notices changes. All of this is in the language server; the
 extension only passes file locations.
 
 The wiki's developer notes on this topic were written against language server 4.6.0-SNAPSHOT
-[src: WIKI-c9e1023 developer-notes/CQL-Library-Resolution.md:3-11]. Where 5.0.0 differs, this page
+[src: WIKI-030e98c developer-notes/CQL-Library-Resolution.md:3-11]. Where 5.0.0 differs, this page
 follows the code.
 
 ## Where an include is looked for
@@ -42,7 +42,7 @@ A breadth-first search, so a shallower file beats a deeper one
 
 Two passes: **exact version** through all tiers first, then a **compatible version** through all
 tiers. So `input/cql/Helper-1.0.0.cql` beats `Helper-1.0.1.cql` next to the including library
-[src: CQLLS-5.0.0 ls/server/…/service/FileContentService.kt:304-405] [src: WIKI-c9e1023 User-Guide.md:948-955].
+[src: CQLLS-5.0.0 ls/server/…/service/FileContentService.kt:304-405] [src: WIKI-030e98c User-Guide.md:948-955].
 
 - File names are `<Library>-<version>.cql` or `<Library>.cql`, matched case-insensitively. A hyphen in
   the library name is fine: the version is the last hyphen-separated part that parses as a version.
@@ -82,12 +82,12 @@ If two projects share a canonical, the first wins and a warning is logged
 `projectSearchExclude` lists folder names never searched
 [src: CQLLS-5.0.0 ls/server/…/service/FileContentService.kt:391-405]. It is off by default so that a
 sibling project's copy doesn't silently replace the package version you meant
-[src: WIKI-c9e1023 User-Guide.md:994-1000].
+[src: WIKI-030e98c User-Guide.md:994-1000].
 
 **Open each IG project as its own workspace folder** for predictable results. The extension uses only
 the first folder of a multi-root workspace [src: VSCQL-1.0.0 src/model/cqlSolution.ts:42-43], and the
 server's tier 2 and `config.jsonc` come from the workspace folder, not from a project in a sub-folder
-[src: WIKI-c9e1023 User-Guide.md:1041].
+[src: WIKI-030e98c User-Guide.md:1041].
 
 ## FHIR packages and `dev` dependencies
 
@@ -105,12 +105,12 @@ That stub is then in `~/.fhir/packages` for every tool. The IG Publisher, asked 
 package, can pick up an empty package. If an IG Publisher build or another tool behaves as if a
 package has no content, look for `~/.fhir/packages/<packageId>#current/package/` holding only
 `package.json` (and maybe `.index.json`), and remove that folder with no tool running. Leave `*.lock`
-files alone [src: WIKI-c9e1023 developer-notes/FHIR-Package-Cache.md:64-101].
+files alone [src: WIKI-030e98c developer-notes/FHIR-Package-Cache.md:64-101].
 
 The wiki describes a different design, in which `dev` packages are built in memory and the server
 "never writes stub or partial packages", and says the stubs came from versions before 4.11
-[src: WIKI-c9e1023 developer-notes/FHIR-Package-Cache.md:17-24]
-[src: WIKI-c9e1023 developer-notes/FHIR-Package-Cache.md:64-72]. No 4.11 was released (the
+[src: WIKI-030e98c developer-notes/FHIR-Package-Cache.md:17-24]
+[src: WIKI-030e98c developer-notes/FHIR-Package-Cache.md:64-72]. No 4.11 was released (the
 CHANGELOG goes from 4.10.0 to 5.0.0) [src: CQLLS-5.0.0 CHANGELOG.md:4-35], and 5.0.0 still writes the
 stub. Treat the wiki's description as not yet released.
 
@@ -139,7 +139,7 @@ The options are the CQL-to-ELM translator's, for example:
 }
 ```
 
-[src: WIKI-c9e1023 User-Guide.md:285-310]. The IG Publisher reads the same file from each
+[src: WIKI-030e98c User-Guide.md:285-310]. The IG Publisher reads the same file from each
 `path-binary` folder, with its own translator version, so the two can report different diagnostics
 for the same CQL.
 

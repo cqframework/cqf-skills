@@ -8,6 +8,10 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `vscode-cql` skill: re-pinned the vscode-cql wiki from `c9e1023` to `030e98c` (2026-11-20). The
+  Developer Guide no longer has `hotfix/` branches, so the branching summary drops them; the other
+  Developer Guide citations moved down two lines. Fixes #21.
+
 - `vscode-cql` skill: a run-time error in any definition replaces that test case's results with a
   single `Error` entry while other cases still run (from the language server's evaluation code);
   the extension reads a test case MeasureReport's expected populations but never compares them,
