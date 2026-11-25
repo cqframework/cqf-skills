@@ -1,12 +1,13 @@
 # Testing CQL Libraries
 
 Baseline: CQL 1.5.3; translator and engine 5.5.0 for the observed behaviour. Untagged statements hold at these versions.
-Sources: CQL-1.5.3, PROBES-2026-11-14, DQMCMS-757d7c6
+Sources: CQL-1.5.3, PROBES-2026-11-14, DQMCMS-757d7c6, DQMCMS-739494f
 
 A way to unit-test a CQL library with CQL: a test library of Boolean definitions, each `true` when its
-test passes, run against inline fixtures or test patients. The method is the one the CMS 2026 dQM
-content repository uses for its shared libraries
-[src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:74-95] [src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:185-236];
+test passes, run against test patients (and inline fixtures for values that aren't resources). The
+method is the one the CMS 2026 dQM content repository uses for its shared libraries
+[src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:74-95] [src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:185-236]
+[src: DQMCMS-739494f .claude/skills/cql/SKILL.md:269-273];
 the CQL facts it relies on are cited to the spec. Running test libraries is covered by the
 `vscode-cql` skill, and running one in MADiE (as a Cohort measure on `_Passed`) by the `madie` skill.
 
@@ -31,14 +32,33 @@ the CQL facts it relies on are cited to the spec. Running test libraries is cove
 - **Find test resources by an identifier key, not by `id`**, when the data goes through tools that
   reassign ids (MADiE does on export; see the `madie` skill).
 
-## Fixtures
+## Test data and fixtures
 
-- **Build fixtures inline** as FHIR or model resources with selectors, so most tests need no patient
-  data. Keep the values a test asserts as named definitions (`"Onset Date"`), so the fixture and the
-  expected value can't drift apart.
-- **One fixture builder per resource shape, taking every element that varies as a parameter**, with
-  null for "absent": `"Test Condition"(clinicalStatus, onset, abatement, recordedDate)`. Each test then
-  reads as one call.
+- **Test functions over resources with test patients**, not with resources built inline. Retrieve
+  them as the profiles the measures use, find each by its identifier key, and assert the exact
+  result for each case (for a list function, exactly which keys it returns). That runs real data
+  through the function, typed as measure logic types it, and through the retrieve
+  [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:269-273] [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:307-312].
+- **Per case, add only the resources the tests need, plus one near-miss of each kind** (wrong
+  status, a code from another code system, outside the period), and **one case with none of the
+  resources** the library retrieves, so that empty input is tested too
+  [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:169-172].
+- **Keep test data valid against its profiles**, including required elements the tests don't read
+  (the US Quality Core MedicationAdministrationNotDone and MedicationDispenseDeclined profiles
+  require the `us-quality-core-recorded` extension). MADiE rejects invalid resources, and the
+  libraries may assume conformant data, so a resource missing a required element (for example a
+  MedicationRequest with no status) isn't a case to test
+  [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:173-177].
+- **Give each resource the profile the logic retrieves** in `meta.profile`. The engine in the VS Code
+  CQL extension 0.9.8 (engine 4.9.0) filters a profile retrieve by it: a MedicationRequest
+  declaring only the US Quality Core MedicationNotRequested profile wasn't returned by
+  `[USQualityCore.MedicationRequest]` [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:182-185].
+  Not probed on 5.5.0.
+- **Build inline fixtures for values that aren't resources**: codes, intervals, quantities, FHIR
+  primitives and data types. Keep the values a test asserts as named definitions (`"Onset Date"`),
+  so the fixture and the expected value can't drift apart.
+- **One fixture builder per shape, taking every element that varies as a parameter**, with null for
+  "absent": `"Test Period"(start, end)`. Each test then reads as one call.
 - **Build codings from code systems declared in the test library**, not from the code declarations
   of the library under test: a wrong system or code in the library would otherwise be copied into the
   fixture and the test would still pass. Test the library's declarations separately against
@@ -57,10 +77,13 @@ the CQL facts it relies on are cited to the spec. Running test libraries is cove
    boundary means unbounded (`end of` is the maximum value) and an open one unknown (`end of` is null),
    see [intervals.md](intervals.md). For a list of FHIR primitives, compare the System values
    (`L X return X.value`), not the FHIR elements.
-4. **Add a test over a retrieve of each profile the measures use**, such as
-   `AllTrue([Condition] C return C.relevantPeriod() is not null)`: vacuously true with no data, but it
-   checks that the function resolves for that type. (Here `AllTrue` is right: it's an invariant over
-   the data, not a combination of tests.)
+4. **Run the function on a retrieve of each profile the measures use**, in a case that has data for
+   it, and assert the exact result. An invariant such as
+   `AllTrue([Condition] C return C.relevantPeriod() is not null)` alone isn't enough: with no data it
+   is vacuously true, so it only shows that the call compiles for that type. A test library whose
+   profile tests were all invariants like this passed with no data loaded, comparing `Count({})` with
+   `Count({})` [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:307-312]. (Where an invariant is
+   still wanted, `AllTrue` is right: it's an invariant over the data, not a combination of tests.)
 5. **When a test fails**, decide whether the library or the expected value is wrong before changing
    either, and report what's left uncovered.
 
