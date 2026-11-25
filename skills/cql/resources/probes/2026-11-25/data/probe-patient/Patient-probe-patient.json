@@ -1,0 +1,25 @@
+{
+  "resourceType": "Patient",
+  "id": "probe-patient",
+  "meta": {
+    "profile": [
+      "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-patient"
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://example.org/fhir/identifiers",
+      "value": "probe-patient"
+    }
+  ],
+  "name": [
+    {
+      "family": "Probe",
+      "given": [
+        "Probe"
+      ]
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1970-01-01"
+}

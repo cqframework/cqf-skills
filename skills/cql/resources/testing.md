@@ -1,7 +1,7 @@
 # Testing CQL Libraries
 
 Baseline: CQL 1.5.3; translator and engine 5.5.0 for the observed behaviour. Untagged statements hold at these versions.
-Sources: CQL-1.5.3, PROBES-2026-11-14, DQMCMS-757d7c6, DQMCMS-739494f
+Sources: CQL-1.5.3, PROBES-2026-11-14, PROBES-2026-11-25, DQMCMS-757d7c6, DQMCMS-739494f
 
 A way to unit-test a CQL library with CQL: a test library of Boolean definitions, each `true` when its
 test passes, run against test patients (and inline fixtures for values that aren't resources). The
@@ -9,7 +9,9 @@ method is the one the CMS 2026 dQM content repository uses for its shared librar
 [src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:74-95] [src: DQMCMS-757d7c6 .claude/skills/cql/SKILL.md:185-236]
 [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:269-273];
 the CQL facts it relies on are cited to the spec. Running test libraries is covered by the
-`vscode-cql` skill, and running one in MADiE (as a Cohort measure on `_Passed`) by the `madie` skill.
+`vscode-cql` skill (Execute CQL) and the `cql-mcp` skill (`cql_test_run_suite`), and running one in
+MADiE (as a Cohort measure on `_Passed`) by the `madie` skill. To check a run, see
+[Checking a run](#checking-a-run).
 
 ## The test library
 
@@ -49,11 +51,11 @@ the CQL facts it relies on are cited to the spec. Running test libraries is cove
   libraries may assume conformant data, so a resource missing a required element (for example a
   MedicationRequest with no status) isn't a case to test
   [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:173-177].
-- **Give each resource the profile the logic retrieves** in `meta.profile`. The engine in the VS Code
-  CQL extension 0.9.8 (engine 4.9.0) filters a profile retrieve by it: a MedicationRequest
-  declaring only the US Quality Core MedicationNotRequested profile wasn't returned by
-  `[USQualityCore.MedicationRequest]` [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:182-185].
-  Not probed on 5.5.0.
+- **Give each resource the profile the logic retrieves** in `meta.profile`. A profile retrieve returns
+  exactly the resources whose `meta.profile` declares that profile: not a conforming resource that
+  doesn't declare it, and still one that declares it but breaks its fixed values
+  [src: PROBES-2026-11-25 RESULTS.md §Profile retrieves and `meta.profile`]. Observed on 5.5.0, and
+  on 4.9.0 (the VS Code CQL extension 0.9.8) [src: DQMCMS-739494f .claude/skills/cql/SKILL.md:182-185].
 - **Build inline fixtures for values that aren't resources**: codes, intervals, quantities, FHIR
   primitives and data types. Keep the values a test asserts as named definitions (`"Onset Date"`),
   so the fixture and the expected value can't drift apart.
@@ -86,6 +88,27 @@ the CQL facts it relies on are cited to the spec. Running test libraries is cove
    still wanted, `AllTrue` is right: it's an invariant over the data, not a combination of tests.)
 5. **When a test fails**, decide whether the library or the expected value is wrong before changing
    either, and report what's left uncovered.
+
+## Checking a run
+
+Don't read results by eye. [`scripts/check_test_library.py`](../scripts/check_test_library.py) reads the
+library and a run's results, and fails unless every `Test…` is `true` on every case, no case
+reported an error, and `_Passed` lists each test exactly once and is `true`. With `--cases`, it also
+checks that every label in a `when '<label>' then` clause is a case label, which catches the
+misspelled label that would otherwise pass silently. A test commented out of `_Passed` on a line of
+its own (`// and TestX`, with the reason) is reported as a known failure, until it starts passing.
+
+```bash
+# Execute CQL's results file, or its individual results folder
+python3 scripts/check_test_library.py input/cql/MyLibraryTests.cql input/tests/results/MyLibraryTests.txt --cases input/tests/MyLibraryTests
+# a cql-mcp cql_test_run_suite run
+python3 scripts/check_test_library.py input/cql/MyLibraryTests.cql .cql-debug/test-runs/latest-MyLibraryTests.json --cases input/tests/MyLibraryTests
+```
+
+A cql-mcp run's per-case `status` says only whether the case errored, not whether its tests passed,
+so check the run with this script too. cql-mcp names a suite's latest run by a hash of the suite, the
+library and the patient ids, which a re-run on the same cases repeats; the script reads the newest
+run with that hash (see [`scripts/cql_mcp_runs.py`](../scripts/cql_mcp_runs.py)).
 
 ## Expected values that surprise
 

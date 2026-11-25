@@ -43,7 +43,7 @@ BRANCHES = {"MeasureAuthoringTool/madie-models": "main", "cqframework/dqm-conten
             "cqframework/cql-tests": "main",
             # released tools: compared with their latest GitHub release
             "cqframework/vscode-cql": "release", "cqframework/cql-language-server": "release",
-            "projecttacoma/fqm-execution": "release"}
+            "projecttacoma/fqm-execution": "release", "cqframework/cql-mcp": "release"}
 DEFAULT_BRANCH = "develop"
 MAX_ROWS = 150  # per source, so the report fits in an issue body (65,536 characters)
 NEEDS_REPIN = ("CHANGED", "missing", "multi")

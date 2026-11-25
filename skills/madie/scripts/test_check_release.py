@@ -14,13 +14,14 @@ SOURCES = (SKILL / "resources" / "SOURCES.md").read_text(encoding="utf-8")
 
 def test_read_pins():
     pins = C.read_pins(SOURCES)
-    assert len(pins) == 12
+    assert len(pins) == 13
     for p in pins:
         assert re.fullmatch(r"[0-9a-f]{40}", p.sha)
         assert p.sid.endswith("-" + p.sha[:7]), f"{p.sid}: the ID must end with the commit's short SHA"
     branches = {p.repo: p.branch for p in pins}
     assert branches["MeasureAuthoringTool/measure-service"] == "develop"
     assert branches["MeasureAuthoringTool/madie-models"] == "main"
+    assert branches["cqframework/cql-mcp"] == "release"
 
 
 def test_pins_agree_across_the_skill():

@@ -40,6 +40,7 @@ SHARED_FILES = [
     "scripts/fixtures/crmi-shareablelibrary.json",
     "resources/format-guide.md",
     "scripts/lint_skill.py",
+    "scripts/cql_mcp_runs.py",
 ]
 
 

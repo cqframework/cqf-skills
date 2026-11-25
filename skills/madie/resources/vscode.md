@@ -1,7 +1,7 @@
 # Test Cases in VS Code
 
-Baseline: vscode-cql 1.0.0 with cql-language-server 5.0.0; fqm-execution 1.8.6 (MADiE's engine); MADiE `develop` as of 2026-11-14. Untagged statements hold at these versions only.
-Sources: VSCQL-855eac7, CQLLS-68e601f, FQM-8f1038a, MEASURE-18c8d4d, CQLTESTS-5747d2b
+Baseline: vscode-cql 1.0.0 with cql-language-server 5.0.0; fqm-execution 1.8.6 (MADiE's engine); cql-mcp 0.1.0-rc.2 (its run records); MADiE `develop` as of 2026-11-14. Untagged statements hold at these versions only.
+Sources: VSCQL-855eac7, CQLLS-68e601f, FQM-8f1038a, MEASURE-18c8d4d, CQLTESTS-5747d2b, CQLMCP-a2895f0
 
 How to work on MADiE test cases in VS Code with the CQL extension (`cqframework.cql`), in both
 directions:
@@ -92,6 +92,25 @@ server: `true`, `false`, `null`, a resource as `Encounter(id=enc-1)`, and a list
 python3 scripts/check_results.py input/tests/ExampleFollowUp input/tests/results/ExampleFollowUp \
   --measure ExampleFollowUp-Measure.json
 ```
+
+The results can also be a **cql-mcp run**, from its `cql_test_run_suite` tool, which runs the same
+language server without VS Code. cql-mcp saves each run as `<timestamp>-<hash8>.json` in
+`<workspace>/.cql-debug/test-runs/` and points `latest-<suite>.json` at the newest
+[src: CQLMCP-a2895f0 src/workspace/paths.ts:24-26] [src: CQLMCP-a2895f0 src/workspace/paths.ts:60-72]
+[src: CQLMCP-a2895f0 src/testPipeline/resultStore.ts:56-84]; pass either file:
+
+```bash
+python3 scripts/check_results.py input/tests/ExampleFollowUp .cql-debug/test-runs/latest-ExampleFollowUp.json \
+  --measure ExampleFollowUp-Measure.json
+```
+
+A run's `hash` covers the suite, the CQL file, the library name and version, the parameters and the
+patient ids, not the data or the results [src: CQLMCP-a2895f0 src/testPipeline/suiteRunner.ts:387-395],
+so a re-run on the same cases saves a new file with the same hash, and cql-mcp's own lookup by hash
+returns whichever exact match it lists first [src: CQLMCP-a2895f0 src/testPipeline/resultStore.ts:204-210].
+`check_results.py` (through `cql_mcp_runs.py`) resolves a pointer to the newest run with its hash.
+A case's `status` in the run only says whether it errored; the expected values are what this script
+compares.
 
 `--measure` takes the Measure resource (or a Bundle containing it, such as MADiE's measure export), for
 each group's population definitions, population basis and scoring. Without it, give a small JSON file
