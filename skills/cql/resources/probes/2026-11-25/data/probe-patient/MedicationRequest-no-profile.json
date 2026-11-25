@@ -1,0 +1,18 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "no-profile",
+  "status": "active",
+  "intent": "order",
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "243670",
+        "display": "aspirin 81 MG Oral Tablet"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/probe-patient"
+  }
+}

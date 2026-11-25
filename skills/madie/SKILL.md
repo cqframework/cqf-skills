@@ -57,6 +57,10 @@ reports an error message the skill doesn't mention:
 python3 scripts/madie_to_vscode.py export.zip --library MyMeasure
 # after Execute CQL with "resultFormat": "individual": pass/fail per case, as MADiE decides it
 python3 scripts/check_results.py input/tests/MyMeasure input/tests/results/MyMeasure --measure Measure.json
+# or after cql-mcp's cql_test_run_suite (suiteRoot input/tests, suiteName MyMeasure)
+python3 scripts/check_results.py input/tests/MyMeasure .cql-debug/test-runs/latest-MyMeasure.json --measure Measure.json
+# a new test case folder: Patient and test case MeasureReport (fill in the expected counts)
+python3 scripts/new_test_case.py input/tests/MyMeasure 03-Numerator-Met "Description"   --period 2026-01-01 2026-12-31 --populations populations.json
 # input/tests/<Library>/ -> a zip MADiE imports, checked against its import rules
 python3 scripts/vscode_to_madie.py input/tests/MyMeasure -o MyMeasure-tests.zip
 ```
@@ -153,7 +157,9 @@ characters; versions are `x.y.zzz`.
 | [resources/SOURCES.md](resources/SOURCES.md) | The pinned sources and how to read a citation on GitHub |
 | [scripts/madie_to_vscode.py](scripts/madie_to_vscode.py) | Unpacks a MADiE export into the VS Code extension's test case layout |
 | [scripts/vscode_to_madie.py](scripts/vscode_to_madie.py) | Packages VS Code test cases as a zip MADiE imports |
-| [scripts/check_results.py](scripts/check_results.py) | Checks Execute CQL results against the test cases' expected values |
+| [scripts/check_results.py](scripts/check_results.py) | Checks Execute CQL results, or a cql-mcp run, against the test cases' expected values |
+| [scripts/new_test_case.py](scripts/new_test_case.py) | Creates a test case folder (Patient and test case MeasureReport, for a measure's groups or a Cohort test library) and lists the cases |
+| [scripts/cql_mcp_runs.py](scripts/cql_mcp_runs.py) | Reads cql-mcp run records, resolving `latest-<suite>.json` to the newest run (shared with the `cql` skill) |
 | [scripts/check_test_cases.py](scripts/check_test_cases.py) | Checks a test case folder or zip against MADiE's import rules before uploading |
 | [scripts/check_release.py](scripts/check_release.py) | For maintainers: reports cited code that has changed on `develop` or in a newer release |
 

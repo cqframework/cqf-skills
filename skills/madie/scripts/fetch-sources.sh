@@ -24,6 +24,7 @@ REPOS=(
   "VSCQL-855eac7|cqframework/vscode-cql|855eac7b5f21c788d0e0e856d741cadc35e6bda9|vscode-cql"
   "CQLLS-68e601f|cqframework/cql-language-server|68e601fa6b8ef7df99f8ef29b86d4464d94bd400|cql-language-server"
   "FQM-8f1038a|projecttacoma/fqm-execution|8f1038add3658f720b1b851100b50454e40a431d|fqm-execution"
+  "CQLMCP-a2895f0|cqframework/cql-mcp|a2895f0ca2632845b305e70e274bce7c447cfbcf|cql-mcp"
   "CQLTESTS-5747d2b|cqframework/cql-tests|5747d2b72f29d733fbc114383c4a15a30999ffaf|cql-tests"
   "DQMCMS-757d7c6|cqframework/dqm-content-cms-2026|757d7c6fd01998287d622d03fb02e133c700e22a|dqm-content-cms-2026"
 )

@@ -1,0 +1,36 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "not-requested",
+  "meta": {
+    "profile": [
+      "http://fhir.org/guides/onc/us-quality-core/StructureDefinition/us-quality-core-medicationnotrequested"
+    ]
+  },
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "243670",
+        "display": "aspirin 81 MG Oral Tablet"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/probe-patient"
+  },
+  "authoredOn": "2026-03-01T12:00:00.000+00:00",
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "183966005",
+          "display": "Drug treatment not indicated"
+        }
+      ]
+    }
+  ]
+}

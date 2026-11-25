@@ -28,8 +28,10 @@ or the usual names ("Initial Population", "Denominator", …) with the basis inf
 
 Usage: check_results.py CASES RESULTS [--measure FILE | --populations FILE]
   CASES    the library's test case folder, e.g. input/tests/MyMeasure
-  RESULTS  input/tests/results/<Library>/ (individual result files, preferred) or
-           input/tests/results/<Library>.txt (the flat log)
+  RESULTS  input/tests/results/<Library>/ (individual result files, preferred),
+           input/tests/results/<Library>.txt (the flat log), or a cql-mcp run of the test cases:
+           .cql-debug/test-runs/latest-<Library>.json (or a run record file in that folder;
+           see cql_mcp_runs.py)
 Exit status: 0 if every case passes, 1 otherwise.
 """
 from __future__ import annotations
@@ -40,6 +42,9 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cql_mcp_runs  # noqa: E402
 
 IPP, DENOM, DENEX, DENEXCEP = "initial-population", "denominator", "denominator-exclusion", "denominator-exception"
 NUMER, NUMEX, MSRPOPL, MSRPOPLEX = "numerator", "numerator-exclusion", "measure-population", "measure-population-exclusion"
@@ -217,6 +222,12 @@ def read_flat(path: Path) -> dict[str, CaseResult]:
     return out
 
 
+def read_mcp(path: Path) -> dict[str, CaseResult]:
+    """A cql-mcp run (`cql_test_run_suite`), keyed by test case folder name (the patient id)."""
+    return {pid: CaseResult(values, errors)
+            for pid, values, errors in cql_mcp_runs.case_results(cql_mcp_runs.load_run(path))}
+
+
 # ---------------------------------------------------------------------------------------------
 # Checking
 
@@ -294,7 +305,8 @@ def measurement_period_note(result: CaseResult) -> str | None:
 
 def run(cases_dir: Path, results: Path, groups: list[Group]) -> tuple[int, int, list[str]]:
     """Return (passed, failed, report lines)."""
-    by_case = read_individual(results) if results.is_dir() else read_flat(results)
+    by_case = (read_individual(results) if results.is_dir() else
+               read_mcp(results) if results.suffix == ".json" else read_flat(results))
     lines, passed, failed = [], 0, 0
     for case in sorted(p for p in cases_dir.iterdir() if p.is_dir() and p.name != "shared"):
         expected, skipped = expected_values(case)
@@ -327,7 +339,8 @@ def run(cases_dir: Path, results: Path, groups: list[Group]) -> tuple[int, int, 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("cases", type=Path, help="the library's test case folder, e.g. input/tests/MyMeasure")
-    ap.add_argument("results", type=Path, help="input/tests/results/<Library>/ or input/tests/results/<Library>.txt")
+    ap.add_argument("results", type=Path, help="input/tests/results/<Library>/, input/tests/results/<Library>.txt, "
+                                               "or a cql-mcp run (.cql-debug/test-runs/latest-<Library>.json)")
     src = ap.add_mutually_exclusive_group()
     src.add_argument("--measure", type=Path, help="a Measure resource, or a Bundle with one")
     src.add_argument("--populations", type=Path, help="a JSON file mapping population codes to definitions")

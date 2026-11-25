@@ -48,6 +48,7 @@ DEFAULT_REPOS = {
     "VSCQL-855eac7": CACHE_DIR / "vscode-cql.git",
     "CQLLS-68e601f": CACHE_DIR / "cql-language-server.git",
     "FQM-8f1038a": CACHE_DIR / "fqm-execution.git",
+    "CQLMCP-a2895f0": CACHE_DIR / "cql-mcp.git",
     "CQLTESTS-5747d2b": CACHE_DIR / "cql-tests.git",
 }
 GIT_LOCATOR_RE = re.compile(r"^[\w.\-]+(?:/[\w.\-]+)?@([0-9A-Za-z._\-]+)$")

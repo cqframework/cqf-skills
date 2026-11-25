@@ -124,6 +124,8 @@ functions) can be tested there with a Cohort measure
    boolean population basis).
 4. Give every test case a MeasureReport expecting Initial Population 1 (`Group_1`,
    `InitialPopulation_1`, `count: 1`). A case then passes in MADiE exactly when every test is true for
-   it.
+   it. `scripts/new_test_case.py` without `--populations` writes this MeasureReport with the case's
+   Patient. Locally, check each test rather than just `_Passed` with the `cql` skill's
+   `check_test_library.py`.
 
 A measure itself needs no test library: its test cases carry the expected count of each population.

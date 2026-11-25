@@ -1,4 +1,4 @@
-"""Tests for madie_to_vscode.py, vscode_to_madie.py and check_results.py, on synthetic test cases."""
+"""Tests for madie_to_vscode.py, vscode_to_madie.py and check_results.py (with cql_mcp_runs.py), on synthetic test cases."""
 from __future__ import annotations
 
 import json
@@ -173,6 +173,33 @@ def test_check_results_flat_log_and_measure(tmp_path):
             ((R.IPP, "IP"), (R.DENOM, "Denom"), (R.DENEX, "Excl"), (R.NUMER, "Numer"))]}]}}]}), encoding="utf-8")
     passed, failed, lines = R.run(tests / "Ex", flat, R.groups_from_measure(measure))
     assert (passed, failed) == (2, 0), lines
+
+
+def test_check_results_cql_mcp_run(tmp_path):
+    tests = tmp_path / "tests"
+    M.convert(export_zip(tmp_path / "e.zip"), "Ex", tests)
+    store = tmp_path / ".cql-debug" / "test-runs"
+    store.mkdir(parents=True)
+    run_hash = "cd34ab12" + "f" * 56
+
+    def save(timestamp: str, numerator_a: str) -> None:
+        values = {A: {"Initial Population": "true", "Denominator": "true", "Denominator Exclusion": "false",
+                      "Numerator": numerator_a},
+                  B: {"Initial Population": "true", "Denominator": "true", "Denominator Exclusion": "true",
+                      "Numerator": "true"}}
+        run = {"hash": run_hash, "timestamp": timestamp, "suiteName": "Ex",
+               "cases": [{"patientId": pid, "status": "passed", "errors": [],
+                          "expressions": [{"name": k, "value": v} for k, v in v_.items()]} for pid, v_ in values.items()]}
+        (store / f"{timestamp}-{run_hash[:8]}.json").write_text(json.dumps(run), encoding="utf-8")
+        (store / "latest-Ex.json").write_text(json.dumps({"hash": run_hash}), encoding="utf-8")
+
+    # A re-run of the same cases has the same hash; the pointer means the newest run
+    save("2026-11-25T004924982Z", "false")
+    save("2026-11-25T005936515Z", "true")
+    passed, failed, lines = R.run(tests / "Ex", store / "latest-Ex.json", [])
+    assert (passed, failed) == (2, 0), lines
+    passed, failed, lines = R.run(tests / "Ex", store / f"2026-11-25T004924982Z-{run_hash[:8]}.json", [])
+    assert (passed, failed) == (1, 1), lines
 
 
 def test_parse_value():

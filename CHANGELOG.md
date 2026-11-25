@@ -6,6 +6,25 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+
+- `cql` skill: `scripts/check_test_library.py` checks a run of a CQL test library (every `Test…` true
+  on every case, `_Passed` listing each test once, known failures, case labels in `when` clauses),
+  from Execute CQL's results or a cql-mcp run. New probe record `resources/probes/2026-11-25/`
+  (PROBES-2026-11-25), run with patient data through cql-mcp: on 5.5.0 a profile retrieve returns
+  exactly the resources whose `meta.profile` declares the profile, whatever its fixed values say.
+  `testing.md` cites it, and gains "Checking a run".
+- `madie` skill: `scripts/new_test_case.py` creates a test case folder (a Patient with a label and a
+  key identifier, and a test case MeasureReport in MADiE's export form, for a measure's groups with
+  counts to fill in, or a Cohort test library's group) and lists the cases. `check_results.py`
+  accepts a cql-mcp run (`.cql-debug/test-runs/latest-<suite>.json` or a run record) as its results.
+  New source CQLMCP-a2895f0 (cql-mcp 0.1.0-rc.2).
+- `scripts/cql_mcp_runs.py`, shared by the `cql` and `madie` skills (added to `SHARED_FILES`), reads
+  cql-mcp run records. A re-run on the same cases gets the same hash, so it resolves a pointer to the
+  newest run with that hash.
+- `cms-qmd` skill: guidance on FHIRBuilders 0.1.000, the builders for FHIR values the bundled
+  libraries use.
+
 ### Changed
 
 - `trusted-ig-template` skill: re-pinned from IG Publisher commit 4e7325f to 3.0.5 (2026-11-20). Fixes #22.

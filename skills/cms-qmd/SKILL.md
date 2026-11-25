@@ -111,6 +111,18 @@ these libraries.
 - **Claims, coverage and billing** (`pattern_claim.md`, `pattern_coverage.md`,
   `pattern_billingrelated.md`): use ClaimCommon and ClaimElements for claim diagnoses,
   procedures and encounter items.
+- **Building FHIR values** ([FHIRBuilders.cql](resources/libraries/FHIRBuilders.cql) 0.1.000,
+  `include FHIRBuilders version '0.1.000' called Build`): when logic constructs a FHIR element from
+  CQL values, as CQMElements does for its normalized encounters, or a test library does for
+  fixtures, use its builders rather than writing selectors by hand. There is one per FHIR primitive,
+  named for the type (`Build.string('x')`, `Build.dateTime(@2026-03-01T12:00:00Z)`, `Build.id`,
+  `Build.uri`, `Build.code`…), and builders for `Period` (from an `Interval<DateTime>`), `Quantity`,
+  `Coding` (from a `Code`), `CodeableConcept` (from a `Code` or a `Concept`), `Identifier(system,
+  value)` and `Reference('Patient/x')`. Each single-argument builder except `Quantity` also has a
+  fluent form named `toFHIR…` (`'x'.toFHIRString()`, `Interval[a, b].toFHIRPeriod()`). Name any new
+  fluent builder the same way: a fluent function named like a FHIRPath function (`toString`,
+  `toBoolean`…) is never called (see the `cql` skill). Every builder returns null for a null input,
+  and the string-valued ones for an empty string, which FHIR doesn't allow.
 
 ## Known issues
 
