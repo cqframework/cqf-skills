@@ -15,6 +15,7 @@ Registry of every source the skill's resource files cite. Cite a claim inline as
 | PROBES-2026-10-22 | observed-behavior | n/a | translator 5.4.0, engine 5.4.0, CQL language server 4.11.0-SNAPSHOT | `resources/probes/2026-10-22/` | none | `resources/probes/2026-10-22/` | 2026-10-22 |
 | PROBES-2026-11-14 | observed-behavior | n/a | translator 5.5.0, engine 5.5.0, run with the embedded harness in `harness/` | `resources/probes/2026-11-14/` | none | `resources/probes/2026-11-14/` | 2026-11-14 |
 | DQMCMS-757d7c6 | convention | informative | the CQL skill of the CMS 2026 dQM content repository: its test-library method and the pitfalls PROBES-2026-11-14 checks | cqframework/dqm-content-cms-2026@757d7c6fd01998287d622d03fb02e133c700e22a | <https://github.com/cqframework/dqm-content-cms-2026/blob/757d7c6fd01998287d622d03fb02e133c700e22a/.claude/skills/cql/SKILL.md> | none | 2026-11-14 |
+| DQMCMS-739494f | convention | informative | the same skill after its test libraries moved to patient data (MedicationCommonTests, MedicationElementsTests), observed with the VS Code CQL extension 0.9.8 (translator and engine 4.9.0) | cqframework/dqm-content-cms-2026@739494f4648a109d1220d369ee7bd5fc3c1c6708 | <https://github.com/cqframework/dqm-content-cms-2026/blob/739494f4648a109d1220d369ee7bd5fc3c1c6708/.claude/skills/cql/SKILL.md> | none | 2026-11-24 |
 
 ## Notes
 

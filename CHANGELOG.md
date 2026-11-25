@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `cql` skill: `testing.md` now tests functions over resources with test patients rather than
+  inline fixtures, and no longer recommends invariants over retrieves that pass vacuously with no
+  data. It adds keeping test data valid against its profiles, a case with no data, and declaring the
+  retrieved profile in `meta.profile` (the 4.9.0 engine filters on it). New source DQMCMS-739494f,
+  where the CMS 2026 dQM content repository made the change (MedicationCommonTests,
+  MedicationElementsTests).
+- `cms-qmd` skill: new known issue, CQMCommon 5.2.000 and CQMElements 0.5.000 both define
+  `hospitalization()` and related fluent functions on the US Quality Core Encounter, and a library
+  that includes both silently gets CQMCommon's, which returns null without a prior ED visit.
+- `cql-ig` skill: FHIRCommon 2.0.0's `references()` never matches a contained resource (`#id`
+  against `id`), with the workaround. The us-cql-ig Query Management page says otherwise.
+
 - `ig-publisher` skill: re-pinned IG Publisher from 3.0.4 to 3.0.5 (2026-11-20; core library 7.0.6
   and CQL translator 4.9.0 unchanged). Fixes #23.
   - Of 258 line citations, 243 had the same text at 3.0.5 and were moved to the new line numbers; the

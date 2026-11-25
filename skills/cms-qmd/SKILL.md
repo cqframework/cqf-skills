@@ -121,6 +121,18 @@ these libraries.
   The vital-signs profiles deliberately have none, because the profile fixes the code.
 - **Fluent functions on choice types** can't always be resolved.
 - **Fluent function overloads** need care.
+- **Don't include CQMCommon 5.2.000 alongside CQMElements 0.5.000.** Both define fluent
+  `edVisit()`, `hospitalization()`, `hospitalizationLocations()` and `hospitalizationLengthOfStay()`
+  on the US Quality Core Encounter (CQMCommon's `Encounter` parameter resolves to
+  `USQualityCore.Encounter` because it declares that model first). The translator picks one without
+  a warning; see "A fluent call resolves to the first included library with a compatible overload"
+  in the `cql` skill. CQMCommon's `hospitalization()` queries over `TheEncounter."edVisit"()`, so it
+  returns null when there is no prior ED visit, and it doesn't use CQMElements' included encounters.
+  In the HOB measure, including both sent every call to CQMCommon's, and each stay without an ED
+  visit fell out of every population, with no diagnostic. When a CQMElements function works in a
+  test library but not in a measure, compare their includes. Read
+  [CQMCommon.cql](resources/libraries/CQMCommon.cql) and
+  [CQMElements.cql](resources/libraries/CQMElements.cql).
 - **Type references** that look ambiguous are allowed, as described above.
 - **FHIRCommon 2.0.0's `prevalenceInterval()`** mishandles an inactive condition or allergy with
   no abatement date. Use CQMConcepts' `prevalencePeriod()` (0.4.000 or later) until Using CQL With
