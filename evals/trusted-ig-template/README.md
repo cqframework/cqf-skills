@@ -1,7 +1,8 @@
 # trusted-ig-template Skill Evals
 
 Evaluation cases for the [`trusted-ig-template`](../../skills/trusted-ig-template/SKILL.md) skill,
-written against the IG Publisher's `trusted-template-rules.md` as added in commit 4e7325f (2026-11-18).
+written against the IG Publisher's `trusted-template-rules.md` at 3.0.5 (14 rules), first added in commit
+4e7325f (2026-11-18) with 12.
 When the skill is re-pinned, check every answer in the key against the new rules.
 
 | File | Contents |

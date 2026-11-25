@@ -197,3 +197,56 @@ def test_result_document(tmp_path):
 def test_main_exit_status(tmp_path, capsys):
     assert A.main([str(template(tmp_path))]) == 0
     assert A.main([str(template(tmp_path / "b", **{"Gemfile": "x"}))]) == 1
+
+
+def warn_codes(root: Path) -> set[str]:
+    return codes(root, level="WARN")
+
+
+def test_path_from_ig_value(tmp_path):
+    ant = ANT.replace('<target name="diagrams">',
+                      '<target name="langs"><copy todir="${ig.temp}/_includes/${lang}"><fileset dir="${ig.template}/includes"/></copy></target>\n'
+                      '  <target name="diagrams">')
+    assert codes(template(tmp_path, **{"scripts/ant.xml": ant})) == {"A12"}
+
+
+def test_publisher_target_properties_are_fixed(tmp_path):
+    # <target>.ig.source and .ig.dest come from the publisher, so a path built from them is fine
+    assert "A12" not in codes(template(tmp_path))
+
+
+def test_echo_of_ig_value(tmp_path):
+    ant = ANT.replace('<target name="diagrams">',
+                      '<target name="stamp"><echo file="${ig.temp}/_includes/stamp.html" message="${igVersion}"/></target>\n'
+                      '  <target name="diagrams">')
+    root = template(tmp_path, **{"scripts/ant.xml": ant})
+    assert "A12" in warn_codes(root) and "A12" not in codes(root)
+
+
+def test_liquid_dynamic_include(tmp_path):
+    root = template(tmp_path, **{"includes/menu.html": "{% include {{ page.menu }} %}\n"})
+    assert codes(root) == {"A13"}
+
+
+def test_liquid_value_in_script(tmp_path):
+    root = template(tmp_path, **{"layouts/default.html": "<script>var t = {{ site.data.ig.title | jsonify }};</script>\n"})
+    assert codes(root) == {"A13"}
+
+
+def test_liquid_unescaped_value(tmp_path):
+    root = template(tmp_path, **{"layouts/default.html": "<h1>{{ site.data.ig.title }}</h1>\n<p>{{ page.x }}</p>\n"})
+    findings = [f for f in A.audit(root) if f.code == "A13"]
+    assert [f.level for f in findings] == ["WARN"] and "2 value(s)" in findings[0].message
+
+
+def test_liquid_escaped_and_commented(tmp_path):
+    html = ('<h1>{{ site.data.ig.title | escape }}</h1>\n<a href="{{ page.id | url_encode }}.html">x</a>\n'
+            '{{ content }} <!-- publisher HTML -->\n')
+    assert "A13" not in codes(template(tmp_path, **{"layouts/default.html": html})) | warn_codes(
+        template(tmp_path / "b", **{"layouts/default.html": html}))
+
+
+def test_liquid_publisher_placeholders_and_include_parameters(tmp_path):
+    html = ("{% include fragment-intro.html type='{{[type]}}' id='{{[id]}}' %}\n"
+            "{% include {{[id]}}-summary.xhtml %}\n")
+    assert "A13" not in codes(template(tmp_path, **{"layouts/layout-profile.html": html}))

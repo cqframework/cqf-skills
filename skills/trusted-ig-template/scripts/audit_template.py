@@ -16,13 +16,15 @@ Checks (rule numbers are those of trusted-template-rules.md):
     A05  <exec> and <java>: fixed program, fixed arguments                      (rules 4, 6)
     A06  <loadproperties> of a generated file: the stylesheet fixes the names  (rule 7)
     A07  inline JavaScript only joins strings and sets properties              (rule 8)
-    A08  pre-process transforms: your own single-file .xslt                    (rule 9)
-    A09  no Jekyll plugins, Gemfiles or symlinks                               (rule 10)
-    A10  <get>: fixed URL, gated on ${ig.networkprohibited}                     (rule 11)
-    A11  stylesheets in scripts/ use no extension functions or side outputs    (rules 6, 9)
+    A08  pre-process transforms: your own single-file .xslt                    (rule 10)
+    A09  no Jekyll plugins, Gemfiles or symlinks                               (rule 11)
+    A10  <get>: fixed URL, gated on ${ig.networkprohibited}                     (rule 13)
+    A11  stylesheets in scripts/ use no extension functions or side outputs    (rules 6, 10)
+    A12  a value the publisher didn't set, in a path or written to a file      (rule 9)
+    A13  Liquid: IG values escaped, nothing in scripts, no dynamic includes     (rule 12)
 
 The audit is static and errs towards reporting: a WARN is something to look at, not necessarily wrong.
-It can't follow every way Ant builds a path; a clean audit is not a review (rule 12).
+It can't follow every way Ant builds a path; a clean audit is not a review (rule 14).
 Exit status: 1 if any ERROR, else 0.
 """
 from __future__ import annotations
@@ -48,6 +50,26 @@ REPLACEABLE = ("content", "includes", "layouts", "data", "translations", "config
 JS_DANGER = re.compile(r"\b(eval|Function|load|loadWithNewGlobal|importClass|importPackage|Packages|"
                        r"Runtime|ProcessBuilder|exec|java\.)\b")
 PROP_RE = re.compile(r"\$\{([^}]+)\}")
+# Attributes that name a file or folder a task writes, reads or lists (A12). <get> is A10's.
+PATH_ATTRS = {
+    "copy": ("file", "tofile", "todir"), "move": ("file", "tofile", "todir"), "mkdir": ("dir",),
+    "delete": ("file", "dir"), "xslt": ("in", "out", "destdir"), "style": ("in", "out", "destdir"),
+    "concat": ("destfile",), "zip": ("destfile", "basedir"), "unzip": ("src", "dest"), "echo": ("file",),
+    "echoxml": ("file",), "replace": ("file", "dir"), "fileset": ("dir", "file"), "touch": ("file",),
+}
+# The publisher sets <target>.ig.source and <target>.ig.dest for each target it calls.
+PUBLISHER_PROP_RE = re.compile(r"^[\w.\-]+\.ig\.(source|dest)$")
+# Liquid (A13)
+LIQUID_OUT_RE = re.compile(r"\{\{-?(.*?)-?\}\}", re.S)
+ESCAPING_FILTER_RE = re.compile(r"\|\s*(escape|escape_once|url_encode|uri_escape|cgi_escape|xml_escape|"
+                                r"slugify|size|plus|minus|times|divided_by|modulo|round|date_to_xmlschema|"
+                                r"number_of_words)\b")
+# {% include <file> … %}: group 1 is the file name (the parameters after it may hold values safely)
+INCLUDE_RE = re.compile(r"\{%-?\s*include(?:_relative)?\s+(\S+)")
+# {{[id]}}, {{[lang]}}…: placeholders the publisher fills in per page before Jekyll runs, not Liquid values
+PLACEHOLDER_RE = re.compile(r"\{\{\[\w+\]\}\}")
+SCRIPT_RE = re.compile(r"<script\b[^>]*>(.*?)</script\s*>", re.S | re.I)
+LIQUID_FOLDERS = ("includes", "layouts", "content", "_includes", "_layouts")
 
 
 # ---------------------------------------------------------------------------------------------
@@ -168,6 +190,11 @@ def files(root: Path):
 
 def props(value: str) -> set[str]:
     return set(PROP_RE.findall(value))
+
+
+def fixed_prop(name: str) -> bool:
+    """A property the publisher sets: ig.scripts…, basedir, or <target>.ig.source/.ig.dest."""
+    return name in FIXED_PROPS or bool(PUBLISHER_PROP_RE.match(name))
 
 
 def anchored(value: str) -> bool:
@@ -324,6 +351,20 @@ def check_ant(a: Audit, f: Path, node: Node, generated_by: dict[str, str]) -> No
                 a.error("A04", where, rule, f'<{tag} {attr}="{v}"> {why}')
             if tag in ("xslt", "style") and attr == "style" and not v.lower().endswith(".xslt"):
                 a.error("A03", where, "3", f'stylesheet {v!r} is not a .xslt file')
+        # A12: a value the publisher didn't set, in a path, or written into a file
+        for attr in PATH_ATTRS.get(tag, ()):
+            v = n.attrib.get(attr)
+            loose = sorted(x for x in props(expand(v or "", defs)) if not fixed_prop(x))
+            if loose:
+                a.error("A12", where, "9", f'<{tag} {attr}="{v}"> builds a path from ${{{", ".join(loose)}}}: '
+                                           "if any of it can come from the IG or a child template, check it against "
+                                           "a strict pattern and that the resolved path stays in the template or "
+                                           "temp folder")
+        if tag in ("echo", "echoxml") and "file" in n.attrib:
+            loose = sorted(x for x in props(expand(n.attrib.get("message", "") + n.text, defs)) if not fixed_prop(x))
+            if loose:
+                a.warn("A12", where, "9", f'<{tag}> writes ${{{", ".join(loose)}}} into {n.attrib["file"]!r}: '
+                                          "escape it for that file (XML, properties, HTML) and check it")
         # A05: programs and their arguments
         if tag in ("exec", "apply"):
             a.warn("A05", where, "4", f"<{tag}> runs a program: check it is a fixed file in scripts/ with fixed "
@@ -366,7 +407,7 @@ def check_ant(a: Audit, f: Path, node: Node, generated_by: dict[str, str]) -> No
             src = expand(n.attrib.get("src", ""), defs)
             loose = props(src) - FIXED_PROPS
             if loose:
-                a.error("A10", where, "11", f"<get src> uses ${{{', '.join(sorted(loose))}}}; URLs are fixed or "
+                a.error("A10", where, "13", f"<get src> uses ${{{', '.join(sorted(loose))}}}; URLs are fixed or "
                                             "built from fixed parts")
             dest = expand(n.attrib.get("dest", ""), defs)
             if dest and not dest.startswith(("${ig.", "@{")):
@@ -375,13 +416,13 @@ def check_ant(a: Audit, f: Path, node: Node, generated_by: dict[str, str]) -> No
             if owner is not None and owner.tag == "macrodef":
                 macros_with_get.setdefault(owner.attrib.get("name", ""), []).append(n)
             elif owner is not None and not gated(owner):
-                a.error("A10", where, "11", f'<get> in target {owner.attrib.get("name")!r}, which is not gated '
+                a.error("A10", where, "13", f'<get> in target {owner.attrib.get("name")!r}, which is not gated '
                                             'with unless="${ig.networkprohibited}"')
         # if/unless by name
         if tag == "target":
             for attr in ("if", "unless"):
                 if n.attrib.get(attr) == "ig.networkprohibited":
-                    a.error("A10", where, "11", f'{attr}="ig.networkprohibited" tests whether the property is '
+                    a.error("A10", where, "13", f'{attr}="ig.networkprohibited" tests whether the property is '
                                                 'set, and the publisher always sets it; use '
                                                 f'{attr}="${{ig.networkprohibited}}"')
 
@@ -390,7 +431,7 @@ def check_ant(a: Audit, f: Path, node: Node, generated_by: dict[str, str]) -> No
         users = [t for t in targets.values() if any(x.tag == macro for x in t.iter())]
         for t in users:
             if not gated(t):
-                a.error("A10", a.rel(f, t.line), "11", f"target {t.attrib.get('name')!r} uses <{macro}>, which "
+                a.error("A10", a.rel(f, t.line), "13", f"target {t.attrib.get('name')!r} uses <{macro}>, which "
                                                        'calls <get>, and is not gated with '
                                                        'unless="${ig.networkprohibited}"')
 
@@ -437,7 +478,7 @@ def check_stylesheets(a: Audit) -> None:
                 if not (href.endswith(".xslt") and "://" not in href and in_scripts(a.root, f.parent / href)):
                     a.error("A03", where, "3", f"xsl:{n.local} href={href!r} must name a .xslt file in scripts/")
             if n.ns == XSL and n.local == "result-document":
-                a.error("A11", where, "9", "xsl:result-document: a stylesheet produces its main output and "
+                a.error("A11", where, "10", "xsl:result-document: a stylesheet produces its main output and "
                                            "nothing else")
             for prefix, uri in n.nsdecls.items():
                 if EXTENSION_NS.match(uri):
@@ -455,20 +496,20 @@ def check_preprocess(a: Audit, pre: list) -> None:
         t = e["transform"]
         where = f"config.json pre-process[{i}]"
         if not (t.startswith("template/scripts/") and t.endswith(".xslt")):
-            a.error("A08", where, "9", f"transform {t!r} must be one of your own .xslt files, "
+            a.error("A08", where, "10", f"transform {t!r} must be one of your own .xslt files, "
                                        "template/scripts/<name>.xslt")
             continue
         path = a.root / t[len("template/"):]
         if not path.is_file():
-            a.error("A08", where, "9", f"transform {t!r} does not exist in this template")
+            a.error("A08", where, "10", f"transform {t!r} does not exist in this template")
             continue
         node = parse_xml(path)
         for n in (node.iter() if node else []):
             if n.ns == XSL and n.local in ("include", "import"):
-                a.error("A08", a.rel(path, n.line), "9", f"xsl:{n.local} fails in a pre-process transform "
+                a.error("A08", a.rel(path, n.line), "10", f"xsl:{n.local} fails in a pre-process transform "
                                                           "(external stylesheet access is off): make it one file")
             if "document(" in " ".join(n.attrib.values()):
-                a.error("A08", a.rel(path, n.line), "9", "document() fails in a pre-process transform, and "
+                a.error("A08", a.rel(path, n.line), "10", "document() fails in a pre-process transform, and "
                                                           "transforms must not read files")
 
 
@@ -477,17 +518,48 @@ def check_jekyll(a: Audit) -> None:
     for p in files(a.root):
         rel = a.rel(p)
         if p.is_symlink():
-            a.error("A09", rel, "10", "symbolic link: Jekyll doesn't follow them, and they can point anywhere")
+            a.error("A09", rel, "11", "symbolic link: Jekyll doesn't follow them, and they can point anywhere")
         elif p.is_dir() and p.name == "_plugins":
-            a.error("A09", rel, "10", "no Jekyll plugins")
+            a.error("A09", rel, "11", "no Jekyll plugins")
         elif p.is_file() and p.name in ("Gemfile", "gems.rb", "Gemfile.lock"):
-            a.error("A09", rel, "10", f"{p.name}: Jekyll runs without your gems")
+            a.error("A09", rel, "11", f"{p.name}: Jekyll runs without your gems")
         elif p.is_file() and p.suffix.lower() == ".rb":
-            a.error("A09", rel, "10", "Ruby file: Jekyll plugins aren't allowed")
+            a.error("A09", rel, "11", "Ruby file: Jekyll plugins aren't allowed")
         elif p.is_file() and p.name in ("_config.yml", "_config.yaml"):
             for n, line in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
                 if re.match(r"^(plugins|gems|whitelist|plugins_dir)\s*:", line):
-                    a.error("A09", a.rel(p, n), "10", f"{line.split(':')[0]} in _config.yml: no Jekyll plugins")
+                    a.error("A09", a.rel(p, n), "11", f"{line.split(':')[0]} in _config.yml: no Jekyll plugins")
+
+
+def check_liquid(a: Audit) -> None:
+    """A13: layouts and includes escape what they write, keep values out of scripts, and include fixed files."""
+    for p in files(a.root):
+        rel = a.rel(p)
+        if not (p.is_file() and p.suffix.lower() in (".html", ".htm") and rel.split("/")[0] in LIQUID_FOLDERS):
+            continue
+        raw = p.read_text(encoding="utf-8", errors="replace")
+        # blank out the publisher's placeholders, keeping offsets (and so line numbers) the same
+        text = PLACEHOLDER_RE.sub(lambda m: " " * len(m.group(0)), raw)
+        line_of = lambda i: text.count("\n", 0, i) + 1  # noqa: E731
+        for m in INCLUDE_RE.finditer(text):
+            if "{{" in m.group(1):
+                a.error("A13", a.rel(p, line_of(m.start())), "12", "the file to include is chosen by a value: "
+                                                                     "include only fixed file names")
+        scripts = [(m.start(1), m.end(1)) for m in SCRIPT_RE.finditer(text)]
+        unescaped = []
+        for m in LIQUID_OUT_RE.finditer(text):
+            if any(s <= m.start() < e for s, e in scripts):
+                a.error("A13", a.rel(p, line_of(m.start())), "12", f"{{{{{m.group(1).strip()}}}}} is written into a "
+                                                                     "<script>: put it in an escaped data- attribute "
+                                                                     "and read that instead")
+                continue
+            line = text.splitlines()[line_of(m.start()) - 1]
+            if not ESCAPING_FILTER_RE.search(m.group(1)) and "<!--" not in line and "comment" not in line:
+                unescaped.append(line_of(m.start()))
+        if unescaped:
+            a.warn("A13", a.rel(p, unescaped[0]), "12", f"{len(unescaped)} value(s) written without escape or "
+                                                        "url_encode: escape IG values, and comment the ones that are "
+                                                        "HTML the publisher produced")
 
 
 def generated_files(ants: dict[Path, Node]) -> dict[str, str]:
@@ -517,6 +589,7 @@ def audit(root: Path) -> list[Finding]:
     check_stylesheets(a)
     check_preprocess(a, pre)
     check_jekyll(a)
+    check_liquid(a)
     return a.findings
 
 

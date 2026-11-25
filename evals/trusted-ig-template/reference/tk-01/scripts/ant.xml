@@ -22,9 +22,10 @@
           style="${ig.scripts}/checkMenu.xslt" failonerror="false"/>
   </target>
 
-  <!-- Writes the IG's version into a stamp file for the page footer: as text, with no program. -->
+  <!-- Writes the IG's version into a stamp file for the page footer: with a stylesheet, which escapes
+       the version for HTML, and no program. -->
   <target name="onGenerate.stamp" depends="onGenerate.versions">
-    <echo file="${dir.temp.includes}/stamp.html" message="&lt;span class=&quot;stamp&quot;&gt;Version ${igVersion}&lt;/span&gt;"/>
+    <xslt in="${onGenerate.ig.source}xml" out="${dir.temp.includes}/stamp.html" style="${ig.scripts}/stamp.xslt"/>
   </target>
 
   <target name="onGenerate" depends="onGenerate.versions,onGenerate.schemas,onGenerate.menuQa,onGenerate.stamp,common.summary"/>

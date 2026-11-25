@@ -14,7 +14,7 @@ CACHE_DIR="${TRUSTED_IG_TEMPLATE_SKILL_CACHE:-$HOME/.cache/trusted-ig-template-s
 
 # id | owner/repo | commit | cache name
 REPOS=(
-  "PUB-4e7325f|HL7/fhir-ig-publisher|4e7325f81566f341f7a3b38ed1e581a4275ae04e|fhir-ig-publisher"
+  "PUB-3.0.5|HL7/fhir-ig-publisher|cb04275ab57c27309d4e9821c77c63162076e5b7|fhir-ig-publisher"
   "CORE-7.0.6|hapifhir/org.hl7.fhir.core|86bf796ddc97083551c20d113aeda0e5db4f8a25|org.hl7.fhir.core"
 )
 

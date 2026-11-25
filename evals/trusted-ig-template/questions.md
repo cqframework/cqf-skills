@@ -14,8 +14,8 @@ few sentences, as you would to another template author. Then do task TK-01. The 
 **TH-02. Stylesheet extensions.** Why must our stylesheets be `.xslt` rather than `.xml`? They're both
 XML.
 
-**TH-03. Works locally.** A child template of ours builds fine on a laptop, but on the ci-build the log
-says "Unable to execute 'onGenerate' … is not trusted (reason: Template has file extensions: [.js])".
+**TH-03. Works locally.** A child template of ours builds on a laptop with IG Publisher 3.0.5, once its
+author ran with `-trust-template`, but on the ci-build the log says "Unable to execute 'onGenerate' … is not trusted (reason: Template has file extensions: [.js])".
 What happened, and what are the child author's options?
 
 ## Where code lives
@@ -41,6 +41,9 @@ destination of a `<get>`. What can an IG author do, and how do we fix it?
 **IG-03. Inline JavaScript.** A `<scriptdef>` builds a statement as a string from an attribute and runs
 it with `eval`. It's only used to append to a property. Is that acceptable?
 
+**IG-04. A language folder.** For each language in the IG's `i18n-lang` parameter, our script copies the
+template's includes into `${ig.temp}/_includes/${lang}`. What's the risk, and what should the script do?
+
 ## Transforms, Jekyll and network
 
 **PP-01. A pre-process stylesheet.** Our `pre-process` transform `template/scripts/processPages.xslt`
@@ -48,6 +51,9 @@ uses `<xsl:include href="pageUtils.xslt"/>`. Both files are in `scripts/`. The t
 what do we do?
 
 **JK-01. A sitemap.** We'd like `jekyll-sitemap` in the template. How?
+
+**LQ-01. A page title.** Our layout has `<title>{{ page.title }} - {{ site.data.ig.title }}</title>` and
+`<script>var igName = {{ site.data.ig.name | jsonify }};</script>`. Is that safe?
 
 **NW-01. The network gate.** Our schema download target has `unless="ig.networkprohibited"`, and the
 schemas are never downloaded, even with network access. Why?

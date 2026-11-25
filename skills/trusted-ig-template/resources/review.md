@@ -1,10 +1,10 @@
 # Reviewing a Change to a Trusted Template
 
-Baseline: `trusted-template-rules.md` at IG Publisher commit 4e7325f.
-Sources: PUB-4e7325f, PROBES-2026-11-17
+Baseline: `trusted-template-rules.md` at IG Publisher 3.0.5.
+Sources: PUB-3.0.5, PROBES-2026-11-17
 
-Rule 12: every change to a trusted template's `scripts/` or `config.json` is reviewed before it is
-released [src: PUB-4e7325f trusted-template-rules.md:38]. This is a checklist for the author before
+Rule 14: every change to a trusted template's `scripts/` or `config.json` is reviewed before it is
+released [src: PUB-3.0.5 trusted-template-rules.md:60]. This is a checklist for the author before
 asking, and for the reviewer.
 
 ## 1. Run the audit
@@ -31,9 +31,11 @@ For every changed line, ask:
 | Can any value it uses come from the IG: the IG resource, a page, a file generated from them, a property loaded from one? Does that value reach a command, URL, path or `eval`? | 6 |
 | Does a stylesheet whose output is `<loadproperties>`-ed pass every IG value through `normalize-space()`? | 7 |
 | Does new inline JavaScript do anything but read properties, join strings and set properties? | 8 |
-| Does a `pre-process` entry name anything but `template/scripts/<name>.xslt`? Is that file self-contained, with one output? | 9 |
-| Does it add a Jekyll plugin, `Gemfile` or symlink, or `plugins` in `_config.yml`? | 10 |
-| Does a new `<get>` use a fixed URL, and is its target gated with `unless="${ig.networkprohibited}"`? | 11 |
+| Does a value from the IG or a child template go into a path, a properties file, XML, a URL or a command line? Is it checked against a strict pattern, passed as its own `<arg value>` or `<param>`, escaped for where it goes, and its path checked to stay in the template or temp folder? | 9 |
+| Does a `pre-process` entry name anything but `template/scripts/<name>.xslt`? Is that file self-contained, with one output? | 10 |
+| Does it add a Jekyll plugin, `Gemfile` or symlink, or `plugins` in `_config.yml`? | 11 |
+| Does a changed layout or include write an IG value into the page without `escape` (or `url_encode` in a URL), put one into a `<script>`, use a link the IG supplies without checking its scheme, or include a file named by a value? | 12 |
+| Does a new `<get>` use a fixed URL, and is its target gated with `unless="${ig.networkprohibited}"`? | 13 |
 
 Then follow each value backwards. A property is only as trustworthy as everything that could have set
 it first: Ant properties can't be overwritten, so a `<loadproperties>` that runs earlier wins over a
@@ -41,15 +43,20 @@ it first: Ant properties can't be overwritten, so a `<loadproperties>` that runs
 
 ## 3. Build with it, and with a hostile IG
 
-Locally the publisher trusts every template, so a local build can't show a trust failure (see
-[publisher-trust.md](publisher-trust.md)). What a local build can show:
+From 3.0.5 a local build checks trust too: a template that runs scripts and isn't trusted stops the
+build until you pass `-trust-template` (see [publisher-trust.md](publisher-trust.md#local-builds-and-the-ci-build)).
+What a local build can show:
 
 - **Your template still works.** Build a real IG with the template from a local folder: in the `[IG]`
   section of `ig.ini`, `<template id>#<version> = <folder>`, which also works for a base template and
-  is ignored on the ci-build [src: PUB-4e7325f …/templates/TemplateManager.java:76-86].
+  is ignored on the ci-build [src: PUB-3.0.5 …/templates/TemplateManager.java:87-97]. Loaded that way,
+  the template keeps its own package id and version, so the trust check treats it as the trusted
+  template (read from source; not run). Naming the folder in `template =` instead makes it an untrusted
+  template that needs `-trust-template`.
 - **Hostile values stay text.** Build an IG whose `version`, `title`, page names and parameters contain
-  line breaks, `=`, `;`, quotes, `../` and `${…}`. Check that the build fails safely or renders them as
-  text, and that no file appears outside `output/`, `temp/` and `template/`.
+  line breaks, `=`, `;`, quotes, `../`, `${…}`, `&`, and HTML such as `<script>alert(1)</script>` and
+  `javascript:` links. Check that the build fails safely or shows them as text on every page, and that no
+  file appears outside `output/`, `temp/` and `template/`.
 - **The network gate works.** Build with network access prohibited and confirm no `<get>` runs.
 
 ## 4. Release
