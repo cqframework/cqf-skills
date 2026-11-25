@@ -110,6 +110,21 @@ element.
   values. Read [FHIRCommon.cql](resources/libraries/FHIRCommon.cql) for the exact definitions
   before relying on one. For example, `isActive()` on a Condition means a clinical status of
   active, recurrence or relapse.
+- **`references()` doesn't match a contained resource.** It compares the resource's `id` with the
+  last `/`-separated segment of the reference (`resource.id = Last(Split(reference.reference, '/'))`
+  in [FHIRCommon.cql](resources/libraries/FHIRCommon.cql)). A reference to a contained resource is
+  `#med-1` while the contained resource's `id` is `med-1`, so they never match. For a reference that
+  starts with `#`, search `contained` instead, and cast the match to the type you need:
+
+  ```cql
+  if MR.medication.reference.startsWith('#')
+    then MR.contained C where '#' + C.id = MR.medication.reference return C as Medication
+    else [Medication] M where MR.medication.references(M)
+  ```
+
+  This is tracked as [FHIR-59965](https://jira.hl7.org/browse/FHIR-59965). The us-cql-ig Query
+  Management page (in the `us-cql-ig` skill) says the shared libraries' `.references()` handles
+  contained references; with FHIRCommon 2.0.0 it doesn't.
 
 ## Packaging CQL in a FHIR Library
 
